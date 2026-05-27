@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "main": "electron/main.js",
   "scripts": {
-    "dev": "vite",
-    "backend": "cd backend && node server.js",
-    "electron": "electron .",
-    "start": "concurrently \"npm run dev\" \"npm run backend\" \"wait-on http://localhost:5173 && npm run electron\""
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "backend": "cd backend && node server.js",
+  "electron": "electron .",
+  "start": "concurrently \"npm run dev\" \"npm run backend\" \"wait-on http://localhost:5173 && npm run electron\""
+},
   "dependencies": {
     "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
