@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-const API = 'http://localhost:3001'
+const API = 'https://sistema-escola-api.onrender.com'
 
 export default function App() {
 
