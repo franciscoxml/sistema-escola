@@ -263,45 +263,6 @@ async function cadastrarUsuario() {
 
   }
 
-  // =====================================
-  // IMPRIMIR
-  // =====================================
-
-  async function imprimirArquivo(nomeArquivo) {
-
-    try {
-
-      await axios.post(
-
-        `${API}/imprimir/${nomeArquivo}`,
-
-        {
-
-          impressora:
-          impressoraSelecionada
-
-        }
-
-      )
-
-      alert(
-        'Imprimindo...'
-      )
-
-      carregarArquivos()
-
-    } catch (erro) {
-
-      console.log(erro)
-
-      alert(
-        'Erro ao imprimir'
-      )
-
-    }
-
-  }
-
 // =====================================
 // EXCLUIR ARQUIVO
 // =====================================
@@ -1269,11 +1230,15 @@ if (!logado) {
 
                       onClick={() =>
 
-                        imprimirArquivo(
-                          item.nome
-                        )
+  window.open(
 
-                      }
+    `${API}/uploads/${item.nome}`,
+
+    '_blank'
+
+  )
+
+}
 
                       style={{
 
