@@ -1038,7 +1038,6 @@ if (!logado) {
               <th>Arquivo</th>
               <th>Data</th>
               <th>Status</th>
-              <th>PDF</th>
               <th>Imprimir</th>
               <th>Excluir</th>
 
@@ -1124,9 +1123,9 @@ if (!logado) {
 
                           ? '#2563eb'
 
-                          : item.status === 'Erro'
+                          : item.status === 'Disponível'
 
-                          ? '#dc2626'
+                          ? '#2563eb'
 
                           : '#f59e0b'
 
@@ -1137,41 +1136,6 @@ if (!logado) {
                       {item.status}
 
                     </span>
-
-                  </td>
-
-                  <td>
-
-                    <button
-
-                      onClick={() =>
-
-                        window.open(
-
-`${API}/uploads/${item.nome}`,
-
-'_blank'
-
-                        )
-
-                      }
-
-                      style={{
-
-                        padding: 8,
-                        background: '#2563eb',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: 8,
-                        cursor: 'pointer'
-
-                      }}
-
-                    >
-
-                      Abrir PDF
-
-                    </button>
 
                   </td>
 
