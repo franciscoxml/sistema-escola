@@ -475,7 +475,9 @@ boxShadow:
 
             marginTop: 20,
 
-            borderRadius: 10
+            borderRadius: 14
+border: '1px solid #cbd5e1',
+fontSize: 16
 
           }}
 
@@ -505,7 +507,10 @@ boxShadow:
 
             marginTop: 20,
 
-            borderRadius: 10
+            borderRadius: 14
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
           }}
 
@@ -523,13 +528,21 @@ boxShadow:
 
             marginTop: 20,
 
-            background: '#2563eb',
+            background:
+'linear-gradient(135deg,#2563eb,#1d4ed8)',
 
             color: '#fff',
 
             border: 'none',
 
-            borderRadius: 10
+            borderRadius: 14
+
+border: '1px solid #cbd5e1',
+fontSize: 16
+
+transition: '0.3s',
+boxShadow:
+'0 8px 20px rgba(37,99,235,0.3)'
 
           }}
 
@@ -553,7 +566,8 @@ boxShadow:
 
     display: 'flex',
     minHeight: '100vh',
-    background: '#e2e8f0'
+    background:
+'linear-gradient(135deg,#f1f5f9,#cbd5e1)'
 
   }}>
 
@@ -565,7 +579,7 @@ boxShadow:
       background:
 'linear-gradient(135deg,#0f172a,#1e293b)',
       color: '#fff',
-      padding: 25
+      padding: 35
 
     }}>
 
@@ -613,9 +627,16 @@ boxShadow:
           background: '#dc2626',
           color: '#fff',
           border: 'none',
-          borderRadius: 10,
+          borderRadius: 14,
           cursor: 'pointer',
           fontWeight: 'bold'
+
+transition: '0.3s',
+boxShadow:
+'0 8px 20px rgba(37,99,235,0.3)'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
         }}
 
@@ -642,14 +663,19 @@ boxShadow:
         style={{
           background: '#0f172a',
           color: '#fff',
-          padding: 25,
+          padding: 35,
           borderRadius: 28,
 
 boxShadow:
 '0 10px 30px rgba(0,0,0,0.15)',
          
  marginBottom: 30
-        }}
+
+transition: '0.3s',
+boxShadow:
+'0 8px 20px rgba(37,99,235,0.3)'
+        
+}}
       >
 
         <h1 style={{
@@ -658,6 +684,7 @@ boxShadow:
   marginBottom: 10,
   fontWeight: '800',
   letterSpacing: -1
+  textTransform: 'uppercase'
 
 }}>
 
@@ -712,9 +739,16 @@ boxShadow:
     background: '#dc2626',
     color: '#fff',
     border: 'none',
-    borderRadius: 10,
+    borderRadius: 14,
     cursor: 'pointer',
     fontWeight: 'bold'
+
+transition: '0.3s',
+boxShadow:
+'0 8px 20px rgba(37,99,235,0.3)'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
   }}
 
@@ -737,6 +771,10 @@ boxShadow:
   marginBottom: 30,
   flexWrap: 'wrap'
 
+transition: '0.3s',
+boxShadow:
+'0 8px 20px rgba(37,99,235,0.3)'
+
 }}>
 
   {/* CARD TOTAL */}
@@ -745,13 +783,11 @@ boxShadow:
 
     flex: 1,
     minWidth: 220,
-    background: '#2563eb',
+    background:
+'linear-gradient(135deg,#2563eb,#1d4ed8)',
     color: '#fff',
-    padding: 25,
+    padding: 35,
     borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
 
   }}>
 
@@ -777,7 +813,7 @@ boxShadow:
     minWidth: 220,
     background: '#16a34a',
     color: '#fff',
-    padding: 25,
+    padding: 35,
     borderRadius: 28,
 
 boxShadow:
@@ -817,7 +853,7 @@ boxShadow:
     minWidth: 220,
     background: '#f59e0b',
     color: '#fff',
-    padding: 25,
+    padding: 35,
     borderRadius: 28,
 
 boxShadow:
@@ -855,7 +891,7 @@ boxShadow:
 <div style={{
 
   background: '#fff',
-  padding: 20,
+  padding: 30,
   borderRadius: 28,
 
 boxShadow:
@@ -900,12 +936,16 @@ boxShadow:
       width: '100%',
       padding: 14,
       marginTop: 20,
-      background: '#2563eb',
+      background:
+'linear-gradient(135deg,#2563eb,#1d4ed8)',
       color: '#fff',
       border: 'none',
-      borderRadius: 10,
+      borderRadius: 14,
       cursor: 'pointer',
       fontWeight: 'bold'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
     }}
 
@@ -922,7 +962,7 @@ boxShadow:
       <div
         style={{
           background: '#fff',
-          padding: 20,
+          padding: 30,
           borderRadius: 28,
 
 boxShadow:
@@ -997,8 +1037,10 @@ boxShadow:
     padding: 12,
     marginTop: 15,
     marginBottom: 20,
-    borderRadius: 10,
+    borderRadius: 14,
     border: '1px solid #cbd5e1'
+border: '1px solid #cbd5e1',
+fontSize: 16
 
   }}
 
@@ -1024,8 +1066,11 @@ boxShadow:
     padding: 12,
     marginTop: 15,
     marginBottom: 20,
-    borderRadius: 10,
+    borderRadius: 14,
     border: '1px solid #cbd5e1'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
   }}
 
@@ -1081,6 +1126,12 @@ boxShadow:
           width="100%"
           cellPadding="12"
         >
+
+style={{
+
+  borderCollapse: 'collapse'
+
+}}
 
           <thead>
 
@@ -1159,12 +1210,15 @@ boxShadow:
                         padding:
                         '6px 12px',
 
-                        borderRadius: 10,
+                        borderRadius: 14,
 
                         color: '#fff',
 
                         fontWeight:
                         'bold',
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
                         background:
 
@@ -1316,6 +1370,12 @@ boxShadow:
 
                 </table>
 
+style={{
+
+  borderCollapse: 'collapse'
+
+}}
+
       </div>
 
 {
@@ -1325,7 +1385,7 @@ dadosUsuario?.tipo === 'Coordenador' && (
       <div style={{
 
         background: '#fff',
-        padding: 20,
+        padding: 30,
         borderRadius: 28,
 
 boxShadow:
@@ -1360,8 +1420,11 @@ boxShadow:
             width: '100%',
             padding: 12,
             marginTop: 15,
-            borderRadius: 10,
+            borderRadius: 14,
             border: '1px solid #cbd5e1'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
           }}
 
@@ -1388,8 +1451,11 @@ boxShadow:
             width: '100%',
             padding: 12,
             marginTop: 15,
-            borderRadius: 10,
+            borderRadius: 14,
             border: '1px solid #cbd5e1'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
           }}
 
@@ -1412,7 +1478,10 @@ boxShadow:
             width: '100%',
             padding: 12,
             marginTop: 15,
-            borderRadius: 10
+            borderRadius: 14
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
           }}
 
@@ -1444,9 +1513,12 @@ boxShadow:
             background: '#16a34a',
             color: '#fff',
             border: 'none',
-            borderRadius: 10,
+            borderRadius: 14,
             cursor: 'pointer',
             fontWeight: 'bold'
+
+border: '1px solid #cbd5e1',
+fontSize: 16
 
           }}
 
