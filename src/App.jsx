@@ -143,7 +143,7 @@ async function cadastrarUsuario() {
     const resposta =
     await axios.post(
 
-      'http://localhost:3001/usuarios',
+  'https://sistema-escola-api.onrender.com/usuarios',
 
       {
 
@@ -202,15 +202,15 @@ async function cadastrarUsuario() {
 
     }
 
-    if (!usuario) {
+    if (!dadosUsuario?.usuario) {
 
-      alert(
-        'Digite o nome do professor'
-      )
+  alert(
+    'Usuário inválido'
+  )
 
-      return
+  return
 
-    }
+}
 
     try {
 
@@ -438,7 +438,10 @@ if (!logado) {
 
         padding: 40,
 
-        borderRadius: 20,
+        borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
 
         width: 350
 
@@ -559,7 +562,8 @@ if (!logado) {
     <div style={{
 
       width: 250,
-      background: '#0f172a',
+      background:
+'linear-gradient(135deg,#0f172a,#1e293b)',
       color: '#fff',
       padding: 25
 
@@ -639,32 +643,63 @@ if (!logado) {
           background: '#0f172a',
           color: '#fff',
           padding: 25,
-          borderRadius: 20,
-          marginBottom: 30
+          borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
+         
+ marginBottom: 30
         }}
       >
 
-        <h1>
-          Controle de Impressões
-        </h1>
+        <h1 style={{
 
-<p>
+  fontSize: 42,
+  marginBottom: 10,
+  fontWeight: '800',
+  letterSpacing: -1
 
-  Usuário:
-  {dadosUsuario?.usuario}
+}}>
+
+  Controle de Impressões
+
+</h1>
+
+<p style={{
+
+  fontSize: 18,
+  opacity: 0.9,
+  marginTop: 5
+
+}}>
+
+  👤 {dadosUsuario?.usuario}
 
 </p>
 
-<p>
+<p style={{
 
-  Tipo:
-  {dadosUsuario?.tipo}
+  fontSize: 18,
+  opacity: 0.9
+
+}}>
+
+  🔐 {dadosUsuario?.tipo}
 
 </p>
 
-        <p>
-          Escola Argentina Santos da Silva
-        </p>
+        <p style={{
+
+  marginTop: 10,
+  fontSize: 20,
+  fontWeight: '600',
+  color: '#cbd5e1'
+
+}}>
+
+  Escola Argentina Santos da Silva
+
+</p>
 
 <button
 
@@ -713,7 +748,10 @@ if (!logado) {
     background: '#2563eb',
     color: '#fff',
     padding: 25,
-    borderRadius: 20
+    borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
 
   }}>
 
@@ -740,7 +778,11 @@ if (!logado) {
     background: '#16a34a',
     color: '#fff',
     padding: 25,
-    borderRadius: 20
+    borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
+
 
   }}>
 
@@ -776,7 +818,10 @@ if (!logado) {
     background: '#f59e0b',
     color: '#fff',
     padding: 25,
-    borderRadius: 20
+    borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
 
   }}>
 
@@ -811,7 +856,11 @@ if (!logado) {
 
   background: '#fff',
   padding: 20,
-  borderRadius: 20,
+  borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
+
   marginBottom: 30
 
 }}>
@@ -874,7 +923,11 @@ if (!logado) {
         style={{
           background: '#fff',
           padding: 20,
-          borderRadius: 20
+          borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
+
         }}
       >
 
@@ -1273,7 +1326,11 @@ dadosUsuario?.tipo === 'Coordenador' && (
 
         background: '#fff',
         padding: 20,
-        borderRadius: 20,
+        borderRadius: 28,
+
+boxShadow:
+'0 10px 30px rgba(0,0,0,0.15)',
+
         marginTop: 30
 
       }}>
