@@ -475,7 +475,7 @@ boxShadow:
 
             marginTop: 20,
 
-            borderRadius: 14
+            borderRadius: 14,
 border: '1px solid #cbd5e1',
 fontSize: 16
 
@@ -507,7 +507,7 @@ fontSize: 16
 
             marginTop: 20,
 
-            borderRadius: 14
+            borderRadius: 14,
 
 border: '1px solid #cbd5e1',
 fontSize: 16
@@ -535,7 +535,7 @@ fontSize: 16
 
             border: 'none',
 
-            borderRadius: 14
+            borderRadius: 14,
 
 border: '1px solid #cbd5e1',
 fontSize: 16
@@ -629,7 +629,7 @@ boxShadow:
           border: 'none',
           borderRadius: 14,
           cursor: 'pointer',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
 
 transition: '0.3s',
 boxShadow:
@@ -665,11 +665,8 @@ fontSize: 16
           color: '#fff',
           padding: 35,
           borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
          
- marginBottom: 30
+ marginBottom: 30,
 
 transition: '0.3s',
 boxShadow:
@@ -683,7 +680,7 @@ boxShadow:
   fontSize: 42,
   marginBottom: 10,
   fontWeight: '800',
-  letterSpacing: -1
+  letterSpacing: -1,
   textTransform: 'uppercase'
 
 }}>
@@ -741,7 +738,7 @@ boxShadow:
     border: 'none',
     borderRadius: 14,
     cursor: 'pointer',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
 
 transition: '0.3s',
 boxShadow:
@@ -897,7 +894,7 @@ boxShadow:
 boxShadow:
 '0 10px 30px rgba(0,0,0,0.15)',
 
-  marginBottom: 30
+  marginBottom: 30,
 
 }}>
 
@@ -942,7 +939,7 @@ boxShadow:
       border: 'none',
       borderRadius: 14,
       cursor: 'pointer',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
 
 border: '1px solid #cbd5e1',
 fontSize: 16
@@ -979,7 +976,7 @@ boxShadow:
 
   marginBottom: 20,
   color: '#475569',
-  fontWeight: 'bold'
+  fontWeight: 'bold',
 
 }}>
 
@@ -1038,9 +1035,8 @@ boxShadow:
     marginTop: 15,
     marginBottom: 20,
     borderRadius: 14,
-    border: '1px solid #cbd5e1'
-border: '1px solid #cbd5e1',
-fontSize: 16
+    border: '1px solid #cbd5e1',
+    fontSize: 16
 
   }}
 
@@ -1080,7 +1076,7 @@ fontSize: 16
 
   marginBottom: 20,
   color: '#475569',
-  fontWeight: 'bold'
+  fontWeight: 'bold',
 
 }}>
 
@@ -1123,15 +1119,12 @@ fontSize: 16
 </p>
 
         <table
-          width="100%"
-          cellPadding="12"
-        >
-
-style={{
-
-  borderCollapse: 'collapse'
-
-}}
+  width="100%"
+  cellPadding="12"
+  style={{
+    borderCollapse: 'collapse'
+  }}
+>
 
           <thead>
 
@@ -1372,8 +1365,6 @@ fontSize: 16
 
 style={{
 
-  borderCollapse: 'collapse'
-
 }}
 
       </div>
@@ -1478,7 +1469,7 @@ fontSize: 16
             width: '100%',
             padding: 12,
             marginTop: 15,
-            borderRadius: 14
+            borderRadius: 14,
 
 border: '1px solid #cbd5e1',
 fontSize: 16
@@ -1515,7 +1506,7 @@ fontSize: 16
             border: 'none',
             borderRadius: 14,
             cursor: 'pointer',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
 
 border: '1px solid #cbd5e1',
 fontSize: 16
