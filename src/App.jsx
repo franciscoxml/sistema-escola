@@ -1,7 +1,53 @@
+// =====================================
+// IMPORTS
+// =====================================
+
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 
+// =====================================
+// API
+// =====================================
+
 const API = 'https://sistema-escola-api.onrender.com'
+
+// =====================================
+// ESTILOS
+// =====================================
+
+const cardStyle = {
+  background: '#fff',
+  borderRadius: 28,
+  padding: 30,
+  boxShadow: '0 10px 30px rgba(0,0,0,0.10)'
+}
+
+const inputStyle = {
+  width: '100%',
+  padding: 14,
+  marginTop: 15,
+  borderRadius: 14,
+  border: '1px solid #cbd5e1',
+  fontSize: 16,
+  outline: 'none',
+  boxSizing: 'border-box'
+}
+
+const buttonStyle = {
+  padding: 14,
+  background: 'linear-gradient(135deg,#2563eb,#1d4ed8)',
+  color: '#fff',
+  border: 'none',
+  borderRadius: 14,
+  cursor: 'pointer',
+  fontWeight: 'bold',
+  fontSize: 16,
+  transition: '0.3s'
+}
+
+// =====================================
+// APP
+// =====================================
 
 export default function App() {
 
@@ -9,60 +55,86 @@ export default function App() {
   // STATES
   // =====================================
 
-  const [arquivo, setArquivo] =
-  useState(null)
+  const [arquivo, setArquivo] = useState(null)
 
-  const [usuario, setUsuario] =
-  useState('')
+  const [usuario, setUsuario] = useState('')
 
-  const [senha, setSenha] =
-  useState('')
+  const [senha, setSenha] = useState('')
 
-  const [logado, setLogado] =
-  useState(false)
+  const [logado, setLogado] = useState(false)
 
-  const [dadosUsuario, setDadosUsuario] =
-  useState(null)
+  const [dadosUsuario, setDadosUsuario] = useState(null)
 
-  const [arquivos, setArquivos] =
-  useState([])
+  const [arquivos, setArquivos] = useState([])
 
-  const [busca, setBusca] =
-  useState('')
+  const [busca, setBusca] = useState('')
 
-  const [pesquisa, setPesquisa] =
-  useState('')
+  const [impressoras, setImpressoras] = useState([])
 
-  const [impressoras, setImpressoras] =
-  useState([])
-
-  const [
-    impressoraSelecionada,
-    setImpressoraSelecionada
-  ] = useState('')
+  const [impressoraSelecionada, setImpressoraSelecionada] =
+    useState('')
 
   const [novoUsuario, setNovoUsuario] = useState('')
-  
+
   const [novaSenha, setNovaSenha] = useState('')
-  
+
   const [tipoCadastro, setTipoCadastro] =
-useState('Professor')
+    useState('Professor')
 
-// =====================================
-// LOGOUT
-// =====================================
+  // =====================================
+  // LOGOUT
+  // =====================================
 
-function sair() {
+  function sair() {
 
-  setLogado(false)
+    setLogado(false)
+    setDadosUsuario(null)
+    setUsuario('')
+    setSenha('')
 
-  setDadosUsuario(null)
+  }
 
-  setUsuario('')
+  // =====================================
+  // LOGIN
+  // =====================================
 
-  setSenha('')
+  async function fazerLogin() {
 
-}
+    try {
+
+      const resposta = await axios.post(
+        `${API}/login`,
+        {
+          usuario,
+          senha
+        }
+      )
+
+      if (resposta.data.sucesso) {
+
+        setLogado(true)
+
+        setDadosUsuario(
+          resposta.data.usuario
+        )
+
+        alert('Login realizado')
+
+      } else {
+
+        alert('Usuário inválido')
+
+      }
+
+    } catch (erro) {
+
+      console.log(erro)
+
+      alert('Erro no login')
+
+    }
+
+  }
 
   // =====================================
   // CARREGAR ARQUIVOS
@@ -70,59 +142,19 @@ function sair() {
 
   async function carregarArquivos() {
 
-  try {
-
-    const resposta =
-    await axios.get(
-
-      `${API}/arquivos`,
-
-      {
-
-        params: {
-
-          usuario:
-          dadosUsuario?.usuario,
-
-          tipo:
-          dadosUsuario?.tipo
-
-        }
-
-      }
-
-    )
-
-    setArquivos(
-      resposta.data
-    )
-
-  } catch (erro) {
-
-    console.log(erro)
-
-  }
-
-}
-
-  // =====================================
-  // CARREGAR IMPRESSORAS
-  // =====================================
-
-  async function carregarImpressoras() {
-
     try {
 
-      const resposta =
-      await axios.get(
-
-        `${API}/impressoras`
-
+      const resposta = await axios.get(
+        `${API}/arquivos`,
+        {
+          params: {
+            usuario: dadosUsuario?.usuario,
+            tipo: dadosUsuario?.tipo
+          }
+        }
       )
 
-      setImpressoras(
-        resposta.data
-      )
+      setArquivos(resposta.data)
 
     } catch (erro) {
 
@@ -132,59 +164,27 @@ function sair() {
 
   }
 
-// =====================================
-// CADASTRAR USUÁRIO
-// =====================================
+  // =====================================
+  // CARREGAR IMPRESSORAS
+  // =====================================
 
-async function cadastrarUsuario() {
+  async function carregarImpressoras() {
 
-  try {
+    try {
 
-    const resposta =
-    await axios.post(
-
-  'https://sistema-escola-api.onrender.com/usuarios',
-
-      {
-
-        usuario: novoUsuario,
-
-        senha: novaSenha,
-
-        tipo: tipoCadastro
-
-      }
-
-    )
-
-    if (resposta.data.sucesso) {
-
-      alert(
-        'Usuário cadastrado'
+      const resposta = await axios.get(
+        `${API}/impressoras`
       )
 
-      setNovoUsuario('')
-      setNovaSenha('')
+      setImpressoras(resposta.data)
 
-    } else {
+    } catch (erro) {
 
-      alert(
-        resposta.data.erro
-      )
+      console.log(erro)
 
     }
 
-  } catch (erro) {
-
-    console.log(erro)
-
-    alert(
-      'Erro ao cadastrar'
-    )
-
   }
-
-}
 
   // =====================================
   // ENVIAR ARQUIVO
@@ -194,56 +194,30 @@ async function cadastrarUsuario() {
 
     if (!arquivo) {
 
-      alert(
-        'Selecione um arquivo'
-      )
-
+      alert('Selecione um arquivo')
       return
 
     }
 
-    if (!dadosUsuario?.usuario) {
-
-  alert(
-    'Usuário inválido'
-  )
-
-  return
-
-}
-
     try {
 
-      const formData =
-      new FormData()
+      const formData = new FormData()
+
+      formData.append('arquivo', arquivo)
 
       formData.append(
-        'arquivo',
-        arquivo
+        'usuario',
+        dadosUsuario.usuario
       )
 
-      formData.append(
-
-  'usuario',
-
-  dadosUsuario.usuario
-
-)
-
-      const resposta =
-      await axios.post(
-
+      const resposta = await axios.post(
         `${API}/upload`,
-
         formData
-
       )
 
       if (resposta.data.sucesso) {
 
-        alert(
-          'Arquivo enviado'
-        )
+        alert('Arquivo enviado')
 
         setArquivo(null)
 
@@ -255,1279 +229,758 @@ async function cadastrarUsuario() {
 
       console.log(erro)
 
-      alert(
-        'Erro ao enviar'
-      )
+      alert('Erro ao enviar')
 
     }
 
   }
-
-// =====================================
-// EXCLUIR ARQUIVO
-// =====================================
-
-async function excluirArquivo(id) {
-
-  const confirmar = window.confirm(
-
-    'Deseja excluir este arquivo?'
-
-  )
-
-  if (!confirmar) {
-
-    return
-
-  }
-
-  try {
-
-    const resposta =
-    await axios.delete(
-
-      `${API}/arquivos/${id}`
-
-    )
-
-    if (resposta.data.sucesso) {
-
-      alert(
-        'Arquivo excluído'
-      )
-
-      carregarArquivos()
-
-    }
-
-  } catch (erro) {
-
-    console.log(erro)
-
-    alert(
-      'Erro ao excluir'
-    )
-
-  }
-
-}
 
   // =====================================
-  // INICIAR
+  // EXCLUIR
+  // =====================================
+
+  async function excluirArquivo(id) {
+
+    const confirmar = window.confirm(
+      'Deseja excluir este arquivo?'
+    )
+
+    if (!confirmar) return
+
+    try {
+
+      const resposta = await axios.delete(
+        `${API}/arquivos/${id}`
+      )
+
+      if (resposta.data.sucesso) {
+
+        alert('Arquivo excluído')
+
+        carregarArquivos()
+
+      }
+
+    } catch (erro) {
+
+      console.log(erro)
+
+      alert('Erro ao excluir')
+
+    }
+
+  }
+
+  // =====================================
+  // CADASTRAR USUÁRIO
+  // =====================================
+
+  async function cadastrarUsuario() {
+
+    try {
+
+      const resposta = await axios.post(
+        `${API}/usuarios`,
+        {
+          usuario: novoUsuario,
+          senha: novaSenha,
+          tipo: tipoCadastro
+        }
+      )
+
+      if (resposta.data.sucesso) {
+
+        alert('Usuário cadastrado')
+
+        setNovoUsuario('')
+        setNovaSenha('')
+
+      } else {
+
+        alert(resposta.data.erro)
+
+      }
+
+    } catch (erro) {
+
+      console.log(erro)
+
+      alert('Erro ao cadastrar')
+
+    }
+
+  }
+
+  // =====================================
+  // USE EFFECT
   // =====================================
 
   useEffect(() => {
 
-  if (logado) {
-
-    carregarArquivos()
-
-    carregarImpressoras()
-
-  }
-
-}, [logado])
-
-// =====================================
-// LOGIN
-// =====================================
-
-async function fazerLogin() {
-
-  try {
-
-    const resposta =
-    await axios.post(
-
-      `${API}/login`,
-
-      {
-
-        usuario,
-        senha
-
-      }
-
-    )
-
-    if (resposta.data.sucesso) {
-
-      setLogado(true)
-
-      setDadosUsuario(
-        resposta.data.usuario
-      )
+    if (logado && dadosUsuario) {
 
       carregarArquivos()
-
-      alert('Login realizado')
-
-    } else {
-
-      alert(
-        'Usuário inválido'
-      )
+      carregarImpressoras()
 
     }
 
-  } catch (erro) {
+  }, [logado, dadosUsuario])
 
-    console.log(erro)
+  // =====================================
+  // FILTRO
+  // =====================================
 
-    alert(
-      'Erro no login'
+  const arquivosFiltrados = arquivos.filter((item) => {
+
+    return (
+
+      item.usuario
+        .toLowerCase()
+        .includes(busca.toLowerCase())
+
+      ||
+
+      item.nome
+        .toLowerCase()
+        .includes(busca.toLowerCase())
+
+      ||
+
+      item.status
+        .toLowerCase()
+        .includes(busca.toLowerCase())
+
+    )
+
+  })
+
+  // =====================================
+  // LOGIN SCREEN
+  // =====================================
+
+  if (!logado) {
+
+    return (
+
+      <div style={{
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background:
+          'linear-gradient(135deg,#0f172a,#1e293b)'
+      }}>
+
+        <div style={{
+          ...cardStyle,
+          width: 380
+        }}>
+
+          <h1 style={{
+            textAlign: 'center',
+            marginBottom: 30
+          }}>
+            Controle Escolar
+          </h1>
+
+          <input
+            placeholder="Usuário"
+            value={usuario}
+            onChange={(e) =>
+              setUsuario(e.target.value)
+            }
+            style={inputStyle}
+          />
+
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) =>
+              setSenha(e.target.value)
+            }
+            style={inputStyle}
+          />
+
+          <button
+            onClick={fazerLogin}
+            style={{
+              ...buttonStyle,
+              width: '100%',
+              marginTop: 20
+            }}
+          >
+            Entrar
+          </button>
+
+        </div>
+
+      </div>
+
     )
 
   }
 
-}
-
-// =====================================
-// FILTRAR ARQUIVOS
-// =====================================
-
-const arquivosFiltrados =
-
-arquivos.filter((item) => {
-
-  return (
-
-    item.usuario
-    .toLowerCase()
-    .includes(
-      pesquisa.toLowerCase()
-    )
-
-    ||
-
-    item.nome
-    .toLowerCase()
-    .includes(
-      pesquisa.toLowerCase()
-    )
-
-  )
-
-})
-
   // =====================================
-  // TELA
+  // SISTEMA
   // =====================================
-
-if (!logado) {
 
   return (
 
     <div style={{
-
-      height: '100vh',
-
       display: 'flex',
-
-      justifyContent: 'center',
-
-      alignItems: 'center',
-
-      background: '#0f172a'
-
+      minHeight: '100vh',
+      background:
+        'linear-gradient(135deg,#f1f5f9,#cbd5e1)'
     }}>
 
+      {/* MENU */}
+
       <div style={{
-
-        background: '#fff',
-
-        padding: 40,
-
-        borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
-
-        width: 350
-
+        width: 260,
+        background:
+          'linear-gradient(135deg,#0f172a,#1e293b)',
+        color: '#fff',
+        padding: 30
       }}>
 
-        <h1>
+        <h2>ESCOLA</h2>
 
-          Login
+        <p>
+          Argentina Santos da Silva
+        </p>
 
-        </h1>
+        <hr style={{
+          marginTop: 20,
+          marginBottom: 20,
+          borderColor: '#334155'
+        }} />
 
-        <input
+        <p>
+          👤 {dadosUsuario?.usuario}
+        </p>
 
-          placeholder="Usuário"
-
-          value={usuario}
-
-          onChange={(e) =>
-
-            setUsuario(
-              e.target.value
-            )
-
-          }
-
-          style={{
-
-            width: '100%',
-
-            padding: 12,
-
-            marginTop: 20,
-
-            borderRadius: 14,
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-          }}
-
-        />
-
-        <input
-
-          type="password"
-
-          placeholder="Senha"
-
-          value={senha}
-
-          onChange={(e) =>
-
-            setSenha(
-              e.target.value
-            )
-
-          }
-
-          style={{
-
-            width: '100%',
-
-            padding: 12,
-
-            marginTop: 20,
-
-            borderRadius: 14,
-
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-          }}
-
-        />
+        <p>
+          🔐 {dadosUsuario?.tipo}
+        </p>
 
         <button
-
-          onClick={fazerLogin}
-
+          onClick={sair}
           style={{
-
+            ...buttonStyle,
             width: '100%',
-
-            padding: 14,
-
             marginTop: 20,
-
-            background:
-'linear-gradient(135deg,#2563eb,#1d4ed8)',
-
-            color: '#fff',
-
-            border: 'none',
-
-            borderRadius: 14,
-
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-transition: '0.3s',
-boxShadow:
-'0 8px 20px rgba(37,99,235,0.3)'
-
+            background: '#dc2626'
           }}
-
         >
-
-          Entrar
-
+          Sair
         </button>
 
       </div>
 
-    </div>
+      {/* CONTEÚDO */}
 
-  )
+      <div style={{
+        flex: 1,
+        padding: 30
+      }}>
 
-}
+        {/* TOPO */}
 
-  return (
-
-  <div style={{
-
-    display: 'flex',
-    minHeight: '100vh',
-    background:
-'linear-gradient(135deg,#f1f5f9,#cbd5e1)'
-
-  }}>
-
-    {/* MENU LATERAL */}
-
-    <div style={{
-
-      width: 250,
-      background:
-'linear-gradient(135deg,#0f172a,#1e293b)',
-      color: '#fff',
-      padding: 35
-
-    }}>
-
-      <h2>
-
-        ESCOLA
-
-      </h2>
-
-      <p>
-
-        Argentina Santos da Silva
-
-      </p>
-
-      <hr style={{
-
-        marginTop: 20,
-        marginBottom: 20,
-        borderColor: '#334155'
-
-      }} />
-
-      <p>
-
-        👤 {dadosUsuario?.usuario}
-
-      </p>
-
-      <p>
-
-        🔐 {dadosUsuario?.tipo}
-
-      </p>
-
-      <button
-
-        onClick={sair}
-
-        style={{
-
-          width: '100%',
-          padding: 12,
-          marginTop: 30,
-          background: '#dc2626',
-          color: '#fff',
-          border: 'none',
-          borderRadius: 14,
-          cursor: 'pointer',
-          fontWeight: 'bold',
-
-transition: '0.3s',
-boxShadow:
-'0 8px 20px rgba(37,99,235,0.3)'
-
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-        }}
-
-      >
-
-        Sair
-
-      </button>
-
-    </div>
-
-    {/* CONTEÚDO */}
-
-    <div style={{
-
-      flex: 1,
-      padding: 30
-
-    }}>
-
-      {/* TOPO */}
-
-      <div
-        style={{
-          background: '#0f172a',
+        <div style={{
+          background:
+            'linear-gradient(135deg,#0f172a,#1e293b)',
           color: '#fff',
           padding: 35,
           borderRadius: 28,
-         
- marginBottom: 30,
+          marginBottom: 30
+        }}>
 
-transition: '0.3s',
-boxShadow:
-'0 8px 20px rgba(37,99,235,0.3)'
-        
-}}
-      >
+          <h1 style={{
+            fontSize: 42,
+            fontWeight: '800'
+          }}>
+            Controle de Impressões
+          </h1>
 
-        <h1 style={{
+          <p>
+            Escola Argentina Santos da Silva
+          </p>
 
-  fontSize: 42,
-  marginBottom: 10,
-  fontWeight: '800',
-  letterSpacing: -1,
-  textTransform: 'uppercase'
+        </div>
 
-}}>
+        {/* DASHBOARD */}
 
-  Controle de Impressões
+        <div style={{
+          display: 'flex',
+          gap: 20,
+          flexWrap: 'wrap',
+          marginBottom: 30
+        }}>
 
-</h1>
+          <div style={{
+            flex: 1,
+            minWidth: 220,
+            background:
+              'linear-gradient(135deg,#2563eb,#1d4ed8)',
+            color: '#fff',
+            padding: 30,
+            borderRadius: 28
+          }}>
 
-<p style={{
+            <h3>Total</h3>
 
-  fontSize: 18,
-  opacity: 0.9,
-  marginTop: 5
+            <h1>
+              {arquivos.length}
+            </h1>
 
-}}>
+          </div>
 
-  👤 {dadosUsuario?.usuario}
+          <div style={{
+            flex: 1,
+            minWidth: 220,
+            background:
+              'linear-gradient(135deg,#16a34a,#15803d)',
+            color: '#fff',
+            padding: 30,
+            borderRadius: 28
+          }}>
 
-</p>
+            <h3>Impressos</h3>
 
-<p style={{
+            <h1>
+              {
+                arquivos.filter(
+                  item =>
+                    item.status === 'Impresso'
+                ).length
+              }
+            </h1>
 
-  fontSize: 18,
-  opacity: 0.9
+          </div>
 
-}}>
+          <div style={{
+            flex: 1,
+            minWidth: 220,
+            background:
+              'linear-gradient(135deg,#f59e0b,#d97706)',
+            color: '#fff',
+            padding: 30,
+            borderRadius: 28
+          }}>
 
-  🔐 {dadosUsuario?.tipo}
+            <h3>Pendentes</h3>
 
-</p>
+            <h1>
+              {
+                arquivos.filter(
+                  item =>
+                    item.status === 'Pendente'
+                ).length
+              }
+            </h1>
 
-        <p style={{
+          </div>
 
-  marginTop: 10,
-  fontSize: 20,
-  fontWeight: '600',
-  color: '#cbd5e1'
+        </div>
 
-}}>
+        {/* ENVIAR */}
 
-  Escola Argentina Santos da Silva
+        <div style={cardStyle}>
 
-</p>
+          <h2>
+            Enviar Documento
+          </h2>
 
-<button
+          <input
+            type="file"
+            onChange={(e) =>
+              setArquivo(
+                e.target.files[0]
+              )
+            }
+            style={{
+              marginTop: 20
+            }}
+          />
 
-  onClick={sair}
-
-  style={{
-
-    marginTop: 15,
-    padding: '10px 20px',
-    background: '#dc2626',
-    color: '#fff',
-    border: 'none',
-    borderRadius: 14,
-    cursor: 'pointer',
-    fontWeight: 'bold',
-
-transition: '0.3s',
-boxShadow:
-'0 8px 20px rgba(37,99,235,0.3)'
-
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-  }}
-
->
-
-  Sair do Sistema
-
-</button>
-
-      </div>
-
-      {/* ENVIAR */}
-
-{/* DASHBOARD */}
+          <button
+            onClick={enviarArquivo}
+            style={{
+              ...buttonStyle,
+              width: '100%',
+              marginTop: 20
+            }}
+          >
+            {/* HISTÓRICO */}
 
 <div style={{
-
-  display: 'flex',
-  gap: 20,
-  marginBottom: 30,
-  flexWrap: 'wrap'
-
-transition: '0.3s',
-boxShadow:
-'0 8px 20px rgba(37,99,235,0.3)'
-
-}}>
-
-  {/* CARD TOTAL */}
-
-  <div style={{
-
-    flex: 1,
-    minWidth: 220,
-    background:
-'linear-gradient(135deg,#2563eb,#1d4ed8)',
-    color: '#fff',
-    padding: 35,
-    borderRadius: 28,
-
-  }}>
-
-    <h3>
-
-      Total de Arquivos
-
-    </h3>
-
-    <h1>
-
-      {arquivos.length}
-
-    </h1>
-
-  </div>
-
-  {/* CARD IMPRESSOS */}
-
-  <div style={{
-
-    flex: 1,
-    minWidth: 220,
-    background: '#16a34a',
-    color: '#fff',
-    padding: 35,
-    borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
-
-
-  }}>
-
-    <h3>
-
-      Impressos
-
-    </h3>
-
-    <h1>
-
-      {
-
-        arquivos.filter(
-
-          item =>
-          item.status === 'Impresso'
-
-        ).length
-
-      }
-
-    </h1>
-
-  </div>
-
-  {/* CARD PENDENTES */}
-
-  <div style={{
-
-    flex: 1,
-    minWidth: 220,
-    background: '#f59e0b',
-    color: '#fff',
-    padding: 35,
-    borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
-
-  }}>
-
-    <h3>
-
-      Pendentes
-
-    </h3>
-
-    <h1>
-
-      {
-
-        arquivos.filter(
-
-          item =>
-          item.status === 'Pendente'
-
-        ).length
-
-      }
-
-    </h1>
-
-  </div>
-
-</div>
-
-      {/* ENVIAR */}
-
-<div style={{
-
-  background: '#fff',
-  padding: 30,
-  borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
-
-  marginBottom: 30,
-
+  ...cardStyle,
+  marginTop: 30
 }}>
 
   <h2>
-
-    Enviar Documento
-
+    Documentos Recebidos
   </h2>
 
   <input
 
-    type="file"
+    placeholder="🔎 Pesquisar documentos"
+
+    value={busca}
 
     onChange={(e) =>
 
-      setArquivo(
-        e.target.files[0]
-      )
+      setBusca(e.target.value)
 
     }
 
-    style={{
-
-      marginTop: 20
-
-    }}
+    style={inputStyle}
 
   />
 
-  <button
+  <p style={{
 
-    onClick={enviarArquivo}
+    marginBottom: 20,
+    color: '#475569',
+    fontWeight: 'bold'
+
+  }}>
+
+    {arquivosFiltrados.length}
+    {' '}documentos encontrados
+
+  </p>
+
+  <table
+
+    width="100%"
+
+    cellPadding="12"
 
     style={{
 
-      width: '100%',
-      padding: 14,
-      marginTop: 20,
-      background:
-'linear-gradient(135deg,#2563eb,#1d4ed8)',
-      color: '#fff',
-      border: 'none',
-      borderRadius: 14,
-      cursor: 'pointer',
-      fontWeight: 'bold',
-
-border: '1px solid #cbd5e1',
-fontSize: 16
+      borderCollapse: 'collapse'
 
     }}
 
   >
 
-    Enviar Documento
+    <thead>
 
-  </button>
+      <tr style={{
 
-</div>
-
-      {/* HISTÓRICO */}
-
-      <div
-        style={{
-          background: '#fff',
-          padding: 30,
-          borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
-
-        }}
-      >
-
-        <h2>
-          Documentos Recebidos
-        </h2>
-
-<p style={{
-
-  marginBottom: 20,
-  color: '#475569',
-  fontWeight: 'bold',
-
-}}>
-
-  {
-
-    arquivos.filter((item) =>
-
-      item.usuario
-      .toLowerCase()
-      .includes(
-        busca.toLowerCase()
-      )
-
-      ||
-
-      item.nome
-      .toLowerCase()
-      .includes(
-        busca.toLowerCase()
-      )
-
-      ||
-
-      item.status
-      .toLowerCase()
-      .includes(
-        busca.toLowerCase()
-      )
-
-    ).length
-
-  }
-
-  documentos encontrados
-
-</p>
-
-<input
-
-  placeholder="🔎 Pesquisar documentos"
-
-  value={busca}
-
-  onChange={(e) =>
-
-    setBusca(
-      e.target.value
-    )
-
-  }
-
-  style={{
-
-    width: '100%',
-    padding: 12,
-    marginTop: 15,
-    marginBottom: 20,
-    borderRadius: 14,
-    border: '1px solid #cbd5e1',
-    fontSize: 16
-
-  }}
-
-/>
-
-<input
-
-  placeholder="Pesquisar arquivo ou professor"
-
-  value={pesquisa}
-
-  onChange={(e) =>
-
-    setPesquisa(
-      e.target.value
-    )
-
-  }
-
-  style={{
-
-    width: '100%',
-    padding: 12,
-    marginTop: 15,
-    marginBottom: 20,
-    borderRadius: 14,
-    border: '1px solid #cbd5e1'
-
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-  }}
-
-/>
-
-<p style={{
-
-  marginBottom: 20,
-  color: '#475569',
-  fontWeight: 'bold',
-
-}}>
-
-  {
-
-    arquivos
-
-    .filter((item) =>
-
-      item.usuario
-      .toLowerCase()
-      .includes(
-        busca.toLowerCase()
-      )
-
-      ||
-
-      item.nome
-      .toLowerCase()
-      .includes(
-        busca.toLowerCase()
-      )
-
-      ||
-
-      item.status
-      .toLowerCase()
-      .includes(
-        busca.toLowerCase()
-      )
-
-    )
-
-    .length
-
-  }
-
-  {' '}documentos encontrados
-
-</p>
-
-        <table
-  width="100%"
-  cellPadding="12"
-  style={{
-    borderCollapse: 'collapse'
-  }}
->
-
-          <thead>
-
-            <tr>
-
-              <th>ID</th>
-              <th>Professor</th>
-              <th>Arquivo</th>
-              <th>Data</th>
-              <th>Status</th>
-              <th>Imprimir</th>
-              <th>Excluir</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {
-
-              arquivos
-
-.filter((item) =>
-
-  item.usuario
-  .toLowerCase()
-  .includes(
-    busca.toLowerCase()
-  )
-
-  ||
-
-  item.nome
-  .toLowerCase()
-  .includes(
-    busca.toLowerCase()
-  )
-
-  ||
-
-  item.status
-  .toLowerCase()
-  .includes(
-    busca.toLowerCase()
-  )
-
-)
-
-.map((item) => (
-
-                <tr key={item.id}>
-
-                  <td>
-                    {item.id}
-                  </td>
-
-                  <td>
-                    {item.usuario}
-                  </td>
-
-                  <td>
-                    {item.nome}
-                  </td>
-
-                  <td>
-                    {item.data}
-                  </td>
-
-                  <td>
-
-                    <span
-
-                      style={{
-
-                        padding:
-                        '6px 12px',
-
-                        borderRadius: 14,
-
-                        color: '#fff',
-
-                        fontWeight:
-                        'bold',
-
-border: '1px solid #cbd5e1',
-fontSize: 16
-
-                        background:
-
-                          item.status === 'Impresso'
-
-                          ? '#16a34a'
-
-                          : item.status === 'Imprimindo'
-
-                          ? '#2563eb'
-
-                          : item.status === 'Disponível'
-
-                          ? '#2563eb'
-
-                          : '#f59e0b'
-
-                      }}
-
-                    >
-
-                      {item.status}
-
-                    </span>
-
-                  </td>
-
-                  <td>
-
-                    <select
-
-                      value={
-                        impressoraSelecionada
-                      }
-
-                      onChange={(e) =>
-
-                        setImpressoraSelecionada(
-                          e.target.value
-                        )
-
-                      }
-
-                      style={{
-
-                        padding: 8,
-                        borderRadius: 8
-
-                      }}
-
-                    >
-
-                      <option value="">
-                        Impressora
-                      </option>
-
-                      {
-
-                        impressoras.map((imp, index) => (
-
-                          <option
-
-                            key={index}
-
-                            value={imp.name}
-
-                          >
-
-                            {imp.name}
-
-                          </option>
-
-                        ))
-
-                      }
-
-                    </select>
-
-                    <button
-
-                      onClick={() =>
-
-  window.open(
-
-    `${API}/uploads/${item.nome}`,
-
-    '_blank'
-
-  )
-
-}
-
-                      style={{
-
-                        marginLeft: 10,
-                        padding: 8,
-                        background: '#16a34a',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: 8,
-                        cursor: 'pointer'
-
-                      }}
-
-                    >
-
-                      🖨️ Imprimir
-
-                    </button>
-
-                  </td>
-
-<td>
-
-  <button
-
-    onClick={() =>
-
-      excluirArquivo(item.id)
-
-    }
-
-    style={{
-
-      padding: 8,
-      background: '#dc2626',
-      color: '#fff',
-      border: 'none',
-      borderRadius: 8,
-      cursor: 'pointer'
-
-    }}
-
-  >
-
-    Excluir
-
-  </button>
-
-</td>
-
-                </tr>
-
-              ))
-
-            }
-
-          </tbody>
-
-                </table>
-
-style={{
-
-}}
-
-      </div>
-
-{
-
-dadosUsuario?.tipo === 'Coordenador' && (
-
-      <div style={{
-
-        background: '#fff',
-        padding: 30,
-        borderRadius: 28,
-
-boxShadow:
-'0 10px 30px rgba(0,0,0,0.15)',
-
-        marginTop: 30
+        background: '#e2e8f0'
 
       }}>
 
-        <h2>
+        <th>ID</th>
+        <th>Professor</th>
+        <th>Arquivo</th>
+        <th>Data</th>
+        <th>Status</th>
+        <th>Imprimir</th>
+        <th>Excluir</th>
 
-          Cadastrar Usuário
+      </tr>
 
-        </h2>
+    </thead>
 
-        <input
+    <tbody>
 
-          placeholder="Usuário"
+      {
 
-          value={novoUsuario}
+        arquivosFiltrados.map((item) => (
 
-          onChange={(e) =>
+          <tr
 
-            setNovoUsuario(
-              e.target.value
-            )
+            key={item.id}
 
-          }
+            style={{
 
-          style={{
+              borderBottom:
+              '1px solid #e2e8f0'
 
-            width: '100%',
-            padding: 12,
-            marginTop: 15,
-            borderRadius: 14,
-            border: '1px solid #cbd5e1'
+            }}
 
-border: '1px solid #cbd5e1',
-fontSize: 16
+          >
 
-          }}
+            <td>{item.id}</td>
 
-        />
+            <td>{item.usuario}</td>
 
-        <input
+            <td>{item.nome}</td>
 
-          type="password"
+            <td>{item.data}</td>
 
-          placeholder="Senha"
+            <td>
 
-          value={novaSenha}
+              <span style={{
 
-          onChange={(e) =>
+                padding: '6px 12px',
+                borderRadius: 14,
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: 14,
 
-            setNovaSenha(
-              e.target.value
-            )
+                background:
 
-          }
+                  item.status === 'Impresso'
 
-          style={{
+                  ? '#16a34a'
 
-            width: '100%',
-            padding: 12,
-            marginTop: 15,
-            borderRadius: 14,
-            border: '1px solid #cbd5e1'
+                  : item.status === 'Imprimindo'
 
-border: '1px solid #cbd5e1',
-fontSize: 16
+                  ? '#2563eb'
 
-          }}
+                  : '#f59e0b'
 
-        />
+              }}>
 
-        <select
+                {item.status}
 
-          value={tipoCadastro}
+              </span>
 
-          onChange={(e) =>
+            </td>
 
-            setTipoCadastro(
-              e.target.value
-            )
+            <td>
 
-          }
+              <select
 
-          style={{
+                value={impressoraSelecionada}
 
-            width: '100%',
-            padding: 12,
-            marginTop: 15,
-            borderRadius: 14,
+                onChange={(e) =>
 
-border: '1px solid #cbd5e1',
-fontSize: 16
+                  setImpressoraSelecionada(
+                    e.target.value
+                  )
 
-          }}
+                }
 
-        >
+                style={{
 
-          <option value="Professor">
+                  padding: 8,
+                  borderRadius: 10,
+                  border:
+                  '1px solid #cbd5e1'
 
-            Professor
+                }}
 
-          </option>
+              >
 
-          <option value="Coordenador">
+                <option value="">
+                  Impressora
+                </option>
 
-            Coordenador
+                {
 
-          </option>
+                  impressoras.map((imp, index) => (
 
-        </select>
+                    <option
 
-        <button
+                      key={index}
 
-          onClick={cadastrarUsuario}
+                      value={imp.name}
 
-          style={{
+                    >
 
-            width: '100%',
-            padding: 14,
-            marginTop: 20,
-            background: '#16a34a',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 14,
-            cursor: 'pointer',
-            fontWeight: 'bold',
+                      {imp.name}
 
-border: '1px solid #cbd5e1',
-fontSize: 16
+                    </option>
 
-          }}
+                  ))
 
-        >
+                }
 
-                  Cadastrar Usuário
+              </select>
 
-        </button>
+              <button
+
+                onClick={() =>
+
+                  window.open(
+
+                    `${API}/uploads/${item.nome}`,
+
+                    '_blank'
+
+                  )
+
+                }
+
+                style={{
+
+                  marginLeft: 10,
+                  padding: '8px 14px',
+                  background: '#16a34a',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+
+                }}
+
+              >
+
+                🖨️ Imprimir
+
+              </button>
+
+            </td>
+
+            <td>
+
+              <button
+
+                onClick={() =>
+
+                  excluirArquivo(item.id)
+
+                }
+
+                style={{
+
+                  padding: '8px 14px',
+                  background: '#dc2626',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+
+                }}
+
+              >
+
+                Excluir
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        ))
+
+      }
+
+    </tbody>
+
+  </table>
+
+</div>
+
+{/* CADASTRAR USUÁRIO */}
+
+{
+
+  dadosUsuario?.tipo ===
+  'Coordenador'
+
+  && (
+
+    <div style={{
+
+      ...cardStyle,
+      marginTop: 30
+
+    }}>
+
+      <h2>
+        Cadastrar Usuário
+      </h2>
+
+      <input
+
+        placeholder="Usuário"
+
+        value={novoUsuario}
+
+        onChange={(e) =>
+
+          setNovoUsuario(
+            e.target.value
+          )
+
+        }
+
+        style={inputStyle}
+
+      />
+
+      <input
+
+        type="password"
+
+        placeholder="Senha"
+
+        value={novaSenha}
+
+        onChange={(e) =>
+
+          setNovaSenha(
+            e.target.value
+          )
+
+        }
+
+        style={inputStyle}
+
+      />
+
+      <select
+
+        value={tipoCadastro}
+
+        onChange={(e) =>
+
+          setTipoCadastro(
+            e.target.value
+          )
+
+        }
+
+        style={inputStyle}
+
+      >
+
+        <option value="Professor">
+          Professor
+        </option>
+
+        <option value="Coordenador">
+          Coordenador
+        </option>
+
+      </select>
+
+      <button
+
+        onClick={cadastrarUsuario}
+
+        style={{
+
+          ...buttonStyle,
+          width: '100%',
+          background:
+          'linear-gradient(135deg,#16a34a,#15803d)'
+
+        }}
+
+      >
+
+        Cadastrar Usuário
+
+              </button>
 
       </div>
 
-)
+    )
 
-}
+  }
 
-      </div>
-
-    </div>
+</div>
 
   )
 
