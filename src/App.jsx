@@ -605,13 +605,19 @@ export default function App() {
           />
 
           <button
-            onClick={enviarArquivo}
-            style={{
-              ...buttonStyle,
-              width: '100%',
-              marginTop: 20
-            }}
-          >
+  onClick={enviarArquivo}
+  style={{
+    ...buttonStyle,
+    width: '100%',
+    marginTop: 20
+  }}
+>
+
+  Enviar Documento
+
+</button>
+
+</div>
             {/* HISTÓRICO */}
 
 <div style={{
