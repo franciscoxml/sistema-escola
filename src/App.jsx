@@ -775,15 +775,15 @@ setDocumentos(novaLista)
         <button
   onClick={() => {
 
-    window.open(doc.file)
+window.open(
 
-    const novaLista = [...documentos]
+`https://sistema-escola-api.onrender.com/uploads/${doc.arquivo}`,
 
-    novaLista[index].status = 'Impresso'
+'_blank'
 
-    setDocumentos(novaLista)
+)
 
-  }}
+}}
   className="bg-blue-600 hover:bg-blue-700 transition p-3 rounded-xl"
 >
 
