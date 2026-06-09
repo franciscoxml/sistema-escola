@@ -1,583 +1,355 @@
-// =====================================
-// IMPORTS
-// =====================================
+import { useState, useEffect } from 'react'
 
-import { useEffect, useState } from 'react'
 import axios from 'axios'
 
-// =====================================
-// API
-// =====================================
+import {
+  FaPrint,
+  FaTrash,
+  FaUpload,
+  FaSignOutAlt,
+  FaHome,
+  FaUsers,
+  FaFileAlt,
+  FaChartBar,
+  FaCog
+} from 'react-icons/fa'
 
-const API = 'https://sistema-escola-api.onrender.com'
-
-// =====================================
-// ESTILOS
-// =====================================
-
-const cardStyle = {
-  background: '#fff',
-  borderRadius: 28,
-  padding: 30,
-  boxShadow: '0 10px 30px rgba(0,0,0,0.10)'
-}
-
-const inputStyle = {
-  width: '100%',
-  padding: 14,
-  marginTop: 15,
-  borderRadius: 14,
-  border: '1px solid #cbd5e1',
-  fontSize: 16,
-  outline: 'none',
-  boxSizing: 'border-box'
-}
-
-const buttonStyle = {
-  padding: 14,
-  background: 'linear-gradient(135deg,#2563eb,#1d4ed8)',
-  color: '#fff',
-  border: 'none',
-  borderRadius: 14,
-  cursor: 'pointer',
-  fontWeight: 'bold',
-  fontSize: 16,
-  transition: '0.3s'
-}
-
-// =====================================
-// APP
-// =====================================
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts'
 
 export default function App() {
 
-  // =====================================
-  // STATES
-  // =====================================
+  const [tela, setTela] = useState('dashboard')
 
-  const [arquivo, setArquivo] = useState(null)
+  const [novoDocumento, setNovoDocumento] = useState(null)
 
-  const [usuario, setUsuario] = useState('')
+  const [pesquisa, setPesquisa] = useState('')
 
-  const [senha, setSenha] = useState('')
+  const [pdfAtual, setPdfAtual] = useState(null)
 
-  const [logado, setLogado] = useState(false)
+const removerDocumento = (index) => {
 
-  const [dadosUsuario, setDadosUsuario] = useState(null)
+  const novos = documentos.filter((_, i) => i !== index)
 
-  const [arquivos, setArquivos] = useState([])
+  setDocumentos(novos)
 
-  const [busca, setBusca] = useState('')
+}
 
-  const [impressoras, setImpressoras] = useState([])
-
-  const [impressoraSelecionada, setImpressoraSelecionada] =
-    useState('')
-
-  const [novoUsuario, setNovoUsuario] = useState('')
-
-  const [novaSenha, setNovaSenha] = useState('')
-
-  const [tipoCadastro, setTipoCadastro] =
-    useState('Professor')
-
-  // =====================================
-  // LOGOUT
-  // =====================================
-
-  function sair() {
-
-    setLogado(false)
-    setDadosUsuario(null)
-    setUsuario('')
-    setSenha('')
-
-  }
-
-  // =====================================
-  // LOGIN
-  // =====================================
-
-  async function fazerLogin() {
-
-    try {
-
-      const resposta = await axios.post(
-        `${API}/login`,
-        {
-          usuario,
-          senha
-        }
-      )
-
-      if (resposta.data.sucesso) {
-
-        setLogado(true)
-
-        setDadosUsuario(
-          resposta.data.usuario
-        )
-
-        alert('Login realizado')
-
-      } else {
-
-        alert('Usuário inválido')
-
-      }
-
-    } catch (erro) {
-
-      console.log(erro)
-
-      alert('Erro no login')
-
-    }
-
-  }
-
-  // =====================================
-  // CARREGAR ARQUIVOS
-  // =====================================
-
-  async function carregarArquivos() {
-
-    try {
-
-      const resposta = await axios.get(
-        `${API}/arquivos`,
-        {
-          params: {
-            usuario: dadosUsuario?.usuario,
-            tipo: dadosUsuario?.tipo
-          }
-        }
-      )
-
-      setArquivos(resposta.data)
-
-    } catch (erro) {
-
-      console.log(erro)
-
-    }
-
-  }
-
-  // =====================================
-  // CARREGAR IMPRESSORAS
-  // =====================================
-
-  async function carregarImpressoras() {
-
-    try {
-
-      const resposta = await axios.get(
-        `${API}/impressoras`
-      )
-
-      setImpressoras(resposta.data)
-
-    } catch (erro) {
-
-      console.log(erro)
-
-    }
-
-  }
-
-  // =====================================
-  // ENVIAR ARQUIVO
-  // =====================================
-
-  async function enviarArquivo() {
-
-    if (!arquivo) {
-
-      alert('Selecione um arquivo')
-      return
-
-    }
-
-    try {
-
-      const formData = new FormData()
-
-      formData.append('arquivo', arquivo)
-
-      formData.append(
-        'usuario',
-        dadosUsuario.usuario
-      )
-
-      const resposta = await axios.post(
-        `${API}/upload`,
-        formData
-      )
-
-      if (resposta.data.sucesso) {
-
-        alert('Arquivo enviado')
-
-        setArquivo(null)
-
-        carregarArquivos()
-
-      }
-
-    } catch (erro) {
-
-      console.log(erro)
-
-      alert('Erro ao enviar')
-
-    }
-
-  }
-
-  // =====================================
-  // EXCLUIR
-  // =====================================
-
-  async function excluirArquivo(id) {
-
-    const confirmar = window.confirm(
-      'Deseja excluir este arquivo?'
-    )
-
-    if (!confirmar) return
-
-    try {
-
-      const resposta = await axios.delete(
-        `${API}/arquivos/${id}`
-      )
-
-      if (resposta.data.sucesso) {
-
-        alert('Arquivo excluído')
-
-        carregarArquivos()
-
-      }
-
-    } catch (erro) {
-
-      console.log(erro)
-
-      alert('Erro ao excluir')
-
-    }
-
-  }
-
-  // =====================================
-  // CADASTRAR USUÁRIO
-  // =====================================
-
-  async function cadastrarUsuario() {
-
-    try {
-
-      const resposta = await axios.post(
-        `${API}/usuarios`,
-        {
-          usuario: novoUsuario,
-          senha: novaSenha,
-          tipo: tipoCadastro
-        }
-      )
-
-      if (resposta.data.sucesso) {
-
-        alert('Usuário cadastrado')
-
-        setNovoUsuario('')
-        setNovaSenha('')
-
-      } else {
-
-        alert(resposta.data.erro)
-
-      }
-
-    } catch (erro) {
-
-      console.log(erro)
-
-      alert('Erro ao cadastrar')
-
-    }
-
-  }
-
-  // =====================================
-  // USE EFFECT
-  // =====================================
+  const [documentos, setDocumentos] = useState([])
 
   useEffect(() => {
 
-    if (logado && dadosUsuario) {
+carregarArquivos()
 
-      carregarArquivos()
-      carregarImpressoras()
+}, [])
 
-    }
+const carregarArquivos = async () => {
 
-  }, [logado, dadosUsuario])
+try {
 
-  // =====================================
-  // FILTRO
-  // =====================================
+```
+const resposta = await axios.get(
 
-  const arquivosFiltrados = arquivos.filter((item) => {
+  'https://sistema-escola-api.onrender.com//arquivos?tipo=Coordenador'
 
-    return (
+)
 
-      item.usuario
-        .toLowerCase()
-        .includes(busca.toLowerCase())
+setDocumentos(resposta.data)
+```
 
-      ||
+} catch (erro) {
 
-      item.nome
-        .toLowerCase()
-        .includes(busca.toLowerCase())
+```
+console.log(erro)
+```
 
-      ||
+}
 
-      item.status
-        .toLowerCase()
-        .includes(busca.toLowerCase())
+}
 
-    )
 
-  })
+  const [professores, setProfessores] = useState([
 
-  // =====================================
-  // LOGIN SCREEN
-  // =====================================
+  {
+    nome: 'Professor João',
+    materia: 'Matemática',
+    cor: 'bg-blue-600'
+  },
 
-  if (!logado) {
+  {
+    nome: 'Professora Maria',
+    materia: 'Português',
+    cor: 'bg-green-600'
+  },
 
-    return (
-
-      <div style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background:
-          'linear-gradient(135deg,#0f172a,#1e293b)'
-      }}>
-
-        <div style={{
-          ...cardStyle,
-          width: 380
-        }}>
-
-          <h1 style={{
-            textAlign: 'center',
-            marginBottom: 30
-          }}>
-            Controle Escolar
-          </h1>
-
-          <input
-            placeholder="Usuário"
-            value={usuario}
-            onChange={(e) =>
-              setUsuario(e.target.value)
-            }
-            style={inputStyle}
-          />
-
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            onChange={(e) =>
-              setSenha(e.target.value)
-            }
-            style={inputStyle}
-          />
-
-          <button
-            onClick={fazerLogin}
-            style={{
-              ...buttonStyle,
-              width: '100%',
-              marginTop: 20
-            }}
-          >
-            Entrar
-          </button>
-
-        </div>
-
-      </div>
-
-    )
-
+  {
+    nome: 'Professor Carlos',
+    materia: 'História',
+    cor: 'bg-yellow-500'
   }
 
-  // =====================================
-  // SISTEMA
-  // =====================================
+])
+
+const adicionarProfessor = () => {
+
+  const nome = prompt('Nome do professor:')
+  const materia = prompt('Matéria:')
+
+  if (!nome || !materia) return
+
+  const novoProfessor = {
+    nome,
+    materia,
+    cor: 'bg-purple-600'
+  }
+
+  setProfessores([...professores, novoProfessor])
+
+}
+
+  const dadosGrafico = [
+
+  { nome: 'Seg', paginas: 120 },
+  { nome: 'Ter', paginas: 300 },
+  { nome: 'Qua', paginas: 250 },
+  { nome: 'Qui', paginas: 420 },
+  { nome: 'Sex', paginas: 390 },
+  { nome: 'Sáb', paginas: 500 }
+
+]
 
   return (
 
-    <div style={{
-      display: 'flex',
-      minHeight: '100vh',
-      background:
-        'linear-gradient(135deg,#f1f5f9,#cbd5e1)'
-    }}>
+    <div className="flex min-h-screen bg-gradient-to-br from-[#020617] via-[#0f172a] to-black text-white">
 
       {/* MENU */}
 
-      <div style={{
-        width: 260,
-        background:
-          'linear-gradient(135deg,#0f172a,#1e293b)',
-        color: '#fff',
-        padding: 30
-      }}>
+      {/* MENU */}
 
-        <h2>ESCOLA</h2>
+<div className="w-72 bg-black/50 backdrop-blur-3xl border-r border-slate-800 text-white p-8 shadow-black/50 shadow-2xl flex flex-col justify-between">
 
-        <p>
-          Argentina Santos da Silva
-        </p>
+  <div>
 
-        <hr style={{
-          marginTop: 20,
-          marginBottom: 20,
-          borderColor: '#334155'
-        }} />
+    <div>
 
-        <p>
-          👤 {dadosUsuario?.usuario}
-        </p>
+      <h1 className="text-4xl font-black tracking-tight">
+        NEXUS
+      </h1>
 
-        <p>
-          🔐 {dadosUsuario?.tipo}
-        </p>
+      <p className="text-slate-400 mt-2">
+        Gestão Escolar
+      </p>
 
-        <button
-          onClick={sair}
-          style={{
-            ...buttonStyle,
-            width: '100%',
-            marginTop: 20,
-            background: '#dc2626'
-          }}
-        >
-          Sair
-        </button>
+    </div>
 
-      </div>
+    {/* MENU ITENS */}
+
+    <div className="mt-14 flex flex-col gap-4">
+
+  <button
+    onClick={() => setTela('dashboard')}
+    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
+      tela === 'dashboard'
+        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
+        : 'bg-slate-800/40 hover:bg-slate-700'
+    }`}
+  >
+    <FaHome />
+    Dashboard
+  </button>
+
+  <button
+    onClick={() => setTela('professores')}
+    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
+      tela === 'professores'
+        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
+        : 'bg-slate-800/40 hover:bg-slate-700'
+    }`}
+  >
+    <FaUsers />
+    Professores
+  </button>
+
+  <button
+    onClick={() => setTela('documentos')}
+    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
+      tela === 'documentos'
+        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
+        : 'bg-slate-800/40 hover:bg-slate-700'
+    }`}
+  >
+    <FaFileAlt />
+    Documentos
+  </button>
+
+  <button
+    onClick={() => setTela('relatorios')}
+    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
+      tela === 'relatorios'
+        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
+        : 'bg-slate-800/40 hover:bg-slate-700'
+    }`}
+  >
+    <FaChartBar />
+    Relatórios
+  </button>
+
+  <button
+    onClick={() => setTela('config')}
+    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
+      tela === 'config'
+        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
+        : 'bg-slate-800/40 hover:bg-slate-700'
+    }`}
+  >
+    <FaCog />
+    Configurações
+  </button>
+
+</div>
+
+  </div>
+
+  {/* SAIR */}
+
+  <button className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 transition-all duration-300 p-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl">
+
+    <FaSignOutAlt />
+
+    Sair
+
+  </button>
+
+</div>
 
       {/* CONTEÚDO */}
 
-      <div style={{
-        flex: 1,
-        padding: 30
-      }}>
+      <div className="flex-1 p-8">
 
         {/* TOPO */}
 
-        <div style={{
-          background:
-            'linear-gradient(135deg,#0f172a,#1e293b)',
-          color: '#fff',
-          padding: 35,
-          borderRadius: 28,
-          marginBottom: 30
-        }}>
+        {/* TOPO */}
 
-          <h1 style={{
-            fontSize: 42,
-            fontWeight: '800'
-          }}>
-            Controle de Impressões
-          </h1>
+<div className="bg-black/40 backdrop-blur-2xl border border-slate-800 text-white rounded-3xl p-8 shadow-blue-500/20 shadow-2xl flex items-center justify-between">
 
-          <p>
-            Escola Argentina Santos da Silva
-          </p>
+  {/* ESQUERDA */}
 
-        </div>
+  <div>
 
-        {/* DASHBOARD */}
+    <h1 className="text-6xl font-black tracking-tight">
 
-        <div style={{
-          display: 'flex',
-          gap: 20,
-          flexWrap: 'wrap',
-          marginBottom: 30
-        }}>
+      Controle de Impressões
 
-          <div style={{
-            flex: 1,
-            minWidth: 220,
-            background:
-              'linear-gradient(135deg,#2563eb,#1d4ed8)',
-            color: '#fff',
-            padding: 30,
-            borderRadius: 28
-          }}>
+    </h1>
 
-            <h3>Total</h3>
+    <p className="mt-3 text-slate-300 text-lg">
 
-            <h1>
-              {arquivos.length}
+      Sistema interno escolar
+
+    </p>
+
+  </div>
+
+  {/* DIREITA */}
+
+  <div className="flex items-center gap-5">
+
+    {/* PESQUISA */}
+
+    <input
+      type="text"
+      placeholder="Pesquisar documentos..."
+      value={pesquisa}
+      onChange={(e) => setPesquisa(e.target.value)}
+      className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white outline-none focus:border-blue-500 transition-all w-80"
+    />
+
+    {/* NOTIFICAÇÃO */}
+
+    <button className="bg-slate-800 hover:bg-slate-700 transition-all duration-300 p-4 rounded-2xl">
+
+      🔔
+
+    </button>
+
+    {/* USUÁRIO */}
+
+    <div className="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-2xl">
+
+      <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-bold text-lg">
+
+        A
+
+      </div>
+
+      <div>
+
+        <h2 className="font-bold">
+          Administrador
+        </h2>
+
+        <p className="text-slate-400 text-sm">
+          Online
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+ 
+{
+  tela === 'dashboard' && (
+    <>
+
+        {/* CARDS */}
+
+        <div className="grid grid-cols-3 gap-6 mt-8">
+
+          <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
+
+            <h2 className="text-xl">
+              Total
+            </h2>
+
+            <h1 className="text-6xl font-bold mt-4">
+              {documentos.length}
             </h1>
 
           </div>
 
-          <div style={{
-            flex: 1,
-            minWidth: 220,
-            background:
-              'linear-gradient(135deg,#16a34a,#15803d)',
-            color: '#fff',
-            padding: 30,
-            borderRadius: 28
-          }}>
+          <div className="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
 
-            <h3>Impressos</h3>
+            <h2 className="text-xl">
+              Impressos
+            </h2>
 
-            <h1>
+            <h1 className="text-6xl font-bold mt-4">
               {
-                arquivos.filter(
-                  item =>
-                    item.status === 'Impresso'
-                ).length
-              }
+  documentos.filter(doc => doc.status === 'Impresso').length
+}
             </h1>
 
           </div>
 
-          <div style={{
-            flex: 1,
-            minWidth: 220,
-            background:
-              'linear-gradient(135deg,#f59e0b,#d97706)',
-            color: '#fff',
-            padding: 30,
-            borderRadius: 28
-          }}>
+          <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
 
-            <h3>Pendentes</h3>
+            <h2 className="text-xl">
+              Pendentes
+            </h2>
 
-            <h1>
+            <h1 className="text-6xl font-bold mt-4">
               {
-                arquivos.filter(
-                  item =>
-                    item.status === 'Pendente'
-                ).length
-              }
+  documentos.filter(doc => doc.status === 'Pendente').length
+}
             </h1>
 
           </div>
@@ -586,408 +358,590 @@ export default function App() {
 
         {/* ENVIAR */}
 
-        <div style={cardStyle}>
+        <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl">
 
-          <h2>
+          <h2 className="text-3xl font-bold text-white mb-6">
+
             Enviar Documento
+
           </h2>
 
           <input
-            type="file"
-            onChange={(e) =>
-              setArquivo(
-                e.target.files[0]
-              )
-            }
-            style={{
-              marginTop: 20
-            }}
-          />
+  type="file"
+  onChange={(e) => setNovoDocumento(e.target.files[0])}
+  className="mt-6 w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 text-white"
+/>
 
           <button
-  onClick={enviarArquivo}
-  style={{
-    ...buttonStyle,
-    width: '100%',
-    marginTop: 20
+  onClick={() => {
+
+    if (!novoDocumento) return
+
+    const novo = {
+  professor: 'Administrador',
+  arquivo: novoDocumento.name,
+  file: URL.createObjectURL(novoDocumento),
+  status: 'Pendente',
+  data: new Date().toLocaleString(),
+}
+
+    setDocumentos([...documentos, novo])
+
+    setNovoDocumento(null)
+
   }}
+  className="mt-6 bg-gradient-to-r from-blue-500 to-blue-700 hover:scale-110 hover:shadow-blue-500/40 transition text-white px-8 py-4 rounded-2xl flex items-center gap-3"
 >
+
+  <FaUpload />
 
   Enviar Documento
 
 </button>
 
-</div>
-            {/* HISTÓRICO */}
+        </div>
 
-<div style={{
-  ...cardStyle,
-  marginTop: 30
-}}>
+{/* GRÁFICO */}
 
-  <h2>
-    Documentos Recebidos
+<div className="bg-slate-900/70 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-blue-500/10 shadow-2xl text-white">
+
+  <h2 className="text-3xl font-bold mb-8">
+
+    Volume de Impressões
+
   </h2>
 
-  <input
-
-    placeholder="🔎 Pesquisar documentos"
-
-    value={busca}
-
-    onChange={(e) =>
-
-      setBusca(e.target.value)
-
-    }
-
-    style={inputStyle}
-
-  />
-
-  <p style={{
-
-    marginBottom: 20,
-    color: '#475569',
-    fontWeight: 'bold'
-
-  }}>
-
-    {arquivosFiltrados.length}
-    {' '}documentos encontrados
-
-  </p>
-
-  <table
-
-    width="100%"
-
-    cellPadding="12"
-
-    style={{
-
-      borderCollapse: 'collapse'
-
-    }}
-
-  >
-
-    <thead>
-
-      <tr style={{
-
-        background: '#e2e8f0'
-
-      }}>
-
-        <th>ID</th>
-        <th>Professor</th>
-        <th>Arquivo</th>
-        <th>Data</th>
-        <th>Status</th>
-        <th>Imprimir</th>
-        <th>Excluir</th>
-
-      </tr>
-
-    </thead>
-
-    <tbody>
-
-      {
-
-        arquivosFiltrados.map((item) => (
-
-          <tr
-
-            key={item.id}
-
-            style={{
-
-              borderBottom:
-              '1px solid #e2e8f0'
-
-            }}
-
-          >
-
-            <td>{item.id}</td>
-
-            <td>{item.usuario}</td>
-
-            <td>{item.nome}</td>
-
-            <td>{item.data}</td>
-
-            <td>
-
-              <span style={{
-
-                padding: '6px 12px',
-                borderRadius: 14,
-                color: '#fff',
-                fontWeight: 'bold',
-                fontSize: 14,
-
-                background:
-
-                  item.status === 'Impresso'
-
-                  ? '#16a34a'
-
-                  : item.status === 'Imprimindo'
-
-                  ? '#2563eb'
-
-                  : '#f59e0b'
-
-              }}>
-
-                {item.status}
-
-              </span>
-
-            </td>
-
-            <td>
-
-              <select
-
-                value={impressoraSelecionada}
-
-                onChange={(e) =>
-
-                  setImpressoraSelecionada(
-                    e.target.value
-                  )
-
-                }
-
-                style={{
-
-                  padding: 8,
-                  borderRadius: 10,
-                  border:
-                  '1px solid #cbd5e1'
-
-                }}
-
-              >
-
-                <option value="">
-                  Impressora
-                </option>
-
-                {
-
-                  impressoras.map((imp, index) => (
-
-                    <option
-
-                      key={index}
-
-                      value={imp.name}
-
-                    >
-
-                      {imp.name}
-
-                    </option>
-
-                  ))
-
-                }
-
-              </select>
-
-              <button
-
-                onClick={() =>
-
-                  window.open(
-
-                    `${API}/uploads/${item.nome}`,
-
-                    '_blank'
-
-                  )
-
-                }
-
-                style={{
-
-                  marginLeft: 10,
-                  padding: '8px 14px',
-                  background: '#16a34a',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 10,
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-
-                }}
-
-              >
-
-                🖨️ Imprimir
-
-              </button>
-
-            </td>
-
-            <td>
-
-              <button
-
-                onClick={() =>
-
-                  excluirArquivo(item.id)
-
-                }
-
-                style={{
-
-                  padding: '8px 14px',
-                  background: '#dc2626',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: 10,
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-
-                }}
-
-              >
-
-                Excluir
-
-              </button>
-
-            </td>
-
-          </tr>
-
-        ))
-
-      }
-
-    </tbody>
-
-  </table>
+  <div className="h-96">
+
+    <ResponsiveContainer width="100%" height="100%">
+
+      <LineChart data={dadosGrafico}>
+
+        <XAxis
+          dataKey="nome"
+          stroke="#94a3b8"
+        />
+
+        <YAxis stroke="#94a3b8" />
+
+        <Tooltip
+  contentStyle={{
+    backgroundColor: '#0f172a',
+    border: '1px solid #334155',
+    borderRadius: '16px',
+    color: '#fff'
+  }}
+/>
+
+        <Line
+  type="monotone"
+  dataKey="paginas"
+  stroke="#3b82f6"
+  strokeWidth={5}
+  dot={{
+    r: 6,
+    fill: '#3b82f6',
+    strokeWidth: 2,
+    stroke: '#fff'
+  }}
+  activeDot={{
+    r: 10
+  }}
+/>
+
+      </LineChart>
+
+    </ResponsiveContainer>
+
+  </div>
 
 </div>
 
-{/* CADASTRAR USUÁRIO */}
+        {/* TABELA */}
+
+        <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl text-white">
+
+          <h2 className="text-3xl font-bold text-white mb-6">
+
+            Documentos
+
+          </h2>
+
+          <table className="w-full overflow-hidden rounded-3xl border-separate border-spacing-y-4">
+
+            <thead>
+
+              <tr className="text-left text-slate-400 uppercase text-sm tracking-widest">
+
+                <th className="pb-4">
+                  Professor
+                </th>
+
+                <th className="pb-4">
+                  Arquivo
+                </th>
+
+                <th className="pb-4">
+                  Status
+                </th>
+
+                <th className="pb-4">
+                  Ações
+                </th>
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+  {documentos
+  .filter((doc) =>
+    doc.arquivo.toLowerCase().includes(pesquisa.toLowerCase())
+  )
+  .map((doc, index) => (
+
+    <tr
+      key={index}
+      className="bg-slate-900/80 hover:bg-slate-800/80 transition-all duration-300 shadow-xl"
+    >
+
+      <td className="py-6 px-4 rounded-l-2xl font-semibold">
+
+  <div>
+
+    <p>
+      {doc.professor}
+    </p>
+
+    <p className="text-slate-500 text-sm mt-1">
+      {doc.data}
+    </p>
+
+  </div>
+
+</td>
+
+      <td>
+        {doc.arquivo}
+      </td>
+
+      <td>
+
+        <span
+  className={`px-4 py-2 rounded-full text-sm font-bold text-white ${
+    doc.status === 'Impresso'
+      ? 'bg-green-600'
+      : doc.status === 'Cancelado'
+      ? 'bg-red-600'
+      : 'bg-yellow-500'
+  }`}
+>
+
+<select
+  value={doc.status}
+  onChange={(e) => {
+
+    const novaLista = [...documentos]
+
+    novaLista[index].status = e.target.value
+
+    setDocumentos(novaLista)
+
+  }}
+  className="bg-transparent outline-none text-white"
+>
+
+  <option value="Pendente" className="text-black">
+    Pendente
+  </option>
+
+  <option value="Impresso" className="text-black">
+    Impresso
+  </option>
+
+  <option value="Cancelado" className="text-black">
+    Cancelado
+  </option>
+
+</select>
+
+</span>
+
+      </td>
+
+      <td>
+
+        <div className="flex gap-3">
+
+<button
+  onClick={() => window.open(doc.file)}
+  className="bg-yellow-500 hover:bg-yellow-600 transition text-white p-3 rounded-xl"
+>
+
+  👁
+
+</button>
+
+          <button
+  onClick={() => {
+
+  window.open(doc.file)
+
+  const novaLista = [...documentos]
+
+novaLista[index].status = 'Impresso'
+
+setDocumentos(novaLista)
+
+  document.getElementById(`download-${index}`).click()
+
+  const atualizados = documentos.map((item, i) => {
+
+    if (i === index) {
+      return { ...item, status: 'Impresso' }
+    }
+ 
+    return item
+
+  })
+
+  setDocumentos(atualizados)
+
+}}
+  className="bg-blue-600 hover:bg-blue-700 transition text-white p-3 rounded-xl"
+>
+
+  <FaPrint />
+
+<a
+  href={doc.file}
+  download={doc.arquivo}
+  className="hidden"
+  id={`download-${index}`}
+></a>
+
+</button>
+
+          <button
+  onClick={() => {
+
+    const confirmar = window.confirm(
+      'Deseja realmente excluir este documento?'
+    )
+
+    if (confirmar) {
+      removerDocumento(index)
+    }
+
+  }}
+  className="bg-gradient-to-r from-red-500 to-red-700 hover:scale-110 hover:shadow-red-500/40 transition-all duration-300 text-white p-3 rounded-xl shadow-lg"
+>
+
+  <FaTrash />
+
+</button>
+
+        </div>
+
+      </td>
+
+    </tr>
+
+  ))}
+
+</tbody>
+
+          </table>
+
+        </div>
+
+            </>
+      )
+}
 
 {
+  tela === 'professores' && (
 
-  dadosUsuario?.tipo ===
-  'Coordenador'
+    <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
 
-  && (
+      <h1 className="text-4xl font-black mb-8">
+        Professores
+      </h1>
 
-    <div style={{
+<button
+  onClick={adicionarProfessor}
+  className="bg-blue-600 hover:bg-blue-700 transition px-6 py-4 rounded-2xl font-bold mb-6"
+>
 
-      ...cardStyle,
-      marginTop: 30
+  + Novo Professor
 
-    }}>
+</button>
 
-      <h2>
-        Cadastrar Usuário
-      </h2>
+      <div className="grid grid-cols-3 gap-6">
 
-      <input
+  {professores.map((professor, index) => (
 
-        placeholder="Usuário"
+    <div
+      key={index}
+      className="bg-slate-800 p-6 rounded-3xl"
+    >
 
-        value={novoUsuario}
+      <div className="flex items-center gap-4">
 
-        onChange={(e) =>
+        <div className={`w-16 h-16 rounded-full ${professor.cor} flex items-center justify-center text-2xl font-bold`}>
 
-          setNovoUsuario(
-            e.target.value
-          )
+          {professor.nome.charAt(0)}
 
-        }
+        </div>
 
-        style={inputStyle}
+        <div>
 
-      />
+          <h2 className="text-2xl font-bold">
+            {professor.nome}
+          </h2>
 
-      <input
+          <p className="text-slate-400 mt-2">
+            {professor.materia}
+          </p>
 
-        type="password"
-
-        placeholder="Senha"
-
-        value={novaSenha}
-
-        onChange={(e) =>
-
-          setNovaSenha(
-            e.target.value
-          )
-
-        }
-
-        style={inputStyle}
-
-      />
-
-      <select
-
-        value={tipoCadastro}
-
-        onChange={(e) =>
-
-          setTipoCadastro(
-            e.target.value
-          )
-
-        }
-
-        style={inputStyle}
-
-      >
-
-        <option value="Professor">
-          Professor
-        </option>
-
-        <option value="Coordenador">
-          Coordenador
-        </option>
-
-      </select>
-
-      <button
-
-        onClick={cadastrarUsuario}
-
-        style={{
-
-          ...buttonStyle,
-          width: '100%',
-          background:
-          'linear-gradient(135deg,#16a34a,#15803d)'
-
-        }}
-
-      >
-
-        Cadastrar Usuário
-
-              </button>
+        </div>
 
       </div>
 
-    )
+    </div>
 
-  }
+  ))}
 
 </div>
+
+    </div>
+
+  )
+}
+
+{
+  tela === 'documentos' && (
+
+    <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
+
+      <div className="flex items-center justify-between mb-8">
+
+        <h1 className="text-4xl font-black">
+          Documentos
+        </h1>
+
+        <button className="bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-2xl font-bold">
+          + Novo Documento
+        </button>
+
+      </div>
+
+      <div className="space-y-4">
+
+  {documentos.map((doc, index) => (
+
+    <div
+      key={index}
+      className="bg-slate-800 p-6 rounded-2xl flex items-center justify-between"
+    >
+
+      <div>
+
+        <h2 className="text-2xl font-bold">
+          {doc.arquivo}
+        </h2>
+
+        <td className="py-6 px-4 rounded-l-2xl font-semibold">
+
+  <div>
+
+    <p>
+      {doc.professor}
+    </p>
+
+    <p className="text-slate-500 text-sm mt-1">
+      {doc.data}
+    </p>
+
+  </div>
+
+</td>
+
+      </div>
+
+      <div className="flex gap-3">
+
+        <button
+  onClick={() => {
+
+    window.open(doc.file)
+
+    const novaLista = [...documentos]
+
+    novaLista[index].status = 'Impresso'
+
+    setDocumentos(novaLista)
+
+  }}
+  className="bg-blue-600 hover:bg-blue-700 transition p-3 rounded-xl"
+>
+
+  <FaPrint />
+
+<a
+  href={doc.file}
+  download={doc.arquivo}
+  className="hidden"
+  id={`download-${index}`}
+></a>
+
+</button>
+
+        <button
+  onClick={() => {
+
+    const confirmar = window.confirm(
+      'Deseja realmente excluir este documento?'
+    )
+
+    if (confirmar) {
+      removerDocumento(index)
+    }
+
+  }}
+  className="bg-gradient-to-r from-red-500 to-red-700 hover:scale-110 hover:shadow-red-500/40 transition-all duration-300 text-white p-3 rounded-xl shadow-lg"
+>
+
+  <FaTrash />
+
+</button>
+
+      </div>
+
+    </div>
+
+  ))}
+
+</div>
+
+    </div>
+
+  )
+}
+
+{
+  tela === 'relatorios' && (
+
+    <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
+
+      <h1 className="text-4xl font-black mb-8">
+        Relatórios
+      </h1>
+
+      <div className="grid grid-cols-3 gap-6">
+
+        <div className="bg-slate-800 p-6 rounded-3xl">
+
+          <h2 className="text-2xl font-bold">
+            Total de Impressões
+          </h2>
+
+          <p className="text-5xl font-black text-blue-500 mt-4">
+            542
+          </p>
+
+        </div>
+
+        <div className="bg-slate-800 p-6 rounded-3xl">
+
+          <h2 className="text-2xl font-bold">
+            Professores Ativos
+          </h2>
+
+          <p className="text-5xl font-black text-green-500 mt-4">
+            12
+          </p>
+
+        </div>
+
+        <div className="bg-slate-800 p-6 rounded-3xl">
+
+          <h2 className="text-2xl font-bold">
+            Pendências
+          </h2>
+
+          <p className="text-5xl font-black text-yellow-500 mt-4">
+            7
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  )
+}
+
+{
+  tela === 'config' && (
+
+    <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
+
+      <h1 className="text-4xl font-black mb-8">
+        Configurações
+      </h1>
+
+      <div className="space-y-6">
+
+        <div className="bg-slate-800 p-6 rounded-3xl">
+
+          <h2 className="text-2xl font-bold">
+            Nome da Escola
+          </h2>
+
+          <input
+            type="text"
+            placeholder="Digite o nome da escola"
+            className="mt-4 w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none"
+          />
+
+        </div>
+
+        <div className="bg-slate-800 p-6 rounded-3xl">
+
+          <h2 className="text-2xl font-bold">
+            Limite de Impressões
+          </h2>
+
+          <input
+            type="number"
+            placeholder="Quantidade máxima"
+            className="mt-4 w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none"
+          />
+
+        </div>
+
+        <button className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 px-8 py-4 rounded-2xl font-bold">
+
+          Salvar Configurações
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+  )
+}
+
+      </div>
+
+    </div>
 
   )
 
 }
+
