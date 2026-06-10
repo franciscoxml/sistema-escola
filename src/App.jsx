@@ -33,7 +33,25 @@ export default function App() {
 
   const [pdfAtual, setPdfAtual] = useState(null)
 
-const removerDocumento = (index) => {
+  const removerDocumento = async (id) => {
+
+  try {
+
+    await axios.delete(
+      `https://sistema-escola-api.onrender.com/arquivos/${id}`
+    )
+
+    await carregarArquivos()
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    alert('Erro ao excluir arquivo')
+
+  }
+
+}
 
   const novos = documentos.filter((_, i) => i !== index)
 
@@ -665,7 +683,7 @@ setDocumentos(novaLista)
     )
 
     if (confirmar) {
-      removerDocumento(index)
+      removerDocumento(doc.id)
     }
 
   }}
@@ -977,5 +995,4 @@ window.open(
 
   )
 
-}
 
