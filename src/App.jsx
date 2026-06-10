@@ -527,8 +527,10 @@ const adicionarProfessor = () => {
 
   {documentos
   .filter((doc) =>
-    doc.arquivo.toLowerCase().includes(pesquisa.toLowerCase())
+  doc.nome.toLowerCase().includes(
+    pesquisa.toLowerCase()
   )
+)
   .map((doc, index) => (
 
     <tr
@@ -553,7 +555,7 @@ const adicionarProfessor = () => {
 </td>
 
       <td>
-        {doc.arquivo}
+        {doc.nome}
       </td>
 
       <td>
@@ -616,7 +618,9 @@ const adicionarProfessor = () => {
           <button
   onClick={() => {
 
-  window.open(doc.file)
+  window.open(
+  `https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+)
 
   const novaLista = [...documentos]
 
