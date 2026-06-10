@@ -53,11 +53,6 @@ export default function App() {
 
 }
 
-  const novos = documentos.filter((_, i) => i !== index)
-
-  setDocumentos(novos)
-
-}
 
   const [documentos, setDocumentos] = useState([])
 
@@ -858,7 +853,7 @@ window.open(
     )
 
     if (confirmar) {
-      removerDocumento(index)
+      removerDocumento(doc.id)
     }
 
   }}
@@ -995,4 +990,4 @@ window.open(
 
   )
 
-
+}

@@ -653,36 +653,44 @@ app.delete(
 
         db.run(
 
-          `
+  `
 
-          DELETE FROM arquivos
-          WHERE id = ?
+  DELETE FROM arquivos
+  WHERE id = ?
 
-          `,
+  `,
 
-          [id],
+  [id],
 
-          (erroDelete) => {
+  function (erroDelete) {
 
-            if (erroDelete) {
+    console.log('=================')
+    console.log('ID:', id)
+    console.log('APAGADOS:', this.changes)
+    console.log('ERRO:', erroDelete)
+    console.log('=================')
 
-              return res.json({
+    if (erroDelete) {
 
-                sucesso: false
+      return res.json({
 
-              })
+        sucesso: false,
+        erro: erroDelete.message
 
-            }
+      })
 
-            res.json({
+    }
 
-              sucesso: true
+    res.json({
 
-            })
+      sucesso: true,
+      apagados: this.changes
 
-          }
+    })
 
-        )
+  }
+
+)
 
       }
 
