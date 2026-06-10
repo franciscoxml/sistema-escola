@@ -43,7 +43,9 @@ const removerDocumento = (index) => {
 
   const [documentos, setDocumentos] = useState([])
 
-const carregarArquivos = async () => {
+  console.log(documentos)
+
+  const carregarArquivos = async () => {
 
   try {
 
@@ -404,6 +406,10 @@ const adicionarProfessor = () => {
 
     alert('Documento enviado com sucesso!')
 
+    await carregarArquivos()
+
+    setNovoDocumento(null)
+
   } catch (erro) {
 
     console.log(erro)
@@ -535,8 +541,8 @@ const adicionarProfessor = () => {
   <div>
 
     <p>
-      {doc.professor}
-    </p>
+  {doc.usuario}
+</p>
 
     <p className="text-slate-500 text-sm mt-1">
       {doc.data}
@@ -781,8 +787,8 @@ setDocumentos(novaLista)
   <div>
 
     <p>
-      {doc.professor}
-    </p>
+  {doc.usuario}
+</p>
 
     <p className="text-slate-500 text-sm mt-1">
       {doc.data}
@@ -801,7 +807,7 @@ setDocumentos(novaLista)
 
 window.open(
 
-`https://SEU-BACKEND.onrender.com/uploads/${doc.arquivo}`,
+`https://sistema-escola-api.onrender.com/uploads/${doc.arquivo}`,
 
 '_blank'
 
