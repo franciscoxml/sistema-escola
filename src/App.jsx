@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-
 import axios from 'axios'
+
+import { useState, useEffect } from 'react'
 
 import {
   FaPrint,
@@ -43,36 +43,37 @@ const removerDocumento = (index) => {
 
   const [documentos, setDocumentos] = useState([])
 
-  useEffect(() => {
+const carregarArquivos = async () => {
+
+  try {
+
+    const resposta = await axios.get(
+
+      'https://sistema-escola-api.onrender.com/arquivos?tipo=Coordenador'
+
+    )
+
+    setDocumentos(
+      resposta.data.map((doc) => ({
+        ...doc,
+        arquivo: doc.nome,
+        file: `https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+      }))
+    )
+
+  } catch (erro) {
+
+    console.log(erro)
+
+  }
+
+}
+
+ useEffect(() => {
 
 carregarArquivos()
 
 }, [])
-
-const carregarArquivos = async () => {
-
-try {
-
-```
-const resposta = await axios.get(
-
-  'https://sistema-escola-api.onrender.com//arquivos?tipo=Coordenador'
-
-)
-
-setDocumentos(resposta.data)
-```
-
-} catch (erro) {
-
-```
-console.log(erro)
-```
-
-}
-
-}
-
 
   const [professores, setProfessores] = useState([
 
@@ -373,23 +374,46 @@ const adicionarProfessor = () => {
 />
 
           <button
-  onClick={() => {
+ onClick={async () => {
 
-    if (!novoDocumento) return
+  if (!novoDocumento) return
 
-    const novo = {
-  professor: 'Administrador',
-  arquivo: novoDocumento.name,
-  file: URL.createObjectURL(novoDocumento),
-  status: 'Pendente',
-  data: new Date().toLocaleString(),
-}
+  const formData = new FormData()
 
-    setDocumentos([...documentos, novo])
+  formData.append(
+    'arquivo',
+    novoDocumento
+  )
 
-    setNovoDocumento(null)
+  formData.append(
+    'usuario',
+    'Administrador'
+  )
 
-  }}
+  try {
+
+    const resposta = await axios.post(
+
+      'https://sistema-escola-api.onrender.com/upload',
+
+      formData
+
+    )
+
+    console.log(resposta.data)
+
+    alert('Documento enviado com sucesso!')
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    alert('Erro ao enviar documento')
+
+  }
+
+}}
+
   className="mt-6 bg-gradient-to-r from-blue-500 to-blue-700 hover:scale-110 hover:shadow-blue-500/40 transition text-white px-8 py-4 rounded-2xl flex items-center gap-3"
 >
 
@@ -777,7 +801,7 @@ setDocumentos(novaLista)
 
 window.open(
 
-`https://sistema-escola-api.onrender.com/uploads/${doc.arquivo}`,
+`https://SEU-BACKEND.onrender.com/uploads/${doc.arquivo}`,
 
 '_blank'
 
