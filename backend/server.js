@@ -667,6 +667,30 @@ app.delete(
 // SERVIDOR
 // ======================================
 
+app.get('/usuarios', (req, res) => {
+
+  db.all(
+
+    'SELECT id, usuario, tipo FROM usuarios',
+
+    [],
+
+    (erro, rows) => {
+
+      if (erro) {
+
+        return res.json([])
+
+      }
+
+      res.json(rows)
+
+    }
+
+  )
+
+})
+
 app.listen(3001, () => {
 
   console.log('=======================')
