@@ -98,42 +98,6 @@ db.serialize(() => {
 
   `)
 
-  db.run(`
-
-    CREATE TABLE IF NOT EXISTS arquivos (
-
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-      nome TEXT,
-
-      usuario TEXT,
-
-      data TEXT,
-
-      status TEXT
-
-    )
-
-  `)
-
-})
-
-db.run(`
-
-CREATE TABLE IF NOT EXISTS usuarios (
-
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-  usuario TEXT UNIQUE,
-
-  senha TEXT,
-
-  tipo TEXT
-
-)
-
-`)
-
 // ======================================
 // ADMIN PADRÃO
 // ======================================
@@ -161,9 +125,46 @@ db.get(
 
         [
 
-          "admin",
-          "123456",
-          "Administrador"
+          bcrypt.hash('123456', 10).then((senhaHash) => {
+
+  db.get(
+
+    "SELECT * FROM usuarios WHERE usuario = ?",
+
+    ["admin"],
+
+    (erro, row) => {
+
+      if (!row) {
+
+        db.run(
+
+          `
+
+          INSERT INTO usuarios
+          (usuario, senha, tipo)
+
+          VALUES (?, ?, ?)
+
+          `,
+
+          [
+
+            "admin",
+            senhaHash,
+            "Administrador"
+
+          ]
+
+        )
+
+      }
+
+    }
+
+  )
+
+})
 
         ]
 
@@ -183,7 +184,7 @@ app.post(
 
   '/login',
 
-  (req, res) => {
+  async (req, res) => {
 
     const {
 
@@ -200,20 +201,32 @@ app.post(
       FROM usuarios
 
       WHERE usuario = ?
-      AND senha = ?
 
       `,
 
-      [
+      [usuario],
 
-        usuario,
-        senha
-
-      ],
-
-      (erro, user) => {
+      async (erro, user) => {
 
         if (erro || !user) {
+
+          return res.json({
+
+            sucesso: false
+
+          })
+
+        }
+
+        const senhaValida = await bcrypt.compare(
+
+          senha,
+
+          user.senha
+
+        )
+
+        if (!senhaValida) {
 
           return res.json({
 
@@ -660,5 +673,7 @@ app.listen(3001, () => {
   console.log('SERVIDOR ONLINE')
   console.log('PORTA 3001')
   console.log('=======================')
+
+})
 
 })
