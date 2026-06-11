@@ -1,7 +1,3 @@
-const [usuario, setUsuario] = useState('')
-const [senha, setSenha] = useState('')
-const [logado, setLogado] = useState(false)
-
 import axios from 'axios'
 
 import { useState, useEffect } from 'react'
@@ -30,7 +26,13 @@ import {
 export default function App() {
 
   const [tela, setTela] = useState('dashboard')
-
+  
+  const [usuario, setUsuario] = useState('')
+  
+  const [senha, setSenha] = useState('')
+  
+  const [logado, setLogado] = useState(false)
+  
   const [novoDocumento, setNovoDocumento] = useState(null)
 
   const [pesquisa, setPesquisa] = useState('')
