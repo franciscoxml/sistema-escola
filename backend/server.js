@@ -118,44 +118,42 @@ db.serialize(() => {
 
 })
 
+db.run(`
+
+CREATE TABLE IF NOT EXISTS usuarios (
+
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+  usuario TEXT UNIQUE,
+
+  senha TEXT,
+
+  tipo TEXT
+
+)
+
+`)
+
 // ======================================
 // ADMIN PADRÃO
 // ======================================
 
 db.get(
 
-  `
+  "SELECT * FROM usuarios WHERE usuario = ?",
 
-  SELECT * FROM usuarios
-  WHERE usuario = ?
+  ["admin"],
 
-  `,
+  (erro, row) => {
 
-  ['admin'],
-
-  async (erro, usuario) => {
-
-    if (!usuario) {
-
-      const senhaHash =
-      await bcrypt.hash(
-
-        'admin123',
-        10
-
-      )
+    if (!row) {
 
       db.run(
 
         `
 
-        INSERT INTO usuarios (
-
-          usuario,
-          senha,
-          tipo
-
-        )
+        INSERT INTO usuarios
+        (usuario, senha, tipo)
 
         VALUES (?, ?, ?)
 
@@ -163,23 +161,11 @@ db.get(
 
         [
 
-          'admin',
-          senhaHash,
-          'Coordenador'
+          "admin",
+          "123456",
+          "Administrador"
 
-        ],
-
-        (erroInsert) => {
-
-          if (!erroInsert) {
-
-            console.log(
-              'ADMIN CRIADO'
-            )
-
-          }
-
-        }
+        ]
 
       )
 
@@ -210,14 +196,22 @@ app.post(
 
       `
 
-      SELECT * FROM usuarios
+      SELECT *
+      FROM usuarios
+
       WHERE usuario = ?
+      AND senha = ?
 
       `,
 
-      [usuario],
+      [
 
-      async (erro, user) => {
+        usuario,
+        senha
+
+      ],
+
+      (erro, user) => {
 
         if (erro || !user) {
 
@@ -229,57 +223,13 @@ app.post(
 
         }
 
-        const senhaCorreta =
-        await bcrypt.compare(
-
-          senha,
-          user.senha
-
-        )
-
-        if (!senhaCorreta) {
-
-          return res.json({
-
-            sucesso: false
-
-          })
-
-        }
-
-        const token = jwt.sign(
-
-          {
-
-            id: user.id,
-            usuario: user.usuario,
-            tipo: user.tipo
-
-          },
-
-          SECRET,
-
-          {
-
-            expiresIn: '8h'
-
-          }
-
-        )
-
         res.json({
 
           sucesso: true,
 
-          token,
+          usuario: user.usuario,
 
-          usuario: {
-
-            id: user.id,
-            usuario: user.usuario,
-            tipo: user.tipo
-
-          }
+          tipo: user.tipo
 
         })
 
