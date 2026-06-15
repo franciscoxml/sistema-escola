@@ -691,6 +691,62 @@ app.get('/usuarios', (req, res) => {
 
 })
 
+app.get('/usuarios', (req, res) => {
+
+  db.all(
+
+    'SELECT id, usuario, tipo FROM usuarios',
+
+    (erro, rows) => {
+
+      if (erro) {
+
+        return res.json([])
+
+      }
+
+      res.json(rows)
+
+    }
+
+  )
+
+})
+
+app.delete(
+
+  '/usuarios/:id',
+
+  (req, res) => {
+
+    db.run(
+
+      'DELETE FROM usuarios WHERE id = ?',
+
+      [req.params.id],
+
+      function (erro) {
+
+        if (erro) {
+
+          return res.json({
+            sucesso: false
+          })
+
+        }
+
+        res.json({
+          sucesso: true
+        })
+
+      }
+
+    )
+
+  }
+
+)
+
 app.listen(3001, () => {
 
   console.log('=======================')

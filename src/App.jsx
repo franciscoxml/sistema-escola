@@ -24,7 +24,9 @@ import {
 } from 'recharts'
 
 export default function App() {
-
+  
+  const [dadosUsuario, setDadosUsuario] = useState(null)
+ 
   const [tela, setTela] = useState('dashboard')
   
   const [usuario, setUsuario] = useState('')
@@ -39,6 +41,14 @@ export default function App() {
 
   const [pdfAtual, setPdfAtual] = useState(null)
 
+  const dadosUsuario = JSON.parse(
+  localStorage.getItem('usuario')
+  )
+
+  const tipoUsuario = dadosUsuario?.tipo
+
+  const nomeUsuario = dadosUsuario?.usuario
+  
   const removerDocumento = async (id) => {
 
   try {
@@ -70,16 +80,23 @@ export default function App() {
 
     const resposta = await axios.get(
 
-      'https://sistema-escola-api.onrender.com/arquivos?tipo=Coordenador'
+      `https://sistema-escola-api.onrender.com/arquivos?usuario=${nomeUsuario}&tipo=${tipoUsuario}`
 
     )
 
     setDocumentos(
-      resposta.data.map((doc) => ({
+
+      resposta.data.map(doc => ({
+
         ...doc,
+
         arquivo: doc.nome,
-        file: `https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+
+        file:
+        `https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+
       }))
+
     )
 
   } catch (erro) {
@@ -87,6 +104,8 @@ export default function App() {
     console.log(erro)
 
   }
+
+}
 
 }
 
@@ -101,6 +120,10 @@ useEffect(() => {
   const usuarioSalvo = localStorage.getItem('usuario')
 
   if (usuarioSalvo) {
+
+    const dados = JSON.parse(usuarioSalvo)
+
+    setDadosUsuario(dados)
 
     setLogado(true)
 
@@ -209,15 +232,18 @@ if (!logado) {
 
               if (resposta.data.sucesso) {
 
+                
+
                 localStorage.setItem(
+  'usuario',
+  JSON.stringify(resposta.data)
+)
 
-                  'usuario',
+setDadosUsuario(
+  resposta.data
+)
 
-                  JSON.stringify(resposta.data)
-
-                )
-
-                setLogado(true)
+setLogado(true)
 
               } else {
 
@@ -230,6 +256,96 @@ if (!logado) {
               console.log(erro)
 
               alert('Erro ao conectar ao servidor')
+
+            }
+
+          }}
+
+          className="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-xl text-white"
+
+        >
+
+          Entrar
+
+        </button>
+
+      </div>
+
+    </div>
+
+  )
+
+}
+
+if (!logado) {
+
+  return (
+
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+
+      <div className="bg-slate-900 p-10 rounded-3xl w-[450px]">
+
+        <h1 className="text-4xl font-black text-white mb-6">
+
+          Login
+
+        </h1>
+
+        <input
+          type="text"
+          placeholder="Usuário"
+          value={usuario}
+          onChange={(e) => setUsuario(e.target.value)}
+          className="w-full p-4 rounded-xl mb-4 bg-slate-800 text-white"
+        />
+
+        <input
+          type="password"
+          placeholder="Senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          className="w-full p-4 rounded-xl mb-4 bg-slate-800 text-white"
+        />
+
+        <button
+
+          onClick={async () => {
+
+            try {
+
+              const resposta = await axios.post(
+
+                'https://sistema-escola-api.onrender.com/login',
+
+                {
+                  usuario,
+                  senha
+                }
+
+              )
+
+              if (resposta.data.sucesso) {
+
+                localStorage.setItem(
+                  'usuario',
+                  JSON.stringify(resposta.data)
+                )
+
+                setDadosUsuario(
+                  resposta.data
+                )
+
+                setLogado(true)
+
+              } else {
+
+                alert('Usuário ou senha inválidos')
+
+              }
+
+            } catch (erro) {
+
+              alert('Erro ao conectar')
 
             }
 
@@ -291,17 +407,17 @@ if (!logado) {
     Dashboard
   </button>
 
-  <button
-    onClick={() => setTela('professores')}
-    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
-      tela === 'professores'
-        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
-        : 'bg-slate-800/40 hover:bg-slate-700'
-    }`}
-  >
-    <FaUsers />
-    Professores
-  </button>
+  {tipoUsuario === 'Coordenador' && (
+
+<button
+  onClick={() => setTela('professores')}
+  className={`p-4 rounded-2xl flex items-center gap-4`}
+>
+  <FaUsers />
+  Professores
+</button>
+
+)}
 
   <button
     onClick={() => setTela('documentos')}
@@ -315,17 +431,17 @@ if (!logado) {
     Documentos
   </button>
 
-  <button
-    onClick={() => setTela('relatorios')}
-    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
-      tela === 'relatorios'
-        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
-        : 'bg-slate-800/40 hover:bg-slate-700'
-    }`}
-  >
-    <FaChartBar />
-    Relatórios
-  </button>
+  {tipoUsuario === 'Coordenador' && (
+
+<button
+  onClick={() => setTela('relatorios')}
+  className={`p-4 rounded-2xl flex items-center gap-4`}
+>
+  <FaChartBar />
+  Relatórios
+</button>
+
+)}
 
   <button
     onClick={() => setTela('config')}
@@ -345,17 +461,17 @@ if (!logado) {
 
   {/* SAIR */}
 
-  <button
+ <button
 
-  onClick={() => {
+onClick={() => {
 
-    localStorage.removeItem('usuario')
+  localStorage.removeItem('usuario')
 
-    window.location.reload()
+  window.location.reload()
 
-  }}
+}}
 
-  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 transition-all duration-300 p-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl"
+className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 transition-all duration-300 p-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl"
 
 >
 
@@ -370,8 +486,6 @@ if (!logado) {
       {/* CONTEÚDO */}
 
       <div className="flex-1 p-8">
-
-        {/* TOPO */}
 
         {/* TOPO */}
 
@@ -430,11 +544,11 @@ if (!logado) {
       <div>
 
         <h2 className="font-bold">
-          Administrador
+          {dadosUsuario?.usuario}
         </h2>
 
         <p className="text-slate-400 text-sm">
-          Online
+          {dadosUsuario?.tipo}
         </p>
 
       </div>
@@ -524,9 +638,9 @@ if (!logado) {
   )
 
   formData.append(
-    'usuario',
-    'Administrador'
-  )
+  'usuario',
+  nomeUsuario
+)
 
   try {
 
@@ -793,7 +907,9 @@ setDocumentos(novaLista)
 
 </button>
 
-          <button
+          {tipoUsuario === 'Coordenador' && (
+
+<button
   onClick={() => {
 
     const confirmar = window.confirm(
@@ -805,12 +921,14 @@ setDocumentos(novaLista)
     }
 
   }}
-  className="bg-gradient-to-r from-red-500 to-red-700 hover:scale-110 hover:shadow-red-500/40 transition-all duration-300 text-white p-3 rounded-xl shadow-lg"
+  className="bg-red-600 p-3 rounded-xl"
 >
 
   <FaTrash />
 
 </button>
+
+)}
 
         </div>
 
@@ -833,6 +951,8 @@ setDocumentos(novaLista)
 {
   tela === 'professores' && (
 
+    
+
     <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
 
       <h1 className="text-4xl font-black mb-8">
@@ -845,6 +965,40 @@ setDocumentos(novaLista)
 >
 
   + Novo Professor
+
+</button>
+
+<button
+
+onClick={async () => {
+
+  const usuario = prompt('Digite o usuário')
+
+  const senha = prompt('Digite a senha')
+
+  const tipo = prompt('Professor ou Coordenador')
+
+  await axios.post(
+
+    'https://sistema-escola-api.onrender.com/usuarios',
+
+    {
+      usuario,
+      senha,
+      tipo
+    }
+
+  )
+
+  alert('Usuário criado')
+
+}}
+
+className="bg-green-600 hover:bg-green-700 transition px-6 py-4 rounded-2xl font-bold mb-6 ml-4"
+
+>
+
++ Novo Usuário
 
 </button>
 
@@ -1112,5 +1266,3 @@ window.open(
     </div>
 
   )
-
-}
