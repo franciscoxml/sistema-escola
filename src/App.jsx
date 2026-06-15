@@ -41,10 +41,6 @@ export default function App() {
 
   const [pdfAtual, setPdfAtual] = useState(null)
 
-  const dadosUsuario = JSON.parse(
-  localStorage.getItem('usuario')
-  )
-
   const tipoUsuario = dadosUsuario?.tipo
 
   const nomeUsuario = dadosUsuario?.usuario
@@ -105,7 +101,6 @@ export default function App() {
 
   }
 
-}
 
 }
 
@@ -277,101 +272,9 @@ setLogado(true)
 
 }
 
-if (!logado) {
-
-  return (
-
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-
-      <div className="bg-slate-900 p-10 rounded-3xl w-[450px]">
-
-        <h1 className="text-4xl font-black text-white mb-6">
-
-          Login
-
-        </h1>
-
-        <input
-          type="text"
-          placeholder="Usuário"
-          value={usuario}
-          onChange={(e) => setUsuario(e.target.value)}
-          className="w-full p-4 rounded-xl mb-4 bg-slate-800 text-white"
-        />
-
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          className="w-full p-4 rounded-xl mb-4 bg-slate-800 text-white"
-        />
-
-        <button
-
-          onClick={async () => {
-
-            try {
-
-              const resposta = await axios.post(
-
-                'https://sistema-escola-api.onrender.com/login',
-
-                {
-                  usuario,
-                  senha
-                }
-
-              )
-
-              if (resposta.data.sucesso) {
-
-                localStorage.setItem(
-                  'usuario',
-                  JSON.stringify(resposta.data)
-                )
-
-                setDadosUsuario(
-                  resposta.data
-                )
-
-                setLogado(true)
-
-              } else {
-
-                alert('Usuário ou senha inválidos')
-
-              }
-
-            } catch (erro) {
-
-              alert('Erro ao conectar')
-
-            }
-
-          }}
-
-          className="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-xl text-white"
-
-        >
-
-          Entrar
-
-        </button>
-
-      </div>
-
-    </div>
-
-  )
-
-}
-
   return (
 
     <div className="flex min-h-screen bg-gradient-to-br from-[#020617] via-[#0f172a] to-black text-white">
-
-      {/* MENU */}
 
       {/* MENU */}
 
@@ -1266,3 +1169,5 @@ window.open(
     </div>
 
   )
+
+}
