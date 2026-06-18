@@ -8,10 +8,8 @@ import {
   FaUpload,
   FaSignOutAlt,
   FaHome,
-  FaUsers,
   FaFileAlt,
   FaChartBar,
-  FaCog
 } from 'react-icons/fa'
 
 import {
@@ -140,44 +138,6 @@ useEffect(() => {
 
 }, [dadosUsuario])
 
-  const [professores, setProfessores] = useState([
-
-  {
-    nome: 'Professor João',
-    materia: 'Matemática',
-    cor: 'bg-blue-600'
-  },
-
-  {
-    nome: 'Professora Maria',
-    materia: 'Português',
-    cor: 'bg-green-600'
-  },
-
-  {
-    nome: 'Professor Carlos',
-    materia: 'História',
-    cor: 'bg-yellow-500'
-  }
-
-])
-
-const adicionarProfessor = () => {
-
-  const nome = prompt('Nome do professor:')
-  const materia = prompt('Matéria:')
-
-  if (!nome || !materia) return
-
-  const novoProfessor = {
-    nome,
-    materia,
-    cor: 'bg-purple-600'
-  }
-
-  setProfessores([...professores, novoProfessor])
-
-}
 
   const dadosGrafico = [
 
@@ -324,18 +284,6 @@ setLogado(true)
     Dashboard
   </button>
 
-  {tipoUsuario === 'Coordenador' && (
-
-<button
-  onClick={() => setTela('professores')}
-  className={`p-4 rounded-2xl flex items-center gap-4`}
->
-  <FaUsers />
-  Professores
-</button>
-
-)}
-
   <button
     onClick={() => setTela('documentos')}
     className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
@@ -359,18 +307,6 @@ setLogado(true)
 </button>
 
 )}
-
-  <button
-    onClick={() => setTela('config')}
-    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
-      tela === 'config'
-        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
-        : 'bg-slate-800/40 hover:bg-slate-700'
-    }`}
-  >
-    <FaCog />
-    Configurações
-  </button>
 
 </div>
 
@@ -866,102 +802,6 @@ setDocumentos(novaLista)
 }
 
 {
-  tela === 'professores' && (
-
-    
-
-    <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
-
-      <h1 className="text-4xl font-black mb-8">
-        Professores
-      </h1>
-
-<button
-  onClick={adicionarProfessor}
-  className="bg-blue-600 hover:bg-blue-700 transition px-6 py-4 rounded-2xl font-bold mb-6"
->
-
-  + Novo Professor
-
-</button>
-
-<button
-
-onClick={async () => {
-
-  const usuario = prompt('Digite o usuário')
-
-  const senha = prompt('Digite a senha')
-
-  const tipo = prompt('Professor ou Coordenador')
-
-  await axios.post(
-
-    'https://sistema-escola-api.onrender.com/usuarios',
-
-    {
-      usuario,
-      senha,
-      tipo
-    }
-
-  )
-
-  alert('Usuário criado')
-
-}}
-
-className="bg-green-600 hover:bg-green-700 transition px-6 py-4 rounded-2xl font-bold mb-6 ml-4"
-
->
-
-+ Novo Usuário
-
-</button>
-
-      <div className="grid grid-cols-3 gap-6">
-
-  {professores.map((professor, index) => (
-
-    <div
-      key={index}
-      className="bg-slate-800 p-6 rounded-3xl"
-    >
-
-      <div className="flex items-center gap-4">
-
-        <div className={`w-16 h-16 rounded-full ${professor.cor} flex items-center justify-center text-2xl font-bold`}>
-
-          {professor.nome.charAt(0)}
-
-        </div>
-
-        <div>
-
-          <h2 className="text-2xl font-bold">
-            {professor.nome}
-          </h2>
-
-          <p className="text-slate-400 mt-2">
-            {professor.materia}
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  ))}
-
-</div>
-
-    </div>
-
-  )
-}
-
-{
   tela === 'documentos' && (
 
     <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
@@ -1117,59 +957,6 @@ window.open(
           </p>
 
         </div>
-
-      </div>
-
-    </div>
-
-  )
-}
-
-{
-  tela === 'config' && (
-
-    <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
-
-      <h1 className="text-4xl font-black mb-8">
-        Configurações
-      </h1>
-
-      <div className="space-y-6">
-
-        <div className="bg-slate-800 p-6 rounded-3xl">
-
-          <h2 className="text-2xl font-bold">
-            Nome da Escola
-          </h2>
-
-          <input
-            type="text"
-            placeholder="Digite o nome da escola"
-            className="mt-4 w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none"
-          />
-
-        </div>
-
-        <div className="bg-slate-800 p-6 rounded-3xl">
-
-          <h2 className="text-2xl font-bold">
-            Limite de Impressões
-          </h2>
-
-          <input
-            type="number"
-            placeholder="Quantidade máxima"
-            className="mt-4 w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl outline-none"
-          />
-
-        </div>
-
-        <button className="bg-blue-600 hover:bg-blue-700 transition-all duration-300 px-8 py-4 rounded-2xl font-bold">
-
-          Salvar Configurações
-
-        </button>
-
 
       </div>
 
