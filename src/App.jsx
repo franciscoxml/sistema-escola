@@ -64,7 +64,7 @@ export default function App() {
   }
 
 }
-
+ 
 
   const [documentos, setDocumentos] = useState([])
 
@@ -72,13 +72,23 @@ export default function App() {
 
   const carregarArquivos = async () => {
 
+  if (!nomeUsuario || !tipoUsuario) return
+
   try {
 
-    const resposta = await axios.get(
+    console.log('================')
+    console.log('USUARIO:', nomeUsuario)
+    console.log('TIPO:', tipoUsuario)
 
+    const url =
       `https://sistema-escola-api.onrender.com/arquivos?usuario=${nomeUsuario}&tipo=${tipoUsuario}`
 
-    )
+    console.log('URL:', url)
+
+    const resposta = await axios.get(url)
+
+    console.log('RESPOSTA API:')
+    console.log(resposta.data)
 
     setDocumentos(
 
@@ -97,18 +107,12 @@ export default function App() {
 
   } catch (erro) {
 
+    console.log('ERRO:')
     console.log(erro)
 
   }
 
-
 }
-
- useEffect(() => {
-
-carregarArquivos()
-
-}, [])
 
 useEffect(() => {
 
@@ -125,6 +129,16 @@ useEffect(() => {
   }
 
 }, [])
+
+useEffect(() => {
+
+  if (dadosUsuario) {
+
+    carregarArquivos()
+
+  }
+
+}, [dadosUsuario])
 
   const [professores, setProfessores] = useState([
 
@@ -594,11 +608,11 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
   </h2>
 
-  <div className="h-96">
+  <div style={{ width: '100%', height: '400px' }}>
 
-    <ResponsiveContainer width="100%" height="100%">
+  <ResponsiveContainer width="100%" height={400}>
 
-      <LineChart data={dadosGrafico}>
+    <LineChart data={dadosGrafico}>
 
         <XAxis
           dataKey="nome"
