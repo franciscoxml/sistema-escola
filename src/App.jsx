@@ -10,6 +10,7 @@ import {
   FaHome,
   FaFileAlt,
   FaChartBar,
+  FaUsers
 } from 'react-icons/fa'
 
 import {
@@ -29,6 +30,8 @@ export default function App() {
   
   const [usuario, setUsuario] = useState('')
   
+  const [pesquisaUsuario, setPesquisaUsuario] = useState('')
+
   const [senha, setSenha] = useState('')
   
   const [logado, setLogado] = useState(false)
@@ -39,6 +42,14 @@ export default function App() {
 
   const [pdfAtual, setPdfAtual] = useState(null)
 
+  const [novoUsuario, setNovoUsuario] = useState('')
+  
+  const [novaSenha, setNovaSenha] = useState('')
+
+  const [novoTipo, setNovoTipo] = useState('Professor')
+
+  const [usuarios, setUsuarios] = useState([])
+  
   const tipoUsuario = dadosUsuario?.tipo
 
   const nomeUsuario = dadosUsuario?.usuario
@@ -63,7 +74,6 @@ export default function App() {
 
 }
  
-
   const [documentos, setDocumentos] = useState([])
 
   console.log(documentos)
@@ -112,6 +122,24 @@ export default function App() {
 
 }
 
+const carregarUsuarios = async () => {
+
+  try {
+
+    const resposta = await axios.get(
+      'https://sistema-escola-api.onrender.com/usuarios'
+    )
+
+    setUsuarios(resposta.data)
+
+  } catch (erro) {
+
+    console.log(erro)
+
+  }
+
+}
+
 useEffect(() => {
 
   const usuarioSalvo = localStorage.getItem('usuario')
@@ -133,6 +161,12 @@ useEffect(() => {
   if (dadosUsuario) {
 
     carregarArquivos()
+
+    if (dadosUsuario.tipo === 'Coordenador') {
+
+      carregarUsuarios()
+
+    }
 
   }
 
@@ -304,6 +338,22 @@ setLogado(true)
 >
   <FaChartBar />
   Relatórios
+</button>
+
+)}
+
+{tipoUsuario === 'Coordenador' && (
+
+<button
+  onClick={() => setTela('usuarios')}
+  className={`p-4 rounded-2xl flex items-center gap-4 ${
+    tela === 'usuarios'
+      ? 'bg-blue-600'
+      : 'bg-slate-800/40 hover:bg-slate-700'
+  }`}
+>
+ <FaUsers />
+  Usuários
 </button>
 
 )}
@@ -675,15 +725,36 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
 <select
   value={doc.status}
-  onChange={(e) => {
+  onChange={async (e) => {
 
-    const novaLista = [...documentos]
+  const novoStatus = e.target.value
+  
+  console.log("ID:", doc.id)
+  console.log("STATUS:", novoStatus)
+  
+  try {
 
-    novaLista[index].status = e.target.value
+    await axios.put(
 
-    setDocumentos(novaLista)
+      `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
 
-  }}
+      {
+
+        status: novoStatus
+
+      }
+
+    )
+
+    await carregarArquivos()
+
+  } catch (erro) {
+
+    alert('Erro ao atualizar status')
+
+  }
+
+}}
   className="bg-transparent outline-none text-white"
 >
 
@@ -774,7 +845,7 @@ setDocumentos(novaLista)
     }
 
   }}
-  className="bg-red-600 p-3 rounded-xl"
+  className="bg-gradient-to-r from-red-500 to-red-700 hover:scale-110 transition-all duration-300 text-white p-3 rounded-xl"
 >
 
   <FaTrash />
@@ -957,6 +1028,189 @@ window.open(
           </p>
 
         </div>
+
+      </div>
+
+    </div>
+
+  )
+}
+
+{
+  tela === 'usuarios' &&
+  tipoUsuario === 'Coordenador' && (
+
+    <div className="mt-8 bg-slate-900/60 rounded-3xl p-8">
+
+      <h1 className="text-4xl font-black mb-8">
+        Cadastro de Usuários
+      </h1>
+
+      <div className="max-w-xl space-y-4">
+
+        <input
+          type="text"
+          placeholder="Usuário"
+          value={novoUsuario}
+          onChange={(e) => setNovoUsuario(e.target.value)}
+          className="w-full p-4 rounded-xl bg-slate-800"
+        />
+
+        <input
+          type="password"
+          placeholder="Senha"
+          value={novaSenha}
+          onChange={(e) => setNovaSenha(e.target.value)}
+          className="w-full p-4 rounded-xl bg-slate-800"
+        />
+
+        <select
+          value={novoTipo}
+          onChange={(e) => setNovoTipo(e.target.value)}
+          className="w-full p-4 rounded-xl bg-slate-800"
+        >
+          <option>Professor</option>
+          <option>Coordenador</option>
+        </select>
+
+        <button
+          onClick={async () => {
+
+            try {
+
+              await axios.post(
+                'https://sistema-escola-api.onrender.com/usuarios',
+                {
+                  usuario: novoUsuario,
+                  senha: novaSenha,
+                  tipo: novoTipo
+                }
+              )
+
+              alert('Usuário criado com sucesso')
+
+              setNovoUsuario('')
+              setNovaSenha('')
+              setNovoTipo('Professor')
+
+              carregarUsuarios()
+
+            } catch (erro) {
+
+              alert('Erro ao criar usuário')
+
+            }
+
+          }}
+          className="bg-green-600 hover:bg-green-700 px-8 py-4 rounded-2xl font-bold"
+        >
+          Criar Usuário
+        </button>
+
+<div className="mt-8">
+
+<h2 className="text-2xl font-bold mb-6">
+
+Usuários cadastrados
+
+</h2>
+
+<input
+  type="text"
+  placeholder="Pesquisar usuário..."
+  value={pesquisaUsuario}
+  onChange={(e) => setPesquisaUsuario(e.target.value)}
+  className="w-full bg-slate-800 p-4 rounded-2xl mb-6"
+/>
+
+<div className="bg-slate-800 p-5 rounded-2xl mb-6">
+
+  <h2 className="text-slate-400 text-lg">
+
+    Total de usuários
+
+  </h2>
+
+  <h1 className="text-5xl font-black text-blue-500">
+
+    {usuarios.length}
+
+  </h1>
+
+</div>
+
+<div className="space-y-4">
+
+{usuarios
+.filter(user =>
+  user.usuario.toLowerCase().includes(
+    pesquisaUsuario.toLowerCase()
+  )
+)
+.map((user,index)=>(
+
+<div
+key={index}
+className="bg-slate-800 p-5 rounded-2xl flex justify-between items-center"
+>
+
+<div>
+
+<h2 className="font-bold text-xl">
+
+{user.usuario}
+
+</h2>
+
+<p className="text-slate-400">
+
+{user.tipo}
+
+</p>
+
+</div>
+
+<button
+
+onClick={async()=>{
+
+if(window.confirm('Excluir usuário?')){
+
+try{
+
+await axios.delete(
+
+`https://sistema-escola-api.onrender.com/usuarios/${user.id}`
+
+)
+
+carregarUsuarios()
+
+}catch{
+
+alert('Erro ao excluir')
+
+}
+
+}
+
+}}
+
+className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
+
+>
+
+<FaTrash/>
+
+</button>
+
+</div>
+
+))}
+
+</div>
+
+</div>
 
       </div>
 

@@ -691,21 +691,42 @@ app.get('/usuarios', (req, res) => {
 
 })
 
-app.get('/usuarios', (req, res) => {
+app.put('/arquivos/:id', (req, res) => {
 
-  db.all(
+  const { status } = req.body
 
-    'SELECT id, usuario, tipo FROM usuarios',
+  console.log('=================')
+  console.log('ID:', req.params.id)
+  console.log('STATUS:', status)
 
-    (erro, rows) => {
+  db.run(
+
+    `
+    UPDATE arquivos
+    SET status = ?
+    WHERE id = ?
+    `,
+
+    [status, req.params.id],
+
+    function (erro) {
+
+      console.log('ERRO:', erro)
+      console.log('ALTERADOS:', this.changes)
 
       if (erro) {
 
-        return res.json([])
+        return res.json({
+          sucesso: false,
+          erro: erro.message
+        })
 
       }
 
-      res.json(rows)
+      res.json({
+        sucesso: true,
+        alterados: this.changes
+      })
 
     }
 
