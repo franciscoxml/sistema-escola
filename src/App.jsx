@@ -711,23 +711,31 @@ quantidade
 
               <tr className="text-left text-slate-400 uppercase text-sm tracking-widest">
 
-                <th className="pb-4">
-                  Professor
-                </th>
+<th className="pb-4">
+Professor
+</th>
 
-                <th className="pb-4">
-                  Arquivo
-                </th>
+<th className="pb-4">
+Arquivo
+</th>
 
-                <th className="pb-4">
-                  Status
-                </th>
+<th className="pb-4">
+Quantidade
+</th>
 
-                <th className="pb-4">
-                  Ações
-                </th>
+<th className="pb-4">
+Status
+</th>
 
-              </tr>
+<th className="pb-4">
+Data Impressão
+</th>
+
+<th className="pb-4">
+Ações
+</th>
+
+</tr>
 
             </thead>
 
@@ -794,6 +802,10 @@ doc.status === filtroStatus
       </td>
 
       <td>
+        {doc.quantidade}
+      </td>
+
+      <td>
 
         <span
   className={`px-4 py-2 rounded-full text-sm font-bold text-white ${
@@ -818,15 +830,27 @@ doc.status === filtroStatus
 
     await axios.put(
 
-      `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
+`https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
 
-      {
+{
 
-        status: novoStatus
+status: novoStatus,
 
-      }
+observacao: doc.observacao || '',
 
-    )
+quantidade: doc.quantidade || 0,
+
+dataImpressao:
+
+novoStatus === 'Impresso'
+
+? new Date().toLocaleString()
+
+: null
+
+}
+
+)
 
     await carregarArquivos()
 
@@ -857,7 +881,11 @@ doc.status === filtroStatus
 </span>
 
       </td>
+<td>
 
+{doc.dataImpressao || '-'}
+
+</td>
       <td>
 
         <div className="flex gap-3">

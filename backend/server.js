@@ -106,83 +106,64 @@ dataImpressao TEXT
 
   `)
 
+  db.run(`
+
+CREATE TABLE IF NOT EXISTS usuarios (
+
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+usuario TEXT UNIQUE,
+
+senha TEXT,
+
+tipo TEXT
+
+)
+
+`)
+
 // ======================================
 // ADMIN PADRÃO
 // ======================================
 
 db.get(
 
-  "SELECT * FROM usuarios WHERE usuario = ?",
+"SELECT * FROM usuarios WHERE usuario = ?",
 
-  ["admin"],
+["admin"],
 
-  (erro, row) => {
+async (erro, row) => {
 
-    if (!row) {
+if (!row) {
 
-      db.run(
+const senhaHash = await bcrypt.hash(
+"123456",
+10
+)
 
-        `
+db.run(
 
-        INSERT INTO usuarios
-        (usuario, senha, tipo)
+`
+INSERT INTO usuarios
+(usuario, senha, tipo)
+VALUES (?, ?, ?)
+`,
 
-        VALUES (?, ?, ?)
-
-        `,
-
-        [
-
-          bcrypt.hash('123456', 10).then((senhaHash) => {
-
-  db.get(
-
-    "SELECT * FROM usuarios WHERE usuario = ?",
-
-    ["admin"],
-
-    (erro, row) => {
-
-      if (!row) {
-
-        db.run(
-
-          `
-
-          INSERT INTO usuarios
-          (usuario, senha, tipo)
-
-          VALUES (?, ?, ?)
-
-          `,
-
-          [
-
-            "admin",
-            senhaHash,
-            "Administrador"
-
-          ]
-
-        )
-
-      }
-
-    }
-
-  )
-
-})
-
-        ]
-
-      )
-
-    }
-
-  }
+[
+"admin",
+senhaHash,
+"Coordenador"
+]
 
 )
+
+}
+
+}
+
+)
+
+})
 
 // ======================================
 // LOGIN
@@ -288,14 +269,14 @@ app.post(
 
       }
 
-      const nomeArquivo =
-      req.file.filename
-
       const usuario =
-      req.body.usuario
+req.body.usuario
 
-      const data =
-      new Date().toLocaleString()
+const quantidade =
+req.body.quantidade || 0
+
+const data =
+new Date().toLocaleString()
 
       db.run(
 
@@ -316,13 +297,11 @@ VALUES (?, ?, ?, ?, ?)
         `,
 
         [
-
-nomeArquivo,
-usuario,
-data,
-'Pendente',
-quantidade
-
+  nomeArquivo,
+  usuario,
+  data,
+  'Pendente',
+  quantidade
 ],
 
         function(erro) {
@@ -792,7 +771,5 @@ app.listen(3001, () => {
   console.log('SERVIDOR ONLINE')
   console.log('PORTA 3001')
   console.log('=======================')
-
-})
 
 })
