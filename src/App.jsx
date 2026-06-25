@@ -829,27 +829,12 @@ doc.status === filtroStatus
   try {
 
     await axios.put(
-
-`https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
-
-{
-
-status: novoStatus,
-
-observacao: doc.observacao || '',
-
-quantidade: doc.quantidade || 0,
-
-dataImpressao:
-
-novoStatus === 'Impresso'
-
-? new Date().toLocaleString()
-
-: null
-
-}
-
+  `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
+  {
+    status: novoStatus,
+    observacao: doc.observacao || '',
+    quantidade: doc.quantidade || 0
+  }
 )
 
     await carregarArquivos()

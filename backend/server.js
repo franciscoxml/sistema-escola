@@ -278,6 +278,8 @@ req.body.quantidade || 0
 const data =
 new Date().toLocaleString()
 
+const nomeArquivo = req.file.filename
+
       db.run(
 
         `
@@ -685,9 +687,16 @@ app.put('/arquivos/:id', (req, res) => {
   const {
     status,
     observacao,
-    quantidade,
-    dataImpressao
+    quantidade
   } = req.body
+
+  let dataImpressao = null
+
+  if (status === 'Impresso') {
+    dataImpressao = new Date().toLocaleString('pt-BR')
+  }
+
+  console.log(req.body)
 
   db.run(
 
