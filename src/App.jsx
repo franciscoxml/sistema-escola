@@ -38,7 +38,11 @@ export default function App() {
   
   const [novoDocumento, setNovoDocumento] = useState(null)
 
+  const [quantidade, setQuantidade] = useState('')
+
   const [pesquisa, setPesquisa] = useState('')
+
+  const [filtroStatus, setFiltroStatus] = useState('Todos')
 
   const [pdfAtual, setPdfAtual] = useState(null)
 
@@ -100,18 +104,23 @@ export default function App() {
 
     setDocumentos(
 
-      resposta.data.map(doc => ({
+resposta.data
 
-        ...doc,
+.sort((a,b)=>b.id-a.id)
 
-        arquivo: doc.nome,
+.map(doc => ({
 
-        file:
-        `https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+...
+doc,
 
-      }))
+arquivo: doc.nome,
 
-    )
+file:
+`https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+
+}))
+
+)
 
   } catch (erro) {
 
@@ -426,6 +435,19 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
       className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white outline-none focus:border-blue-500 transition-all w-80"
     />
 
+<select
+value={filtroStatus}
+onChange={(e)=>setFiltroStatus(e.target.value)}
+className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white"
+>
+
+<option>Todos</option>
+<option>Pendente</option>
+<option>Impresso</option>
+<option>Cancelado</option>
+
+</select>
+
     {/* NOTIFICAÇÃO */}
 
     <button className="bg-slate-800 hover:bg-slate-700 transition-all duration-300 p-4 rounded-2xl">
@@ -512,6 +534,26 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
         </div>
 
+<div className="bg-slate-800 p-6 rounded-3xl">
+
+<h2 className="text-2xl font-bold">
+
+Impressos
+
+</h2>
+
+<p className="text-5xl font-black text-green-500 mt-4">
+
+{
+documentos.filter(
+doc=>doc.status==="Impresso"
+).length
+}
+
+</p>
+
+</div>
+
         {/* ENVIAR */}
 
         <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl">
@@ -526,6 +568,14 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
   type="file"
   onChange={(e) => setNovoDocumento(e.target.files[0])}
   className="mt-6 w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 text-white"
+/>
+
+<input
+type="number"
+placeholder="Quantidade de cópias"
+value={quantidade}
+onChange={(e)=>setQuantidade(e.target.value)}
+className="mt-6 w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 text-white"
 />
 
           <button
@@ -543,6 +593,11 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
   formData.append(
   'usuario',
   nomeUsuario
+)
+
+formData.append(
+'quantidade',
+quantidade
 )
 
   try {
@@ -679,12 +734,39 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
             <tbody>
 
   {documentos
-  .filter((doc) =>
-  doc.nome.toLowerCase().includes(
-    pesquisa.toLowerCase()
-  )
+
+.filter(doc =>
+
+doc.nome.toLowerCase().includes(
+pesquisa.toLowerCase()
 )
-  .map((doc, index) => (
+
+||
+
+doc.usuario.toLowerCase().includes(
+pesquisa.toLowerCase()
+
+)
+
+)
+
+.filter(doc =>
+
+filtroStatus === 'Todos'
+
+?
+
+true
+
+:
+
+doc.status === filtroStatus
+
+)
+
+.map((doc,index)=>(
+
+
 
     <tr
       key={index}
@@ -991,7 +1073,7 @@ window.open(
         Relatórios
       </h1>
 
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-4 gap-6">
 
         <div className="bg-slate-800 p-6 rounded-3xl">
 
@@ -1000,7 +1082,7 @@ window.open(
           </h2>
 
           <p className="text-5xl font-black text-blue-500 mt-4">
-            542
+            {documentos.length}
           </p>
 
         </div>
@@ -1012,7 +1094,9 @@ window.open(
           </h2>
 
           <p className="text-5xl font-black text-green-500 mt-4">
-            12
+            {
+usuarios.length
+}
           </p>
 
         </div>
@@ -1024,7 +1108,11 @@ window.open(
           </h2>
 
           <p className="text-5xl font-black text-yellow-500 mt-4">
-            7
+            {
+documentos.filter(
+doc=>doc.status==="Pendente"
+).length
+}
           </p>
 
         </div>

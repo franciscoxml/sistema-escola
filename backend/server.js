@@ -84,17 +84,25 @@ db.serialize(() => {
 
   db.run(`
 
-    CREATE TABLE IF NOT EXISTS usuarios (
+    CREATE TABLE IF NOT EXISTS arquivos (
 
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-      usuario TEXT UNIQUE,
+nome TEXT,
 
-      senha TEXT,
+usuario TEXT,
 
-      tipo TEXT
+data TEXT,
 
-    )
+status TEXT,
+
+observacao TEXT,
+
+quantidade INTEGER,
+
+dataImpressao TEXT
+
+)
 
   `)
 
@@ -295,25 +303,27 @@ app.post(
 
         INSERT INTO arquivos (
 
-          nome,
-          usuario,
-          data,
-          status
+nome,
+usuario,
+data,
+status,
+quantidade
 
-        )
+)
 
-        VALUES (?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?)
 
         `,
 
         [
 
-          nomeArquivo,
-          usuario,
-          data,
-          'Pendente'
+nomeArquivo,
+usuario,
+data,
+'Pendente',
+quantidade
 
-        ],
+],
 
         function(erro) {
 
@@ -693,39 +703,47 @@ app.get('/usuarios', (req, res) => {
 
 app.put('/arquivos/:id', (req, res) => {
 
-  const { status } = req.body
-
-  console.log('=================')
-  console.log('ID:', req.params.id)
-  console.log('STATUS:', status)
+  const {
+    status,
+    observacao,
+    quantidade,
+    dataImpressao
+  } = req.body
 
   db.run(
 
     `
     UPDATE arquivos
-    SET status = ?
+    SET
+      status = ?,
+      observacao = ?,
+      quantidade = ?,
+      dataImpressao = ?
     WHERE id = ?
     `,
 
-    [status, req.params.id],
+    [
+      status,
+      observacao,
+      quantidade,
+      dataImpressao,
+      req.params.id
+    ],
 
     function (erro) {
 
-      console.log('ERRO:', erro)
-      console.log('ALTERADOS:', this.changes)
-
       if (erro) {
 
+        console.log(erro)
+
         return res.json({
-          sucesso: false,
-          erro: erro.message
+          sucesso: false
         })
 
       }
 
       res.json({
-        sucesso: true,
-        alterados: this.changes
+        sucesso: true
       })
 
     }
