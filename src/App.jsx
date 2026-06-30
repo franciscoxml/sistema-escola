@@ -203,9 +203,15 @@ if (!logado) {
 
         <h1 className="text-4xl text-white font-bold mb-6">
 
-          Login
+          Sistema de Impressões
 
         </h1>
+
+<p className="text-slate-400 mb-6">
+
+Escola Argentina Santos da Silva
+
+</p>
 
         <input
           type="text"
@@ -273,7 +279,7 @@ setLogado(true)
 
           }}
 
-          className="w-full bg-blue-600 hover:bg-blue-700 p-4 rounded-xl text-white"
+          className="w-full bg-green-600 hover:bg-green-700"
 
         >
 
@@ -291,7 +297,7 @@ setLogado(true)
 
   return (
 
-    <div className="flex min-h-screen bg-gradient-to-br from-[#020617] via-[#0f172a] to-black text-white">
+    <div className="flex min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-green-950">
 
       {/* MENU */}
 
@@ -301,13 +307,13 @@ setLogado(true)
 
     <div>
 
-      <h1 className="text-4xl font-black tracking-tight">
-        NEXUS
-      </h1>
+      <h1 className="text-3xl font-black tracking-tight text-blue-400">
+  Escola Argentina Santos da Silva
+</h1>
 
       <p className="text-slate-400 mt-2">
-        Gestão Escolar
-      </p>
+  Sistema Interno de Controle de Impressões
+</p>
 
     </div>
 
@@ -407,17 +413,17 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
   <div>
 
-    <h1 className="text-6xl font-black tracking-tight">
+    <h1 className="text-5xl font-black tracking-tight text-blue-400">
 
-      Controle de Impressões
+Escola Argentina Santos da Silva
 
-    </h1>
+</h1>
 
     <p className="mt-3 text-slate-300 text-lg">
 
-      Sistema interno escolar
+Sistema de Controle de Impressões e Documentos
 
-    </p>
+</p>
 
   </div>
 
@@ -460,11 +466,11 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
     <div className="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-2xl">
 
-      <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center font-bold text-lg">
+      <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center font-bold text-lg">
 
-        A
+🏫
 
-      </div>
+</div>
 
       <div>
 
