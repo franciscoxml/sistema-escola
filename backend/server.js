@@ -106,6 +106,72 @@ dataImpressao TEXT
 
   `)
 
+// ======================================
+// ATUALIZAR BANCO AUTOMATICAMENTE
+// ======================================
+
+db.all("PRAGMA table_info(arquivos)", (erro, colunas) => {
+
+  if (erro) {
+    console.log("Erro ao verificar tabela:", erro)
+    return
+  }
+
+  const nomes = colunas.map(c => c.name)
+
+  if (!nomes.includes("quantidade")) {
+
+    db.run(
+      "ALTER TABLE arquivos ADD COLUMN quantidade INTEGER DEFAULT 0",
+      (erro) => {
+
+        if (erro) {
+          console.log("Erro criando coluna quantidade:", erro)
+        } else {
+          console.log("Coluna quantidade criada.")
+        }
+
+      }
+    )
+
+  }
+
+  if (!nomes.includes("observacao")) {
+
+    db.run(
+      "ALTER TABLE arquivos ADD COLUMN observacao TEXT",
+      (erro) => {
+
+        if (erro) {
+          console.log("Erro criando coluna observacao:", erro)
+        } else {
+          console.log("Coluna observacao criada.")
+        }
+
+      }
+    )
+
+  }
+
+  if (!nomes.includes("dataImpressao")) {
+
+    db.run(
+      "ALTER TABLE arquivos ADD COLUMN dataImpressao TEXT",
+      (erro) => {
+
+        if (erro) {
+          console.log("Erro criando coluna dataImpressao:", erro)
+        } else {
+          console.log("Coluna dataImpressao criada.")
+        }
+
+      }
+    )
+
+  }
+
+})
+
   db.run(`
 
 CREATE TABLE IF NOT EXISTS usuarios (
@@ -280,6 +346,13 @@ new Date().toLocaleString()
 
 const nomeArquivo = req.file.filename
 
+console.log("=== DADOS QUE SERÃO GRAVADOS ===");
+console.log("nomeArquivo:", nomeArquivo);
+console.log("usuario:", usuario);
+console.log("data:", data);
+console.log("quantidade:", quantidade);
+console.log("===============================");
+
       db.run(
 
         `
@@ -359,11 +432,12 @@ VALUES (?, ?, ?, ?, ?)
 // LISTAR ARQUIVOS
 // ======================================
 
-app.get(
+app.get('/arquivos', (req, res) => {
 
-  '/arquivos',
-
-  (req, res) => {
+console.log("=== LISTAR ARQUIVOS ===")
+console.log("Usuário:", req.query.usuario)
+console.log("Tipo:", req.query.tipo)
+console.log("=======================")
 
     const usuario =
     req.query.usuario
