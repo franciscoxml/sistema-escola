@@ -305,17 +305,35 @@ setLogado(true)
 
   <div>
 
-    <div>
+    <div className="text-center">
 
-      <h1 className="text-3xl font-black tracking-tight text-blue-400">
-  Escola Argentina Santos da Silva
-</h1>
+  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center text-2xl shadow-lg">
 
-      <p className="text-slate-400 mt-2">
-  Sistema Interno de Controle de Impressões
-</p>
+👨‍🏫
 
-    </div>
+</div>
+
+  <h1 className="mt-5 text-2xl font-black text-white leading-tight">
+
+    Escola Argentina
+
+  </h1>
+
+  <p className="text-lg text-blue-400 font-semibold">
+
+    Santos da Silva
+
+  </p>
+
+  <div className="mt-4 h-px bg-slate-700"></div>
+
+  <p className="mt-4 text-slate-400 text-sm uppercase tracking-widest">
+
+    Sistema de Impressões
+
+  </p>
+
+</div>
 
     {/* MENU ITENS */}
 
@@ -413,17 +431,27 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
   <div>
 
-    <h1 className="text-5xl font-black tracking-tight text-blue-400">
+    <div>
+
+<h1 className="text-5xl font-black text-white">
 
 Escola Argentina Santos da Silva
 
 </h1>
 
-    <p className="mt-3 text-slate-300 text-lg">
+<p className="text-blue-400 text-xl mt-2 font-semibold">
 
-Sistema de Controle de Impressões e Documentos
+Sistema Inteligente de Controle de Impressões
 
 </p>
+
+<p className="text-slate-400 mt-2">
+
+Secretaria Escolar • Professores • Coordenação
+
+</p>
+
+</div>
 
   </div>
 
@@ -474,13 +502,17 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
       <div>
 
-        <h2 className="font-bold">
-          {dadosUsuario?.usuario}
-        </h2>
+        <h2 className="font-bold text-lg">
 
-        <p className="text-slate-400 text-sm">
-          {dadosUsuario?.tipo}
-        </p>
+{dadosUsuario?.usuario}
+
+</h2>
+
+        <p className="text-green-400 font-semibold">
+
+{dadosUsuario?.tipo}
+
+</p>
 
       </div>
 
