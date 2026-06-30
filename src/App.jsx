@@ -530,65 +530,149 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
         <div className="grid grid-cols-3 gap-6 mt-8">
 
-          <div className="bg-gradient-to-br from-blue-500 to-blue-700 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
+          <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
 
-            <h2 className="text-xl">
-              Total
-            </h2>
+<div className="flex justify-between items-center">
 
-            <h1 className="text-6xl font-bold mt-4">
-              {documentos.length}
-            </h1>
+<div>
 
-          </div>
+<p className="text-blue-200 uppercase tracking-widest">
 
-          <div className="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
+TOTAL DE DOCUMENTOS
 
-            <h2 className="text-xl">
-              Impressos
-            </h2>
+</p>
 
-            <h1 className="text-6xl font-bold mt-4">
-              {
-  documentos.filter(doc => doc.status === 'Impresso').length
-}
-            </h1>
+<h1 className="text-6xl font-black mt-4">
 
-          </div>
+{documentos.length}
 
-          <div className="bg-gradient-to-br from-yellow-400 to-yellow-600 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
+</h1>
 
-            <h2 className="text-xl">
-              Pendentes
-            </h2>
+<p className="mt-3 text-blue-100">
 
-            <h1 className="text-6xl font-bold mt-4">
-              {
-  documentos.filter(doc => doc.status === 'Pendente').length
-}
-            </h1>
+Documentos enviados
 
-          </div>
+</p>
+
+</div>
+
+<div className="text-7xl">
+
+📄
+
+</div>
+
+</div>
+
+</div>
+
+          <div className="bg-gradient-to-br from-green-600 via-green-700 to-green-900 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
+
+<div className="flex justify-between items-center">
+
+<div>
+
+<p className="text-green-200 uppercase tracking-widest">
+
+IMPRESSOS
+
+</p>
+
+<h1 className="text-6xl font-black mt-4">
+
+{documentos.filter(doc => doc.status === 'Impresso').length}
+
+</h1>
+
+<p className="mt-3 text-green-100">
+
+Documentos concluídos
+
+</p>
+
+</div>
+
+<div className="text-7xl">
+
+🖨️
+
+</div>
+
+</div>
+
+</div>
+
+          <div className="bg-gradient-to-br from-yellow-500 via-yellow-600 to-orange-700 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
+
+<div className="flex justify-between items-center">
+
+<div>
+
+<p className="text-yellow-100 uppercase tracking-widest">
+
+PENDENTES
+
+</p>
+
+<h1 className="text-6xl font-black mt-4">
+
+{documentos.filter(doc => doc.status === 'Pendente').length}
+
+</h1>
+
+<p className="mt-3 text-yellow-50">
+
+Aguardando impressão
+
+</p>
+
+</div>
+
+<div className="text-7xl">
+
+⏳
+
+</div>
+
+</div>
+
+</div>
 
         </div>
 
-<div className="bg-slate-800 p-6 rounded-3xl">
+<div className="bg-gradient-to-br from-green-600 via-green-700 to-green-900 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
 
-<h2 className="text-2xl font-bold">
+<div className="flex justify-between items-center">
 
-Impressos
+<div>
 
-</h2>
+<p className="text-green-200 uppercase tracking-widest">
 
-<p className="text-5xl font-black text-green-500 mt-4">
-
-{
-documentos.filter(
-doc=>doc.status==="Impresso"
-).length
-}
+IMPRESSOS
 
 </p>
+
+<h1 className="text-6xl font-black mt-4">
+
+{documentos.filter(doc => doc.status === 'Impresso').length}
+
+</h1>
+
+<p className="mt-3 text-green-100">
+
+Documentos concluídos
+
+</p>
+
+</div>
+
+<div className="text-7xl">
+
+🖨️
+
+</div>
+
+</div>
 
 </div>
 
