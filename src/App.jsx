@@ -22,6 +22,68 @@ import {
   ResponsiveContainer
 } from 'recharts'
 
+function MenuBotao({
+  ativo,
+  onClick,
+  icone,
+  texto
+}) {
+
+  return (
+
+    <button
+
+      onClick={onClick}
+
+      className={`
+
+      w-full
+      p-5
+      rounded-2xl
+      flex
+      items-center
+      gap-4
+
+      text-lg
+      font-semibold
+
+      transition-all
+      duration-300
+
+      hover:translate-x-2
+      hover:shadow-xl
+
+      ${
+        ativo
+
+          ? 'bg-gradient-to-r from-blue-600 to-blue-800 shadow-blue-500/40 shadow-2xl'
+
+          : 'bg-slate-800/40 hover:bg-slate-700'
+
+      }
+
+      `}
+
+    >
+
+      <div className="text-2xl">
+
+        {icone}
+
+      </div>
+
+      <span>
+
+        {texto}
+
+      </span>
+
+    </button>
+
+  )
+
+}
+
 export default function App() {
   
   const [dadosUsuario, setDadosUsuario] = useState(null)
@@ -339,55 +401,39 @@ setLogado(true)
 
     <div className="mt-14 flex flex-col gap-4">
 
-  <button
-    onClick={() => setTela('dashboard')}
-    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
-      tela === 'dashboard'
-        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
-        : 'bg-slate-800/40 hover:bg-slate-700'
-    }`}
-  >
-    <FaHome />
-    Dashboard
-  </button>
+  <MenuBotao
+  ativo={tela === 'dashboard'}
+  onClick={() => setTela('dashboard')}
+  icone={<FaHome />}
+  texto="Dashboard"
+/>
 
-  <button
-    onClick={() => setTela('documentos')}
-    className={`p-4 rounded-2xl flex items-center gap-4 transition-all duration-300 ${
-      tela === 'documentos'
-        ? 'bg-blue-600 shadow-lg shadow-blue-500/30'
-        : 'bg-slate-800/40 hover:bg-slate-700'
-    }`}
-  >
-    <FaFileAlt />
-    Documentos
-  </button>
+  <MenuBotao
+  ativo={tela === 'documentos'}
+  onClick={() => setTela('documentos')}
+  icone={<FaFileAlt />}
+  texto="Documentos"
+/>
 
   {tipoUsuario === 'Coordenador' && (
 
-<button
+<MenuBotao
+  ativo={tela === 'relatorios'}
   onClick={() => setTela('relatorios')}
-  className={`p-4 rounded-2xl flex items-center gap-4`}
->
-  <FaChartBar />
-  Relatórios
-</button>
+  icone={<FaChartBar />}
+  texto="Relatórios"
+/>
 
 )}
 
 {tipoUsuario === 'Coordenador' && (
 
-<button
+<MenuBotao
+  ativo={tela === 'usuarios'}
   onClick={() => setTela('usuarios')}
-  className={`p-4 rounded-2xl flex items-center gap-4 ${
-    tela === 'usuarios'
-      ? 'bg-blue-600'
-      : 'bg-slate-800/40 hover:bg-slate-700'
-  }`}
->
- <FaUsers />
-  Usuários
-</button>
+  icone={<FaUsers />}
+  texto="Usuários"
+/>
 
 )}
 
@@ -526,6 +572,46 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
   tela === 'dashboard' && (
     <>
 
+<div className="bg-gradient-to-r from-blue-700 via-blue-800 to-slate-900 rounded-3xl p-8 shadow-2xl mb-8">
+
+  <h1 className="text-4xl font-black">
+
+    Bem-vindo, {dadosUsuario?.usuario} 👋
+
+  </h1>
+
+  <p className="text-slate-300 mt-3 text-lg">
+
+    Você está utilizando o Sistema de Controle de Impressões da Escola Argentina Santos da Silva.
+
+  </p>
+
+</div>
+
+<div className="flex justify-between items-center mb-8">
+
+<div>
+
+<h2 className="text-2xl font-bold">
+
+Painel Geral
+
+</h2>
+
+<p className="text-slate-400">
+
+{new Date().toLocaleDateString('pt-BR', {
+weekday:'long',
+day:'2-digit',
+month:'long',
+year:'numeric'
+})}
+
+</p>
+
+</div>
+
+</div>
         {/* CARDS */}
 
         <div className="grid grid-cols-3 gap-6 mt-8">
@@ -1479,6 +1565,22 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
 
   )
 }
+
+<div className="fixed bottom-0 left-72 right-0 h-12 bg-slate-950 border-t border-slate-800 flex items-center justify-between px-8 text-sm text-slate-400">
+
+<div>
+
+© 2026 • Escola Argentina Santos da Silva
+
+</div>
+
+<div>
+
+Sistema de Controle de Impressões • Versão 2.0
+
+</div>
+
+</div>
 
       </div>
 
