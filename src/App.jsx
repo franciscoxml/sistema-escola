@@ -831,7 +831,7 @@ quantidade
 
             <thead>
 
-              <tr className="text-left text-slate-400 uppercase text-sm tracking-widest">
+<tr className="bg-slate-800 text-blue-300 uppercase text-sm tracking-widest">
 
 <th className="pb-4">
 Professor
@@ -919,13 +919,45 @@ doc.status === filtroStatus
 
 </td>
 
-      <td>
-        {doc.nome}
-      </td>
+      <td className="font-semibold">
+
+<div className="flex items-center gap-3">
+
+<span className="text-2xl">
+
+📄
+
+</span>
+
+<div>
+
+<p className="font-bold">
+
+{doc.nome}
+
+</p>
+
+<p className="text-slate-500 text-sm">
+
+Arquivo PDF
+
+</p>
+
+</div>
+
+</div>
+
+</td>
 
       <td>
-        {doc.quantidade}
-      </td>
+
+<span className="bg-blue-600 px-4 py-2 rounded-full font-bold">
+
+{doc.quantidade}
+
+</span>
+
+</td>
 
       <td>
 
@@ -999,10 +1031,10 @@ doc.status === filtroStatus
 
 <button
   onClick={() => window.open(doc.file)}
-  className="bg-yellow-500 hover:bg-yellow-600 transition text-white p-3 rounded-xl"
+  className="bg-yellow-500 hover:bg-yellow-600 px-5 py-3 rounded-xl font-bold transition-all"
 >
 
-  👁
+  👁️ Visualizar
 
 </button>
 
@@ -1034,10 +1066,13 @@ setDocumentos(novaLista)
   setDocumentos(atualizados)
 
 }}
-  className="bg-blue-600 hover:bg-blue-700 transition text-white p-3 rounded-xl"
+  className="bg-blue-600 hover:bg-blue-700 px-5 py-3 rounded-xl flex items-center gap-2 font-bold transition-all"
 >
 
-  <FaPrint />
+  <>
+<FaPrint />
+<span>Imprimir</span>
+</>
 
 <a
   href={doc.file}
@@ -1062,10 +1097,13 @@ setDocumentos(novaLista)
     }
 
   }}
-  className="bg-gradient-to-r from-red-500 to-red-700 hover:scale-110 transition-all duration-300 text-white p-3 rounded-xl"
+  className="bg-red-600 hover:bg-red-700 px-5 py-3 rounded-xl flex items-center gap-2 font-bold transition-all"
 >
 
-  <FaTrash />
+  <>
+<FaTrash />
+<span>Excluir</span>
+</>
 
 </button>
 
