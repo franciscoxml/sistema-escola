@@ -369,11 +369,11 @@ setLogado(true)
 
     <div className="text-center">
 
-  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center text-2xl shadow-lg">
-
-👨‍🏫
-
-</div>
+  <img
+  src="/logo.png"
+  alt="Logo"
+  className="w-16 h-16 rounded-full object-cover"
+/>
 
   <h1 className="mt-5 text-2xl font-black text-white leading-tight">
 
@@ -540,11 +540,7 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
     <div className="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-2xl">
 
-      <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center font-bold text-lg">
-
-🏫
-
-</div>
+      {dadosUsuario.usuario.charAt(0).toUpperCase()}
 
       <div>
 
@@ -1037,7 +1033,13 @@ Arquivo PDF
 
       <td>
 
-<span className="bg-blue-600 px-4 py-2 rounded-full font-bold">
+<span className="bg-gradient-to-br
+from-blue-500
+to-blue-700
+shadow-2xl
+hover:scale-105
+transition-all
+duration-300 px-4 py-2 rounded-full font-bold">
 
 {doc.quantidade}
 
@@ -1152,7 +1154,13 @@ setDocumentos(novaLista)
   setDocumentos(atualizados)
 
 }}
-  className="bg-blue-600 hover:bg-blue-700 px-5 py-3 rounded-xl flex items-center gap-2 font-bold transition-all"
+  className="bg-gradient-to-br
+from-blue-500
+to-blue-700
+shadow-2xl
+hover:scale-105
+transition-all
+duration-300 hover:bg-blue-700 px-5 py-3 rounded-xl flex items-center gap-2 font-bold transition-all"
 >
 
   <>
@@ -1224,7 +1232,13 @@ setDocumentos(novaLista)
           Documentos
         </h1>
 
-        <button className="bg-blue-600 hover:bg-blue-700 transition px-6 py-3 rounded-2xl font-bold">
+        <button className="bg-gradient-to-br
+from-blue-500
+to-blue-700
+shadow-2xl
+hover:scale-105
+transition-all
+duration-300 hover:bg-blue-700 transition px-6 py-3 rounded-2xl font-bold">
           + Novo Documento
         </button>
 
@@ -1277,7 +1291,13 @@ window.open(
 )
 
 }}
-  className="bg-blue-600 hover:bg-blue-700 transition p-3 rounded-xl"
+  className="bg-gradient-to-br
+from-blue-500
+to-blue-700
+shadow-2xl
+hover:scale-105
+transition-all
+duration-300 hover:bg-blue-700 transition p-3 rounded-xl"
 >
 
   <FaPrint />
