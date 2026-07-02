@@ -717,6 +717,12 @@ Aguardando impressão
 
 <div>
 
+<p className="text-green-200 uppercase tracking-widest">
+
+IMPRESSOS
+
+</p>
+
 <h1 className="text-6xl font-black mt-4">
 
 {documentos.filter(doc => doc.status === 'Impresso').length}
