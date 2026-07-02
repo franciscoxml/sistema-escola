@@ -363,16 +363,15 @@ setLogado(true)
 
       {/* MENU */}
 
-<div className="w-72 bg-black/50 backdrop-blur-3xl border-r border-slate-800 text-white p-8 shadow-black/50 shadow-2xl flex flex-col justify-between">
+<div className="w-80 bg-black/50 backdrop-blur-3xl border-r border-slate-800 text-white p-8 shadow-black/50 shadow-2xl flex flex-col justify-between">
 
   <div>
 
     <div className="text-center">
 
-  <img
-  src="/logo.png"
-  alt="Logo"
-  className="w-16 h-16 rounded-full object-cover"
+ <img
+src={logo}
+className="w-24 h-24 rounded-full shadow-lg"
 />
 
   <h1 className="text-5xl font-black leading-tight text-white">
@@ -717,12 +716,6 @@ Aguardando impressão
 <div className="flex justify-between items-center">
 
 <div>
-
-<p className="text-green-200 uppercase tracking-widest">
-
-IMPRESSOS
-
-</p>
 
 <h1 className="text-6xl font-black mt-4">
 
