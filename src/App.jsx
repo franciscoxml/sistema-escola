@@ -374,6 +374,7 @@ src={logo}
 className="w-24 h-24 rounded-full shadow-lg"
 />
 
+
   <h1 className="text-5xl font-black leading-tight text-white">
   Escola Argentina
   <br />
