@@ -265,7 +265,7 @@ if (!logado) {
 
         <h1 className="text-4xl text-white font-bold mb-6">
 
-          Sistema de Impressões
+          SECRETARIA ESCOLAR
 
         </h1>
 
@@ -375,25 +375,19 @@ setLogado(true)
   className="w-16 h-16 rounded-full object-cover"
 />
 
-  <h1 className="mt-5 text-2xl font-black text-white leading-tight">
+  <h1 className="text-5xl font-black leading-tight text-white">
+  Escola Argentina
+  <br />
+  Santos da Silva
+</h1>
 
-    Escola Argentina
+<p className="mt-5 text-2xl font-semibold text-blue-400">
+  Sistema Inteligente de Controle de Impressões
+</p>
 
-  </h1>
-
-  <p className="text-lg text-blue-400 font-semibold">
-
-    Santos da Silva
-
-  </p>
-
-  <div className="mt-4 h-px bg-slate-700"></div>
-
-  <p className="mt-4 text-slate-400 text-sm uppercase tracking-widest">
-
-    Sistema de Impressões
-
-  </p>
+<p className="mt-2 text-slate-400">
+  Secretaria Escolar • Professores • Coordenação
+</p>
 
 </div>
 
@@ -570,17 +564,13 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
 <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-slate-900 rounded-3xl p-8 shadow-2xl mb-8">
 
-  <h1 className="text-4xl font-black">
+  <h1 className="text-4xl font-black text-white">
+Bem-vindo, {dadosUsuario?.usuario} 👋
+</h1>
 
-    Bem-vindo, {dadosUsuario?.usuario} 👋
-
-  </h1>
-
-  <p className="text-slate-300 mt-3 text-lg">
-
-    Você está utilizando o Sistema de Controle de Impressões da Escola Argentina Santos da Silva.
-
-  </p>
+<p className="mt-3 text-slate-200 text-lg">
+Você está utilizando o Sistema de Controle de Impressões da Escola Argentina Santos da Silva.
+</p>
 
 </div>
 
