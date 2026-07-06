@@ -375,19 +375,33 @@ className="w-24 h-24 rounded-full shadow-lg"
 />
 
 
-  <h1 className="text-5xl font-black leading-tight text-white">
-  Escola Argentina
-  <br />
-  Santos da Silva
+  <h1 className="text-5xl font-black tracking-tight">
+  Escola Argentina Santos da Silva
 </h1>
 
-<p className="mt-5 text-2xl font-semibold text-blue-400">
-  Sistema Inteligente de Controle de Impressões
+<p className="mt-3 text-blue-400 text-xl font-semibold">
+  Sistema de Controle de Impressões
 </p>
 
 <p className="mt-2 text-slate-400">
-  Secretaria Escolar • Professores • Coordenação
+  Secretaria Escolar • Coordenação • Professores
 </p>
+
+<div className="mt-5 flex gap-3">
+
+<span className="bg-blue-600 px-3 py-1 rounded-full text-sm">
+Controle Escolar
+</span>
+
+<span className="bg-green-600 px-3 py-1 rounded-full text-sm">
+Sistema Online
+</span>
+
+<span className="bg-yellow-500 text-black px-3 py-1 rounded-full text-sm">
+Versão 2.0
+</span>
+
+</div>
 
 </div>
 
@@ -396,26 +410,26 @@ className="w-24 h-24 rounded-full shadow-lg"
     <div className="mt-14 flex flex-col gap-4">
 
   <MenuBotao
-  ativo={tela === 'dashboard'}
-  onClick={() => setTela('dashboard')}
+  ativo={tela === 'Painel Geral'}
+  onClick={() => setTela('Painel Geral')}
   icone={<FaHome />}
-  texto="Dashboard"
+  texto="Painel Geral"
 />
 
   <MenuBotao
-  ativo={tela === 'documentos'}
-  onClick={() => setTela('documentos')}
+  ativo={tela === 'Solicitações'}
+  onClick={() => setTela('Solicitações')}
   icone={<FaFileAlt />}
-  texto="Documentos"
+  texto="Solicitações"
 />
 
   {tipoUsuario === 'Coordenador' && (
 
 <MenuBotao
-  ativo={tela === 'relatorios'}
-  onClick={() => setTela('relatorios')}
+  ativo={tela === 'Estatísticas'}
+  onClick={() => setTela('Estatísticas')}
   icone={<FaChartBar />}
-  texto="Relatórios"
+  texto="Estatísticas"
 />
 
 )}
@@ -423,10 +437,10 @@ className="w-24 h-24 rounded-full shadow-lg"
 {tipoUsuario === 'Coordenador' && (
 
 <MenuBotao
-  ativo={tela === 'usuarios'}
-  onClick={() => setTela('usuarios')}
+  ativo={tela === 'Funcionários'}
+  onClick={() => setTela('Funcionários')}
   icone={<FaUsers />}
-  texto="Usuários"
+  texto="Funcionários"
 />
 
 )}
@@ -481,7 +495,13 @@ Escola Argentina Santos da Silva
 
 <p className="text-blue-400 text-xl mt-2 font-semibold">
 
-Sistema Inteligente de Controle de Impressões
+Sistema Oficial
+
+de Controle
+
+de Impressões
+
+da Escola
 
 </p>
 
@@ -565,11 +585,11 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-slate-900 rounded-3xl p-8 shadow-2xl mb-8">
 
   <h1 className="text-4xl font-black text-white">
-Bem-vindo, {dadosUsuario?.usuario} 👋
+Olá, {dadosUsuario?.usuario}! 👋
 </h1>
 
 <p className="mt-3 text-slate-200 text-lg">
-Você está utilizando o Sistema de Controle de Impressões da Escola Argentina Santos da Silva.
+Gerencie documentos, acompanhe impressões e controle todas as solicitações da escola em um único lugar.
 </p>
 
 </div>
@@ -622,7 +642,7 @@ TOTAL DE DOCUMENTOS
 
 <p className="mt-3 text-blue-100">
 
-Documentos enviados
+Arquivos cadastrados no sistema
 
 </p>
 
@@ -658,8 +678,7 @@ IMPRESSOS
 
 <p className="mt-3 text-green-100">
 
-Documentos concluídos
-
+Impressões finalizadas
 </p>
 
 </div>
@@ -694,7 +713,7 @@ PENDENTES
 
 <p className="mt-3 text-yellow-50">
 
-Aguardando impressão
+Solicitações pendentes
 
 </p>
 
