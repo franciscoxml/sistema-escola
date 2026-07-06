@@ -622,9 +622,9 @@ year:'numeric'
 </div>
         {/* CARDS */}
 
-        <div className="grid grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
 
-          <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
+         <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 rounded-3xl p-8 shadow-2xl hover:scale-105 transition duration-300">
 
 <div className="flex justify-between items-center">
 
@@ -920,43 +920,9 @@ quantidade
 
           </h2>
 
-          <table className="w-full overflow-hidden rounded-3xl border-separate border-spacing-y-4">
+          <div className="space-y-5">
 
-            <thead>
-
-<tr className="bg-slate-800 text-blue-300 uppercase text-sm tracking-widest">
-
-<th className="pb-4">
-Professor
-</th>
-
-<th className="pb-4">
-Arquivo
-</th>
-
-<th className="pb-4">
-Quantidade
-</th>
-
-<th className="pb-4">
-Status
-</th>
-
-<th className="pb-4">
-Data Impressão
-</th>
-
-<th className="pb-4">
-Ações
-</th>
-
-</tr>
-
-            </thead>
-
-            <tbody>
-
-  {documentos
+{documentos
 
 .filter(doc =>
 
@@ -989,50 +955,41 @@ doc.status === filtroStatus
 
 .map((doc,index)=>(
 
+<div
 
+key={index}
 
-    <tr
-      key={index}
-      className="bg-slate-900/80 hover:bg-slate-800/80 transition-all duration-300 shadow-xl"
-    >
+className="bg-slate-800 hover:bg-slate-700 rounded-3xl p-6 transition-all duration-300 shadow-xl border border-slate-700"
 
-      <td className="py-6 px-4 rounded-l-2xl font-semibold">
+>
 
-  <div>
+<div className="flex justify-between items-center">
 
-    <p>
-  {doc.usuario}
-</p>
+<div className="flex gap-5 items-center">
 
-    <p className="text-slate-500 text-sm mt-1">
-      {doc.data}
-    </p>
-
-  </div>
-
-</td>
-
-      <td className="font-semibold">
-
-<div className="flex items-center gap-3">
-
-<span className="text-2xl">
+<div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl">
 
 📄
 
-</span>
+</div>
 
 <div>
 
-<p className="font-bold">
+<h2 className="text-2xl font-bold">
 
 {doc.nome}
+
+</h2>
+
+<p className="text-slate-400 mt-2">
+
+👤 {doc.usuario}
 
 </p>
 
 <p className="text-slate-500 text-sm">
 
-Arquivo PDF
+📅 {doc.data}
 
 </p>
 
@@ -1040,191 +997,113 @@ Arquivo PDF
 
 </div>
 
-</td>
+<div className="text-right">
 
-      <td>
+<p className="text-slate-400">
 
-<span className="bg-gradient-to-br
-from-blue-500
-to-blue-700
-shadow-2xl
-hover:scale-105
-transition-all
-duration-300 px-4 py-2 rounded-full font-bold">
+Quantidade
+
+</p>
+
+<h2 className="text-3xl font-black">
 
 {doc.quantidade}
 
-</span>
+</h2>
 
-</td>
+</div>
 
-      <td>
+</div>
 
-        <span
-  className={`px-4 py-2 rounded-full text-sm font-bold text-white ${
-    doc.status === 'Impresso'
-      ? 'bg-green-600'
-      : doc.status === 'Cancelado'
-      ? 'bg-red-600'
-      : 'bg-yellow-500'
-  }`}
+<div className="mt-6 flex justify-between items-center">
+
+<div>
+
+<span
+
+className={`px-5 py-2 rounded-full font-bold text-white ${
+doc.status==="Impresso"
+?
+
+"bg-green-600"
+
+:
+
+doc.status==="Cancelado"
+
+?
+
+"bg-red-600"
+
+:
+
+"bg-yellow-500"
+
+}`}
+
 >
 
-<select
-  value={doc.status}
-  onChange={async (e) => {
-
-  const novoStatus = e.target.value
-  
-  console.log("ID:", doc.id)
-  console.log("STATUS:", novoStatus)
-  
-  try {
-
-    await axios.put(
-  `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
-  {
-    status: novoStatus,
-    observacao: doc.observacao || '',
-    quantidade: doc.quantidade || 0
-  }
-)
-
-    await carregarArquivos()
-
-  } catch (erro) {
-
-    alert('Erro ao atualizar status')
-
-  }
-
-}}
-  className="bg-transparent outline-none text-white"
->
-
-  <option value="Pendente" className="text-black">
-    Pendente
-  </option>
-
-  <option value="Impresso" className="text-black">
-    Impresso
-  </option>
-
-  <option value="Cancelado" className="text-black">
-    Cancelado
-  </option>
-
-</select>
+{doc.status}
 
 </span>
 
-      </td>
-<td>
+</div>
 
-{doc.dataImpressao || '-'}
-
-</td>
-      <td>
-
-        <div className="flex gap-3">
+<div className="flex gap-3">
 
 <button
-  onClick={() => window.open(doc.file)}
-  className="bg-yellow-500 hover:bg-yellow-600 px-5 py-3 rounded-xl font-bold transition-all"
+
+onClick={()=>
+
+window.open(doc.file)
+
+}
+
+className="bg-blue-600 hover:bg-blue-700 p-3 rounded-xl"
+
 >
 
-  👁️ Visualizar
+👁
 
 </button>
 
-          <button
-  onClick={() => {
+<button
 
-  window.open(
-  `https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
+onClick={() => {
+
+const confirmar = window.confirm(
+
+'Deseja excluir este documento?'
+
 )
 
-  const novaLista = [...documentos]
+if(confirmar){
 
-novaLista[index].status = 'Impresso'
+removerDocumento(doc.id)
 
-setDocumentos(novaLista)
-
-  document.getElementById(`download-${index}`).click()
-
-  const atualizados = documentos.map((item, i) => {
-
-    if (i === index) {
-      return { ...item, status: 'Impresso' }
-    }
- 
-    return item
-
-  })
-
-  setDocumentos(atualizados)
+}
 
 }}
-  className="bg-gradient-to-br
-from-blue-500
-to-blue-700
-shadow-2xl
-hover:scale-105
-transition-all
-duration-300 hover:bg-blue-700 px-5 py-3 rounded-xl flex items-center gap-2 font-bold transition-all"
+
+className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
+
 >
 
-  <>
-<FaPrint />
-<span>Imprimir</span>
-</>
-
-<a
-  href={doc.file}
-  download={doc.arquivo}
-  className="hidden"
-  id={`download-${index}`}
-></a>
+<FaTrash/>
 
 </button>
 
-          {tipoUsuario === 'Coordenador' && (
+</div>
 
-<button
-  onClick={() => {
+</div>
 
-    const confirmar = window.confirm(
-      'Deseja realmente excluir este documento?'
-    )
+</div>
 
-    if (confirmar) {
-      removerDocumento(doc.id)
-    }
+))
 
-  }}
-  className="bg-red-600 hover:bg-red-700 px-5 py-3 rounded-xl flex items-center gap-2 font-bold transition-all"
->
+}
 
-  <>
-<FaTrash />
-<span>Excluir</span>
-</>
-
-</button>
-
-)}
-
-        </div>
-
-      </td>
-
-    </tr>
-
-  ))}
-
-</tbody>
-
-          </table>
+</div>
 
         </div>
 
