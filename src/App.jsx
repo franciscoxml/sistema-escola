@@ -603,7 +603,7 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
         <h2 className="font-bold text-lg">
 
-{dadosUsuario?.usuario}
+{dadosUsuario?.usuario?.charAt(0).toUpperCase()}
 
 </h2>
 
@@ -663,7 +663,7 @@ year:'numeric'
 </div>
         {/* CARDS */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
 
          <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 rounded-3xl p-8 shadow-2xl hover:scale-105 transition duration-300">
 
@@ -807,6 +807,83 @@ Documentos concluídos
 </div>
 
 </div>
+
+</div>
+
+<div className="bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
+
+<h2 className="text-xl">
+Total de Cópias
+</h2>
+
+<h1 className="text-6xl font-bold mt-4">
+
+{
+documentos.reduce(
+(total,doc)=>total+(Number(doc.quantidade)||0),
+0
+)
+}
+
+</h1>
+
+</div>
+
+{/* AÇÕES RÁPIDAS */}
+
+<div className="grid grid-cols-4 gap-5 mt-8">
+
+<button
+onClick={() => setTela('documentos')}
+className="bg-blue-600 hover:bg-blue-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
+>
+
+<FaFileAlt className="text-4xl mb-3 mx-auto"/>
+
+<p className="font-bold">
+Documentos
+</p>
+
+</button>
+
+<button
+onClick={() => setTela('relatorios')}
+className="bg-green-600 hover:bg-green-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
+>
+
+<FaChartBar className="text-4xl mb-3 mx-auto"/>
+
+<p className="font-bold">
+Relatórios
+</p>
+
+</button>
+
+<button
+onClick={() => setTela('usuarios')}
+className="bg-purple-600 hover:bg-purple-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
+>
+
+<FaUsers className="text-4xl mb-3 mx-auto"/>
+
+<p className="font-bold">
+Usuários
+</p>
+
+</button>
+
+<button
+onClick={() => window.location.reload()}
+className="bg-yellow-500 hover:bg-yellow-600 p-6 rounded-3xl shadow-xl transition hover:scale-105"
+>
+
+<FaHome className="text-4xl mb-3 mx-auto"/>
+
+<p className="font-bold">
+Atualizar
+</p>
+
+</button>
 
 </div>
 
@@ -1010,7 +1087,7 @@ className="bg-slate-800 hover:bg-slate-700 rounded-3xl p-6 transition-all durati
 
 <div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl">
 
-📄
+<FaFolderOpen className="text-6xl opacity-40" />
 
 </div>
 
