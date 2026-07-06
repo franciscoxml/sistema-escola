@@ -12,7 +12,11 @@ import {
   FaHome,
   FaFileAlt,
   FaChartBar,
-  FaUsers
+  FaUsers,
+  FaFolderOpen,
+  FaClipboardList,
+  FaClock,
+  FaCheckCircle
 } from 'react-icons/fa'
 
 import {
@@ -409,6 +413,49 @@ Versão 2.0
 
     {/* MENU ITENS */}
 
+{/* Informações da Escola */}
+
+<div className="bg-slate-800/40 rounded-2xl p-5 mb-6 border border-slate-700">
+
+  <p className="text-xs text-slate-400 uppercase">
+    Unidade Escolar
+  </p>
+
+  <h2 className="text-lg font-bold mt-1">
+    Escola Argentina Santos da Silva 
+    Inep 12022438
+  </h2>
+
+  <p className="text-sm text-slate-400 mt-2">
+    Feijó - Acre
+  </p>
+
+  <div className="mt-4 space-y-2">
+
+    <div className="flex justify-between">
+      <span className="text-slate-400">
+        Status
+      </span>
+
+      <span className="text-green-400 font-bold">
+        Online
+      </span>
+    </div>
+
+    <div className="flex justify-between">
+      <span className="text-slate-400">
+        Ano Letivo
+      </span>
+
+      <span>
+        2026
+      </span>
+    </div>
+
+  </div>
+
+</div>
+
     <div className="mt-14 flex flex-col gap-4">
 
   <MenuBotao
@@ -489,27 +536,21 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
     <div>
 
-<h1 className="text-5xl font-black text-white">
+<h1 className="text-5xl font-black leading-tight">
 
 Escola Argentina Santos da Silva
 
 </h1>
 
-<p className="text-blue-400 text-xl mt-2 font-semibold">
+<p className="text-blue-400 font-semibold mt-2">
 
-Sistema Oficial
-
-de Controle
-
-de Impressões
-
-da Escola
+Sistema Oficial de Controle de Impressões
 
 </p>
 
 <p className="text-slate-400 mt-2">
 
-Secretaria Escolar • Professores • Coordenação
+Secretaria Escolar • Coordenação • Professores
 
 </p>
 
@@ -587,11 +628,11 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-slate-900 rounded-3xl p-8 shadow-2xl mb-8">
 
   <h1 className="text-4xl font-black text-white">
-Olá, {dadosUsuario?.usuario}! 👋
+Bem-vindo ao Sistema de Impressões , {dadosUsuario?.usuario}! 👋
 </h1>
 
 <p className="mt-3 text-slate-200 text-lg">
-Gerencie documentos, acompanhe impressões e controle todas as solicitações da escola em um único lugar.
+Controle centralizado de solicitações, impressão de documentos e acompanhamento em tempo real.
 </p>
 
 </div>
@@ -652,7 +693,7 @@ Arquivos cadastrados no sistema
 
 <div className="text-7xl">
 
-📄
+<FaFolderOpen className="text-6xl opacity-40" />
 
 </div>
 
@@ -687,7 +728,7 @@ Impressões finalizadas
 
 <div className="text-7xl">
 
-🖨️
+<FaCheckCircle className="text-6xl opacity-40" />
 
 </div>
 
@@ -723,7 +764,7 @@ Solicitações pendentes
 
 <div className="text-7xl">
 
-⏳
+<FaClock className="text-6xl opacity-40" />
 
 </div>
 
