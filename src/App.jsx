@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import logo from './assets/logo.png'
+
 import { useState, useEffect } from 'react'
 
 import {
@@ -1617,4 +1619,4 @@ Sistema de Controle de Impressões • Versão 2.0
 
   )
 
-}
+}  
