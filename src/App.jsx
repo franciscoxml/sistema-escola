@@ -534,25 +534,31 @@ className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:scale-105 trans
 
   <div>
 
-    <div>
+<div>
 
-<h1 className="text-5xl font-black leading-tight">
-
+<h1 className="text-5xl font-black text-white">
 Escola Argentina Santos da Silva
-
 </h1>
 
-<p className="text-blue-400 font-semibold mt-2">
-
+<p className="text-xl text-blue-400 font-semibold mt-2">
 Sistema Oficial de Controle de Impressões
-
 </p>
 
-<p className="text-slate-400 mt-2">
+<div className="flex gap-3 mt-5">
 
-Secretaria Escolar • Coordenação • Professores
+<span className="bg-green-600 px-4 py-2 rounded-full text-sm font-bold">
+Ano Letivo 2026
+</span>
 
-</p>
+<span className="bg-blue-600 px-4 py-2 rounded-full text-sm font-bold">
+INEP 12022438
+</span>
+
+<span className="bg-yellow-500 text-black px-4 py-2 rounded-full text-sm font-bold">
+Feijó - Acre
+</span>
+
+</div>
 
 </div>
 
@@ -595,34 +601,44 @@ className="bg-slate-800 border border-slate-700 px-5 py-3 rounded-2xl text-white
 
     {/* USUÁRIO */}
 
-    <div className="flex items-center gap-3 bg-slate-800 px-4 py-3 rounded-2xl">
+    <div className="bg-slate-800 rounded-2xl px-6 py-4 flex items-center gap-5">
 
-      {dadosUsuario.usuario.charAt(0).toUpperCase()}
-
-      <div>
-
-        <h2 className="font-bold text-lg">
+<div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-2xl font-bold">
 
 {dadosUsuario?.usuario?.charAt(0).toUpperCase()}
 
+</div>
+
+<div>
+
+<h2 className="font-bold text-lg">
+
+{dadosUsuario?.usuario}
+
 </h2>
 
-        <p className="text-green-400 font-semibold">
+<p className="text-green-400">
 
 {dadosUsuario?.tipo}
 
 </p>
 
-      </div>
+<p className="text-slate-500 text-sm">
 
-    </div>
+Conectado
+
+</p>
+
+</div>
+
+</div>
 
   </div>
 
 </div>
  
 {
-  tela === 'dashboard' && (
+  tela === 'Painel Geral' && (
     <>
 
 <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-slate-900 rounded-3xl p-8 shadow-2xl mb-8">
@@ -640,6 +656,52 @@ Controle centralizado de solicitações, impressão de documentos e acompanhamen
 <div className="flex justify-between items-center mb-8">
 
 <div>
+
+{/* INDICADORES DA ESCOLA */}
+
+<div className="grid grid-cols-4 gap-5 mb-8">
+
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+    <p className="text-slate-400 text-sm">
+      Unidade Escolar
+    </p>
+
+    <h2 className="text-xl font-bold mt-2">
+      Argentina Santos da Silva
+    </h2>
+  </div>
+
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+    <p className="text-slate-400 text-sm">
+      Usuário
+    </p>
+
+    <h2 className="text-xl font-bold mt-2">
+      {dadosUsuario?.usuario}
+    </h2>
+  </div>
+
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+    <p className="text-slate-400 text-sm">
+      Cargo
+    </p>
+
+    <h2 className="text-xl font-bold mt-2 text-green-400">
+      {dadosUsuario?.tipo}
+    </h2>
+  </div>
+
+  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
+    <p className="text-slate-400 text-sm">
+      Data
+    </p>
+
+    <h2 className="text-xl font-bold mt-2">
+      {new Date().toLocaleDateString('pt-BR')}
+    </h2>
+  </div>
+
+</div>
 
 <h2 className="text-2xl font-bold">
 
@@ -661,162 +723,196 @@ year:'numeric'
 </div>
 
 </div>
-        {/* CARDS */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-8">
+{/* BARRA DE ESTATÍSTICAS */}
 
-         <div className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 rounded-3xl p-8 shadow-2xl hover:scale-105 transition duration-300">
+<div className="grid grid-cols-5 gap-5 mt-8">
 
-<div className="flex justify-between items-center">
+<div className="bg-green-600 rounded-2xl p-5 text-center shadow-lg">
 
-<div>
+<h3 className="text-sm text-green-100">
+STATUS
+</h3>
 
-<p className="text-blue-200 uppercase tracking-widest">
+<p className="text-2xl font-bold">
+🟢 ONLINE
+</p>
 
-TOTAL DE DOCUMENTOS
+</div>
+
+<div className="bg-slate-800 rounded-2xl p-5 text-center">
+
+<h3 className="text-sm text-slate-400">
+PROFESSORES
+</h3>
+
+<p className="text-3xl font-bold">
+
+{usuarios.length}
 
 </p>
 
-<h1 className="text-6xl font-black mt-4">
+</div>
+
+<div className="bg-slate-800 rounded-2xl p-5 text-center">
+
+<h3 className="text-sm text-slate-400">
+DOCUMENTOS
+</h3>
+
+<p className="text-3xl font-bold">
 
 {documentos.length}
 
-</h1>
+</p>
 
-<p className="mt-3 text-blue-100">
+</div>
 
-Arquivos cadastrados no sistema
+<div className="bg-slate-800 rounded-2xl p-5 text-center">
+
+<h3 className="text-sm text-slate-400">
+CÓPIAS
+</h3>
+
+<p className="text-3xl font-bold">
+
+{
+
+documentos.reduce(
+
+(total,doc)=>total+(Number(doc.quantidade)||0),
+
+0
+
+)
+
+}
 
 </p>
 
 </div>
 
-<div className="text-7xl">
+<div className="bg-slate-800 rounded-2xl p-5 text-center">
 
-<FaFolderOpen className="text-6xl opacity-40" />
+<h3 className="text-sm text-slate-400">
+AGORA
+</h3>
+
+<p className="text-xl font-bold">
+
+{new Date().toLocaleTimeString('pt-BR')}
+
+</p>
 
 </div>
 
 </div>
 
-</div>
+        {/* DASHBOARD PRINCIPAL */}
 
-          <div className="bg-gradient-to-br from-green-600 via-green-700 to-green-900 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
+<div className="grid grid-cols-4 gap-6 mt-8">
+
+{/* DOCUMENTOS */}
+
+<div className="bg-gradient-to-br from-blue-700 to-blue-900 rounded-3xl p-7 shadow-2xl hover:scale-105 transition-all">
 
 <div className="flex justify-between items-center">
 
 <div>
 
-<p className="text-green-200 uppercase tracking-widest">
-
-IMPRESSOS
-
+<p className="text-blue-200 uppercase text-sm">
+Documentos
 </p>
 
-<h1 className="text-6xl font-black mt-4">
-
-{documentos.filter(doc => doc.status === 'Impresso').length}
-
+<h1 className="text-6xl font-black mt-3">
+{documentos.length}
 </h1>
 
-<p className="mt-3 text-green-100">
-
-Impressões finalizadas
+<p className="text-blue-100 mt-2">
+Arquivos cadastrados
 </p>
 
 </div>
 
-<div className="text-7xl">
-
-<FaCheckCircle className="text-6xl opacity-40" />
+<FaFolderOpen className="text-7xl opacity-30"/>
 
 </div>
 
 </div>
 
-</div>
+{/* IMPRESSOS */}
 
-          <div className="bg-gradient-to-br from-yellow-500 via-yellow-600 to-orange-700 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
+<div className="bg-gradient-to-br from-green-600 to-green-900 rounded-3xl p-7 shadow-2xl hover:scale-105 transition-all">
 
 <div className="flex justify-between items-center">
 
 <div>
 
-<p className="text-yellow-100 uppercase tracking-widest">
-
-PENDENTES
-
+<p className="text-green-200 uppercase text-sm">
+Impressos
 </p>
 
-<h1 className="text-6xl font-black mt-4">
+<h1 className="text-6xl font-black mt-3">
 
-{documentos.filter(doc => doc.status === 'Pendente').length}
+{documentos.filter(doc=>doc.status==="Impresso").length}
 
 </h1>
 
-<p className="mt-3 text-yellow-50">
-
-Solicitações pendentes
-
+<p className="text-green-100 mt-2">
+Finalizados
 </p>
 
 </div>
 
-<div className="text-7xl">
-
-<FaClock className="text-6xl opacity-40" />
+<FaCheckCircle className="text-7xl opacity-30"/>
 
 </div>
 
 </div>
 
-</div>
+{/* PENDENTES */}
 
-        </div>
-
-<div className="bg-gradient-to-br from-green-600 via-green-700 to-green-900 rounded-3xl p-8 shadow-2xl hover:scale-105 duration-300">
+<div className="bg-gradient-to-br from-yellow-500 to-orange-700 rounded-3xl p-7 shadow-2xl hover:scale-105 transition-all">
 
 <div className="flex justify-between items-center">
 
 <div>
 
-<p className="text-green-200 uppercase tracking-widest">
-
-IMPRESSOS
-
+<p className="text-yellow-100 uppercase text-sm">
+Pendentes
 </p>
 
-<h1 className="text-6xl font-black mt-4">
+<h1 className="text-6xl font-black mt-3">
 
-{documentos.filter(doc => doc.status === 'Impresso').length}
+{documentos.filter(doc=>doc.status==="Pendente").length}
 
 </h1>
 
-<p className="mt-3 text-green-100">
-
-Documentos concluídos
-
+<p className="text-yellow-100 mt-2">
+Aguardando impressão
 </p>
 
 </div>
 
-<div className="text-7xl">
-
-🖨️
+<FaClock className="text-7xl opacity-30"/>
 
 </div>
 
 </div>
 
-</div>
+{/* CÓPIAS */}
 
-<div className="bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-3xl p-8 shadow-2xl hover:scale-105 transition-all duration-300">
+<div className="bg-gradient-to-br from-purple-600 to-purple-900 rounded-3xl p-7 shadow-2xl hover:scale-105 transition-all">
 
-<h2 className="text-xl">
-Total de Cópias
-</h2>
+<div className="flex justify-between items-center">
 
-<h1 className="text-6xl font-bold mt-4">
+<div>
+
+<p className="text-purple-200 uppercase text-sm">
+Cópias
+</p>
+
+<h1 className="text-6xl font-black mt-3">
 
 {
 documentos.reduce(
@@ -827,6 +923,18 @@ documentos.reduce(
 
 </h1>
 
+<p className="text-purple-100 mt-2">
+Total solicitado
+</p>
+
+</div>
+
+<FaClipboardList className="text-7xl opacity-30"/>
+
+</div>
+
+</div>
+
 </div>
 
 {/* AÇÕES RÁPIDAS */}
@@ -834,7 +942,7 @@ documentos.reduce(
 <div className="grid grid-cols-4 gap-5 mt-8">
 
 <button
-onClick={() => setTela('documentos')}
+onClick={() => setTela('Solicitações')}
 className="bg-blue-600 hover:bg-blue-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
 >
 
@@ -847,7 +955,7 @@ Documentos
 </button>
 
 <button
-onClick={() => setTela('relatorios')}
+onClick={() => setTela('Estatísticas')}
 className="bg-green-600 hover:bg-green-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
 >
 
@@ -860,7 +968,7 @@ Relatórios
 </button>
 
 <button
-onClick={() => setTela('usuarios')}
+onClick={() => setTela('Funcionários')}
 className="bg-purple-600 hover:bg-purple-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
 >
 
@@ -891,31 +999,71 @@ Atualizar
 
         <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl">
 
-          <h2 className="text-3xl font-bold text-white mb-6">
+          <div className="flex items-center gap-4 mb-8">
 
-            Enviar Documento
+<div className="bg-blue-600 p-4 rounded-2xl">
 
-          </h2>
+<FaUpload className="text-3xl"/>
 
-          <input
-  type="file"
-  onChange={(e) => setNovoDocumento(e.target.files[0])}
-  className="mt-6 w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 text-white"
+</div>
+
+<div>
+
+<h2 className="text-3xl font-bold">
+
+Nova Solicitação de Impressão
+
+</h2>
+
+<p className="text-slate-400">
+
+Envie um documento para impressão na secretaria.
+
+</p>
+
+</div>
+
+</div>
+
+         <label className="block">
+
+<p className="mb-2 text-slate-400">
+
+Documento (PDF)
+
+</p>
+
+<input
+type="file"
+onChange={(e)=>setNovoDocumento(e.target.files[0])}
+className="w-full bg-slate-800 rounded-2xl p-5 border border-slate-700"
 />
+
+</label>
+
+<label className="block mt-6">
+
+<p className="mb-2 text-slate-400">
+
+Quantidade de Cópias
+
+</p>
 
 <input
 type="number"
-placeholder="Quantidade de cópias"
+placeholder="Ex: 50"
 value={quantidade}
 onChange={(e)=>setQuantidade(e.target.value)}
-className="mt-6 w-full bg-slate-800 border border-slate-700 rounded-2xl p-4 text-white"
+className="w-full bg-slate-800 rounded-2xl p-5 border border-slate-700"
 />
+
+</label>
 
           <button
  onClick={async () => {
 
   if (!novoDocumento) return
-
+ 
   const formData = new FormData()
 
   formData.append(
@@ -961,16 +1109,91 @@ quantidade
 
 }}
 
-  className="mt-6 bg-gradient-to-r from-blue-500 to-blue-700 hover:scale-110 hover:shadow-blue-500/40 transition text-white px-8 py-4 rounded-2xl flex items-center gap-3"
+  className="mt-8 w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 hover:scale-[1.02] transition-all duration-300 p-5 rounded-2xl font-bold text-xl flex justify-center items-center gap-4 shadow-2xl shadow-blue-900/40"
 >
 
-  <FaUpload />
+ <FaUpload />
 
-  Enviar Documento
+<span>Enviar Solicitação</span>
 
 </button>
 
         </div>
+
+{/* ÚLTIMAS SOLICITAÇÕES */}
+
+<div className="bg-slate-900/70 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl">
+
+<h2 className="text-3xl font-bold mb-6">
+Últimas Solicitações
+</h2>
+
+<div className="space-y-4">
+
+{
+
+documentos
+
+.slice(0,5)
+
+.map((doc,index)=>(
+
+<div
+key={index}
+className="bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-3xl p-6 transition-all duration-300 shadow-lg"
+>
+
+<div>
+
+<h3 className="text-2xl font-bold text-white">
+
+{doc.nome}
+
+</h3>
+
+<p className="text-slate-400 mt-2">
+👤 Professor: {doc.usuario}
+</p>
+
+<p className="text-slate-500">
+🖨️ Quantidade: {doc.quantidade}
+</p>
+
+</div>
+
+<div className="text-right">
+
+<p className="text-slate-400">
+
+📅 {doc.data}
+
+</p>
+
+<span
+className={`px-3 py-1 rounded-full text-sm font-bold ${
+doc.status==="Impresso"
+?"bg-green-600"
+:doc.status==="Cancelado"
+?"bg-red-600"
+:"bg-yellow-500"
+}`}
+>
+
+{doc.status}
+
+</span>
+
+</div>
+
+</div>
+
+))
+
+}
+
+</div>
+
+</div>
 
 {/* GRÁFICO */}
 
@@ -1081,7 +1304,7 @@ className="bg-slate-800 hover:bg-slate-700 rounded-3xl p-6 transition-all durati
 
 >
 
-<div className="flex justify-between items-center">
+<div className="flex justify-between items-start">
 
 <div className="flex gap-5 items-center">
 
@@ -1230,7 +1453,7 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
 }
 
 {
-  tela === 'documentos' && (
+  tela === 'Solicitações' && (
 
     <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
 
@@ -1352,7 +1575,7 @@ duration-300 hover:bg-blue-700 transition p-3 rounded-xl"
 }
 
 {
-  tela === 'relatorios' && (
+  tela === 'Estatísticas' && (
 
     <div className="mt-8 bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 shadow-2xl">
 
