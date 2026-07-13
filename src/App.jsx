@@ -1490,21 +1490,12 @@ duration-300 hover:bg-blue-700 transition px-6 py-3 rounded-2xl font-bold">
           {doc.arquivo}
         </h2>
 
-        <td className="py-6 px-4 rounded-l-2xl font-semibold">
-
-  <div>
-
-    <p>
-  {doc.usuario}
-</p>
-
-    <p className="text-slate-500 text-sm mt-1">
-      {doc.data}
-    </p>
-
-  </div>
-
-</td>
+        <div className="py-6 px-4 font-semibold">
+  <p>{doc.usuario}</p>
+  <p className="text-slate-500 text-sm mt-1">
+    {doc.data}
+  </p>
+</div>
 
       </div>
 
@@ -1635,7 +1626,7 @@ doc=>doc.status==="Pendente"
 }
 
 {
-  tela === 'usuarios' &&
+  tela === 'Funcionários' &&
   tipoUsuario === 'Coordenador' && (
 
     <div className="mt-8 bg-slate-900/60 rounded-3xl p-8">
