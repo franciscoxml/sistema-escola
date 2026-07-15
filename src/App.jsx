@@ -120,6 +120,14 @@ export default function App() {
 
   const [novoTipo, setNovoTipo] = useState('Professor')
 
+  const [usuarioEditando, setUsuarioEditando] = useState(null)
+
+  const [editarUsuario, setEditarUsuario] = useState('')
+
+  const [editarTipo, setEditarTipo] = useState('')
+
+  const [editarSenha, setEditarSenha] = useState('')
+
   const [usuarios, setUsuarios] = useState([])
   
   const tipoUsuario = dadosUsuario?.tipo
@@ -250,16 +258,39 @@ useEffect(() => {
 }, [dadosUsuario])
 
 
-  const dadosGrafico = [
+ const dadosGrafico = Object.values(
 
-  { nome: 'Seg', paginas: 120 },
-  { nome: 'Ter', paginas: 300 },
-  { nome: 'Qua', paginas: 250 },
-  { nome: 'Qui', paginas: 420 },
-  { nome: 'Sex', paginas: 390 },
-  { nome: 'Sáb', paginas: 500 }
+  documentos.reduce((acc, doc) => {
 
-]
+    const dia = doc.data || 'Sem data'
+
+    if (!acc[dia]) {
+
+      acc[dia] = {
+
+        nome: dia,
+
+        paginas: 0
+
+      }
+
+    }
+
+    acc[dia].paginas += Number(doc.quantidade) || 0
+
+    return acc
+
+  }, {})
+
+).sort((a, b) => {
+
+  const dataA = new Date(a.nome.split('/').reverse().join('-'))
+
+  const dataB = new Date(b.nome.split('/').reverse().join('-'))
+
+  return dataA - dataB
+
+})
 
 if (!logado) {
 
@@ -267,19 +298,25 @@ if (!logado) {
 
     <div className="min-h-screen flex items-center justify-center bg-slate-950">
 
-      <div className="bg-slate-900 p-10 rounded-3xl w-96">
+      <div className="bg-slate-900 p-10 rounded-3xl w-96 shadow-2xl">
 
-        <h1 className="text-4xl text-white font-bold mb-6">
+        <div className="flex flex-col items-center mb-8">
 
-          SECRETARIA ESCOLAR
+          <img
+            src={logo}
+            alt="Logo da Escola"
+            className="w-28 h-28 rounded-full shadow-lg mb-4"
+          />
 
-        </h1>
+          <h1 className="text-3xl text-white font-black text-center">
+            Escola Argentina Santos da Silva
+          </h1>
 
-<p className="text-slate-400 mb-6">
+          <p className="text-slate-400 text-center mt-2">
+            Sistema de Controle de Impressões
+          </p>
 
-Escola Argentina Santos da Silva
-
-</p>
+        </div>
 
         <input
           type="text"
@@ -356,13 +393,13 @@ setLogado(true)
         </button>
 
       </div>
-
-    </div>
+ 
+ </div>
 
   )
 
 }
-
+  
   return (
 
     <div className="flex min-h-screen bg-gradient-to-br from-blue-950 via-slate-900 to-green-950">
@@ -724,90 +761,6 @@ year:'numeric'
 
 </div>
 
-{/* BARRA DE ESTATÍSTICAS */}
-
-<div className="grid grid-cols-5 gap-5 mt-8">
-
-<div className="bg-green-600 rounded-2xl p-5 text-center shadow-lg">
-
-<h3 className="text-sm text-green-100">
-STATUS
-</h3>
-
-<p className="text-2xl font-bold">
-🟢 ONLINE
-</p>
-
-</div>
-
-<div className="bg-slate-800 rounded-2xl p-5 text-center">
-
-<h3 className="text-sm text-slate-400">
-PROFESSORES
-</h3>
-
-<p className="text-3xl font-bold">
-
-{usuarios.length}
-
-</p>
-
-</div>
-
-<div className="bg-slate-800 rounded-2xl p-5 text-center">
-
-<h3 className="text-sm text-slate-400">
-DOCUMENTOS
-</h3>
-
-<p className="text-3xl font-bold">
-
-{documentos.length}
-
-</p>
-
-</div>
-
-<div className="bg-slate-800 rounded-2xl p-5 text-center">
-
-<h3 className="text-sm text-slate-400">
-CÓPIAS
-</h3>
-
-<p className="text-3xl font-bold">
-
-{
-
-documentos.reduce(
-
-(total,doc)=>total+(Number(doc.quantidade)||0),
-
-0
-
-)
-
-}
-
-</p>
-
-</div>
-
-<div className="bg-slate-800 rounded-2xl p-5 text-center">
-
-<h3 className="text-sm text-slate-400">
-AGORA
-</h3>
-
-<p className="text-xl font-bold">
-
-{new Date().toLocaleTimeString('pt-BR')}
-
-</p>
-
-</div>
-
-</div>
-
         {/* DASHBOARD PRINCIPAL */}
 
 <div className="grid grid-cols-4 gap-6 mt-8">
@@ -1119,81 +1072,6 @@ quantidade
 </button>
 
         </div>
-
-{/* ÚLTIMAS SOLICITAÇÕES */}
-
-<div className="bg-slate-900/70 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl">
-
-<h2 className="text-3xl font-bold mb-6">
-Últimas Solicitações
-</h2>
-
-<div className="space-y-4">
-
-{
-
-documentos
-
-.slice(0,5)
-
-.map((doc,index)=>(
-
-<div
-key={index}
-className="bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-3xl p-6 transition-all duration-300 shadow-lg"
->
-
-<div>
-
-<h3 className="text-2xl font-bold text-white">
-
-{doc.nome}
-
-</h3>
-
-<p className="text-slate-400 mt-2">
-👤 Professor: {doc.usuario}
-</p>
-
-<p className="text-slate-500">
-🖨️ Quantidade: {doc.quantidade}
-</p>
-
-</div>
-
-<div className="text-right">
-
-<p className="text-slate-400">
-
-📅 {doc.data}
-
-</p>
-
-<span
-className={`px-3 py-1 rounded-full text-sm font-bold ${
-doc.status==="Impresso"
-?"bg-green-600"
-:doc.status==="Cancelado"
-?"bg-red-600"
-:"bg-yellow-500"
-}`}
->
-
-{doc.status}
-
-</span>
-
-</div>
-
-</div>
-
-))
-
-}
-
-</div>
-
-</div>
 
 {/* GRÁFICO */}
 
@@ -1759,6 +1637,30 @@ className="bg-slate-800 p-5 rounded-2xl flex justify-between items-center"
 
 </div>
 
+<div className="flex gap-3">
+
+<button
+
+onClick={() => {
+
+setUsuarioEditando(user)
+
+setEditarUsuario(user.usuario)
+
+setEditarTipo(user.tipo)
+
+setEditarSenha('')
+
+}}
+
+className="bg-blue-600 hover:bg-blue-700 p-3 rounded-xl"
+
+>
+
+✏
+
+</button>
+
 <button
 
 onClick={async()=>{
@@ -1795,9 +1697,135 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
 
 </div>
 
+</div>
+
 ))}
 
 </div>
+
+{usuarioEditando && (
+
+<div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+
+  <div className="bg-slate-900 rounded-3xl p-8 w-[500px] shadow-2xl">
+
+    <h2 className="text-3xl font-bold mb-6">
+      Editar Usuário
+    </h2>
+
+    <label className="block mb-4">
+
+      <p className="mb-2 text-slate-400">
+        Nome do usuário
+      </p>
+
+      <input
+        type="text"
+        value={editarUsuario}
+        onChange={(e)=>setEditarUsuario(e.target.value)}
+        className="w-full p-4 rounded-xl bg-slate-800"
+      />
+
+<label className="block mb-6">
+
+  <p className="mb-2 text-slate-400">
+    Nova Senha
+  </p>
+
+  <input
+    type="password"
+    value={novaSenha}
+    onChange={(e)=>setNovaSenha(e.target.value)}
+    placeholder="Deixe em branco para não alterar"
+    className="w-full p-4 rounded-xl bg-slate-800"
+  />
+
+</label>
+
+    </label>
+
+    <label className="block mb-6">
+
+      <p className="mb-2 text-slate-400">
+        Tipo
+      </p>
+
+      <select
+        value={editarTipo}
+        onChange={(e)=>setEditarTipo(e.target.value)}
+        className="w-full p-4 rounded-xl bg-slate-800"
+      >
+        <option>Professor</option>
+        <option>Coordenador</option>
+      </select>
+
+    </label>
+
+    <div className="flex justify-end gap-4">
+
+      <button
+  onClick={async () => {
+
+    try {
+
+      await axios.put(
+
+        `https://sistema-escola-api.onrender.com/usuarios/${usuarioEditando.id}`,
+
+        {
+
+          usuario: editarUsuario,
+
+          senha: novaSenha,
+
+          tipo: editarTipo
+
+        }
+
+      )
+
+      alert("Usuário atualizado com sucesso!")
+
+      setUsuarioEditando(null)
+
+      setEditarUsuario("")
+
+      setNovaSenha("")
+
+      setEditarTipo("Professor")
+
+      carregarUsuarios()
+
+    } catch (erro) {
+
+  console.log("ERRO COMPLETO:");
+  console.log(erro);
+
+  if (erro.response) {
+    console.log("Status:", erro.response.status);
+    console.log("Dados:", erro.response.data);
+  }
+
+  alert("Erro ao atualizar usuário");
+
+}
+
+  }}
+
+  className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl"
+>
+
+  Salvar
+
+</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+)}
 
 </div>
 

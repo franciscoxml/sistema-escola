@@ -848,6 +848,101 @@ app.delete(
 
 )
 
+app.put('/usuarios/:id', async (req, res) => {
+
+  const { usuario, senha, tipo } = req.body
+
+  try {
+
+    // se a senha veio vazia, não altera
+    if (!senha) {
+
+      db.run(
+
+        `
+        UPDATE usuarios
+        SET usuario = ?, tipo = ?
+        WHERE id = ?
+        `,
+
+        [
+          usuario,
+          tipo,
+          req.params.id
+        ],
+
+        function (erro) {
+
+          if (erro) {
+
+            return res.json({
+              sucesso: false
+            })
+
+          }
+
+          res.json({
+            sucesso: true
+          })
+
+        }
+
+      )
+
+    } else {
+
+      const senhaHash = await bcrypt.hash(senha, 10)
+
+      db.run(
+
+        `
+        UPDATE usuarios
+        SET
+          usuario = ?,
+          senha = ?,
+          tipo = ?
+        WHERE id = ?
+        `,
+
+        [
+          usuario,
+          senhaHash,
+          tipo,
+          req.params.id
+        ],
+
+        function (erro) {
+
+          if (erro) {
+
+            return res.json({
+              sucesso: false
+            })
+
+          }
+
+          res.json({
+            sucesso: true
+          })
+
+        }
+
+      )
+
+    }
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    res.json({
+      sucesso: false
+    })
+
+  }
+
+})
+
 app.listen(3001, () => {
 
   console.log('=======================')
