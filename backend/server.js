@@ -5,7 +5,7 @@ const path = require('path')
 const fs = require('fs')
 const express = require('express')
 const cors = require('cors')
-const sqlite3 = require('sqlite3').verbose()
+const pool = require('./db')
 
 const app = express()
 
@@ -71,22 +71,32 @@ const upload = multer({
 })
 
 // ======================================
-// BANCO SQLITE
-// ======================================
-
-const db = new sqlite3.Database('./database.db')
-
-// ======================================
 // TABELAS
 // ======================================
 
-db.serialize(() => {
+async function iniciarBanco() {
 
-  db.run(`
+  await pool.query(`
 
-    CREATE TABLE IF NOT EXISTS arquivos (
+CREATE TABLE IF NOT EXISTS usuarios(
 
-id INTEGER PRIMARY KEY AUTOINCREMENT,
+id SERIAL PRIMARY KEY,
+
+usuario VARCHAR(100) UNIQUE,
+
+senha TEXT,
+
+tipo VARCHAR(50)
+
+)
+
+`)
+
+  await pool.query(`
+
+CREATE TABLE IF NOT EXISTS arquivos(
+
+id SERIAL PRIMARY KEY,
 
 nome TEXT,
 
@@ -98,216 +108,105 @@ status TEXT,
 
 observacao TEXT,
 
-quantidade INTEGER,
+quantidade INTEGER DEFAULT 0,
 
 dataImpressao TEXT
 
 )
 
-  `)
-
-// ======================================
-// ATUALIZAR BANCO AUTOMATICAMENTE
-// ======================================
-
-db.all("PRAGMA table_info(arquivos)", (erro, colunas) => {
-
-  if (erro) {
-    console.log("Erro ao verificar tabela:", erro)
-    return
-  }
-
-  const nomes = colunas.map(c => c.name)
-
-  if (!nomes.includes("quantidade")) {
-
-    db.run(
-      "ALTER TABLE arquivos ADD COLUMN quantidade INTEGER DEFAULT 0",
-      (erro) => {
-
-        if (erro) {
-          console.log("Erro criando coluna quantidade:", erro)
-        } else {
-          console.log("Coluna quantidade criada.")
-        }
-
-      }
-    )
-
-  }
-
-  if (!nomes.includes("observacao")) {
-
-    db.run(
-      "ALTER TABLE arquivos ADD COLUMN observacao TEXT",
-      (erro) => {
-
-        if (erro) {
-          console.log("Erro criando coluna observacao:", erro)
-        } else {
-          console.log("Coluna observacao criada.")
-        }
-
-      }
-    )
-
-  }
-
-  if (!nomes.includes("dataImpressao")) {
-
-    db.run(
-      "ALTER TABLE arquivos ADD COLUMN dataImpressao TEXT",
-      (erro) => {
-
-        if (erro) {
-          console.log("Erro criando coluna dataImpressao:", erro)
-        } else {
-          console.log("Coluna dataImpressao criada.")
-        }
-
-      }
-    )
-
-  }
-
-})
-
-  db.run(`
-
-CREATE TABLE IF NOT EXISTS usuarios (
-
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-usuario TEXT UNIQUE,
-
-senha TEXT,
-
-tipo TEXT
-
-)
-
 `)
 
-// ======================================
-// ADMIN PADRÃO
-// ======================================
+  const admin = await pool.query(
 
-db.get(
-
-"SELECT * FROM usuarios WHERE usuario = ?",
-
-["admin"],
-
-async (erro, row) => {
-
-if (!row) {
-
-const senhaHash = await bcrypt.hash(
-"123456",
-10
-)
-
-db.run(
-
-`
-INSERT INTO usuarios
-(usuario, senha, tipo)
-VALUES (?, ?, ?)
-`,
-
-[
-"admin",
-senhaHash,
-"Coordenador"
-]
+`SELECT * FROM usuarios WHERE usuario='admin'`
 
 )
+
+  if(admin.rows.length===0){
+
+      const senhaHash=await bcrypt.hash("123456",10)
+
+      await pool.query(
+
+`INSERT INTO usuarios(usuario,senha,tipo)
+
+VALUES($1,$2,$3)`,
+
+["admin",senhaHash,"Coordenador"]
+
+)
+
+  }
 
 }
 
-}
-
-)
-
-})
+iniciarBanco()
 
 // ======================================
 // LOGIN
 // ======================================
 
-app.post(
+app.post('/login', async (req, res) => {
 
-  '/login',
+  try {
 
-  async (req, res) => {
+    const { usuario, senha } = req.body
 
-    const {
+    const resultado = await pool.query(
 
-      usuario,
-      senha
+      'SELECT * FROM usuarios WHERE usuario = $1',
 
-    } = req.body
-
-    db.get(
-
-      `
-
-      SELECT *
-      FROM usuarios
-
-      WHERE usuario = ?
-
-      `,
-
-      [usuario],
-
-      async (erro, user) => {
-
-        if (erro || !user) {
-
-          return res.json({
-
-            sucesso: false
-
-          })
-
-        }
-
-        const senhaValida = await bcrypt.compare(
-
-          senha,
-
-          user.senha
-
-        )
-
-        if (!senhaValida) {
-
-          return res.json({
-
-            sucesso: false
-
-          })
-
-        }
-
-        res.json({
-
-          sucesso: true,
-
-          usuario: user.usuario,
-
-          tipo: user.tipo
-
-        })
-
-      }
+      [usuario]
 
     )
 
+    if (resultado.rows.length === 0) {
+
+      return res.json({
+        sucesso: false
+      })
+
+    }
+
+    const user = resultado.rows[0]
+
+    const senhaValida = await bcrypt.compare(
+
+      senha,
+
+      user.senha
+
+    )
+
+    if (!senhaValida) {
+
+      return res.json({
+        sucesso: false
+      })
+
+    }
+
+    res.json({
+
+      sucesso: true,
+
+      usuario: user.usuario,
+
+      tipo: user.tipo
+
+    })
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    res.json({
+      sucesso: false
+    })
+
   }
 
-)
+})
 
 // ======================================
 // UPLOAD ARQUIVO
@@ -536,93 +435,65 @@ app.get('/', (req, res) => {
 // CADASTRAR USUÁRIO
 // ======================================
 
-app.post(
+app.post('/usuarios', async (req, res) => {
 
-  '/usuarios',
+  try {
 
-  async (req, res) => {
+    const {
 
-    try {
+      usuario,
 
-      const {
+      senha,
+
+      tipo
+
+    } = req.body
+
+    const senhaHash = await bcrypt.hash(senha,10)
+
+    await pool.query(
+
+      `
+
+      INSERT INTO usuarios
+
+      (usuario,senha,tipo)
+
+      VALUES($1,$2,$3)
+
+      `,
+
+      [
 
         usuario,
-        senha,
+
+        senhaHash,
+
         tipo
 
-      } = req.body
+      ]
 
-      const senhaHash =
-      await bcrypt.hash(
+    )
 
-        senha,
-        10
+    res.json({
 
-      )
+      sucesso:true
 
-      db.run(
+    })
 
-        `
+  } catch (erro) {
 
-        INSERT INTO usuarios (
+    console.log(erro)
 
-          usuario,
-          senha,
-          tipo
+    res.json({
 
-        )
+      sucesso:false
 
-        VALUES (?, ?, ?)
-
-        `,
-
-        [
-
-          usuario,
-          senhaHash,
-          tipo
-
-        ],
-
-        function(erro) {
-
-          if (erro) {
-
-            console.log(erro)
-
-            return res.json({
-
-              sucesso: false
-
-            })
-
-          }
-
-          res.json({
-
-            sucesso: true
-
-          })
-
-        }
-
-      )
-
-    } catch (erro) {
-
-      console.log(erro)
-
-      res.json({
-
-        sucesso: false
-
-      })
-
-    }
+    })
 
   }
 
-)
+})
 
 // ======================================
 // EXCLUIR ARQUIVO
@@ -732,27 +603,25 @@ app.delete(
 // SERVIDOR
 // ======================================
 
-app.get('/usuarios', (req, res) => {
+app.get('/usuarios', async (req, res) => {
 
-  db.all(
+  try {
 
-    'SELECT id, usuario, tipo FROM usuarios',
+    const resultado = await pool.query(
 
-    [],
+      'SELECT id, usuario, tipo FROM usuarios ORDER BY id'
 
-    (erro, rows) => {
+    )
 
-      if (erro) {
+    res.json(resultado.rows)
 
-        return res.json([])
+  } catch (erro) {
 
-      }
+    console.log(erro)
 
-      res.json(rows)
+    res.json([])
 
-    }
-
-  )
+  }
 
 })
 
