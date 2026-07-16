@@ -212,113 +212,58 @@ app.post('/login', async (req, res) => {
 // UPLOAD ARQUIVO
 // ======================================
 
+// ======================================
+// UPLOAD ARQUIVO
+// ======================================
+
 app.post(
-
   '/upload',
-
   upload.single('arquivo'),
-
-  (req, res) => {
+  async (req, res) => {
 
     try {
 
       if (!req.file) {
-
         return res.json({
-
           sucesso: false,
-
           erro: 'Arquivo não enviado'
-
         })
-
       }
 
-      const usuario =
-req.body.usuario
+      const usuario = req.body.usuario
+      const quantidade = req.body.quantidade || 0
+      const data = new Date().toLocaleString()
+      const nomeArquivo = req.file.filename
 
-const quantidade =
-req.body.quantidade || 0
-
-const data =
-new Date().toLocaleString()
-
-const nomeArquivo = req.file.filename
-
-console.log("=== DADOS QUE SERÃO GRAVADOS ===");
-console.log("nomeArquivo:", nomeArquivo);
-console.log("usuario:", usuario);
-console.log("data:", data);
-console.log("quantidade:", quantidade);
-console.log("===============================");
-
-      db.run(
+      await pool.query(
 
         `
-
-        INSERT INTO arquivos (
-
-nome,
-usuario,
-data,
-status,
-quantidade
-
-)
-
-VALUES (?, ?, ?, ?, ?)
-
+        INSERT INTO arquivos
+        (nome, usuario, data, status, quantidade)
+        VALUES ($1, $2, $3, $4, $5)
         `,
 
         [
-  nomeArquivo,
-  usuario,
-  data,
-  'Pendente',
-  quantidade
-],
-
-        function(erro) {
-
-          if (erro) {
-
-            console.log(erro)
-
-            return res.json({
-
-              sucesso: false,
-
-              erro: erro.message
-
-            })
-
-          }
-
-          console.log(
-            'ARQUIVO SALVO:',
-            nomeArquivo
-          )
-
-          res.json({
-
-            sucesso: true
-
-          })
-
-        }
+          nomeArquivo,
+          usuario,
+          data,
+          'Pendente',
+          quantidade
+        ]
 
       )
+
+      res.json({
+        sucesso: true
+      })
 
     } catch (erro) {
 
       console.log(erro)
 
       res.json({
-
         sucesso: false,
-
         erro: erro.message
-
       })
 
     }
@@ -331,90 +276,55 @@ VALUES (?, ?, ?, ?, ?)
 // LISTAR ARQUIVOS
 // ======================================
 
-app.get('/arquivos', (req, res) => {
+app.get('/arquivos', async (req, res) => {
 
-console.log("=== LISTAR ARQUIVOS ===")
-console.log("Usuário:", req.query.usuario)
-console.log("Tipo:", req.query.tipo)
-console.log("=======================")
+  try {
 
-    const usuario =
-    req.query.usuario
+    const usuario = req.query.usuario
+    const tipo = req.query.tipo
 
-    const tipo =
-    req.query.tipo
+    let resultado
 
-    // COORDENADOR VÊ TUDO
+    if (tipo === 'Coordenador') {
 
-    if (
-
-      tipo === 'Coordenador'
-
-    ) {
-
-      db.all(
+      resultado = await pool.query(
 
         `
-
-        SELECT * FROM arquivos
-
+        SELECT *
+        FROM arquivos
         ORDER BY id DESC
+        `
 
+      )
+
+    } else {
+
+      resultado = await pool.query(
+
+        `
+        SELECT *
+        FROM arquivos
+        WHERE usuario = $1
+        ORDER BY id DESC
         `,
 
-        (erro, rows) => {
-
-          if (erro) {
-
-            return res.json([])
-
-          }
-
-          res.json(rows)
-
-        }
+        [usuario]
 
       )
 
     }
 
-    // PROFESSOR VÊ APENAS OS DELE
+    res.json(resultado.rows)
 
-    else {
+  } catch (erro) {
 
-      db.all(
+    console.log(erro)
 
-        `
-
-        SELECT * FROM arquivos
-
-        WHERE usuario = ?
-
-        ORDER BY id DESC
-
-        `,
-
-        [usuario],
-
-        (erro, rows) => {
-
-          if (erro) {
-
-            return res.json([])
-
-          }
-
-          res.json(rows)
-
-        }
-
-      )
-
-    }
+    res.json([])
 
   }
 
-)
+})
 
 
 // ======================================
@@ -499,105 +409,74 @@ app.post('/usuarios', async (req, res) => {
 // EXCLUIR ARQUIVO
 // ======================================
 
-app.delete(
+app.delete('/arquivos/:id', async (req, res) => {
 
-  '/arquivos/:id',
-
-  (req, res) => {
+  try {
 
     const id = req.params.id
 
-    db.get(
+    const resultado = await pool.query(
 
       `
-
-      SELECT * FROM arquivos
-      WHERE id = ?
-
+      SELECT *
+      FROM arquivos
+      WHERE id = $1
       `,
 
-      [id],
+      [id]
 
-      (erro, arquivo) => {
+    )
 
-        if (erro || !arquivo) {
-
-          return res.json({
-
-            sucesso: false
-
-          })
-
-        }
-
-        const caminhoArquivo = path.join(
-
-          __dirname,
-
-          'uploads',
-
-          arquivo.nome
-
-        )
-
-        // APAGAR PDF
-
-        if (fs.existsSync(caminhoArquivo)) {
-
-          fs.unlinkSync(caminhoArquivo)
-
-        }
-
-        // APAGAR BANCO
-
-        db.run(
-
-  `
-
-  DELETE FROM arquivos
-  WHERE id = ?
-
-  `,
-
-  [id],
-
-  function (erroDelete) {
-
-    console.log('=================')
-    console.log('ID:', id)
-    console.log('APAGADOS:', this.changes)
-    console.log('ERRO:', erroDelete)
-    console.log('=================')
-
-    if (erroDelete) {
+    if (resultado.rows.length === 0) {
 
       return res.json({
-
-        sucesso: false,
-        erro: erroDelete.message
-
+        sucesso: false
       })
 
     }
 
+    const arquivo = resultado.rows[0]
+
+    const caminhoArquivo = path.join(
+
+      __dirname,
+      'uploads',
+      arquivo.nome
+
+    )
+
+    if (fs.existsSync(caminhoArquivo)) {
+
+      fs.unlinkSync(caminhoArquivo)
+
+    }
+
+    await pool.query(
+
+      `
+      DELETE FROM arquivos
+      WHERE id = $1
+      `,
+
+      [id]
+
+    )
+
     res.json({
+      sucesso: true
+    })
 
-      sucesso: true,
-      apagados: this.changes
+  } catch (erro) {
 
+    console.log(erro)
+
+    res.json({
+      sucesso: false
     })
 
   }
 
-)
-
-      }
-
-    )
-
-  }
-
-)
+})
 
 // ======================================
 // SERVIDOR
@@ -625,136 +504,120 @@ app.get('/usuarios', async (req, res) => {
 
 })
 
-app.put('/arquivos/:id', (req, res) => {
-
-  const {
-    status,
-    observacao,
-    quantidade
-  } = req.body
-
-  let dataImpressao = null
-
-  if (status === 'Impresso') {
-    dataImpressao = new Date().toLocaleString('pt-BR')
-  }
-
-  console.log(req.body)
-
-  db.run(
-
-    `
-    UPDATE arquivos
-    SET
-      status = ?,
-      observacao = ?,
-      quantidade = ?,
-      dataImpressao = ?
-    WHERE id = ?
-    `,
-
-    [
-      status,
-      observacao,
-      quantidade,
-      dataImpressao,
-      req.params.id
-    ],
-
-    function (erro) {
-
-      if (erro) {
-
-        console.log(erro)
-
-        return res.json({
-          sucesso: false
-        })
-
-      }
-
-      res.json({
-        sucesso: true
-      })
-
-    }
-
-  )
-
-})
-
-app.delete(
-
-  '/usuarios/:id',
-
-  (req, res) => {
-
-    db.run(
-
-      'DELETE FROM usuarios WHERE id = ?',
-
-      [req.params.id],
-
-      function (erro) {
-
-        if (erro) {
-
-          return res.json({
-            sucesso: false
-          })
-
-        }
-
-        res.json({
-          sucesso: true
-        })
-
-      }
-
-    )
-
-  }
-
-)
-
-app.put('/usuarios/:id', async (req, res) => {
-
-  const { usuario, senha, tipo } = req.body
+app.put('/arquivos/:id', async (req, res) => {
 
   try {
 
-    // se a senha veio vazia, não altera
-    if (!senha) {
+    const {
+      status,
+      observacao,
+      quantidade
+    } = req.body
 
-      db.run(
+    let dataImpressao = null
+
+    if (status === 'Impresso') {
+
+      dataImpressao = new Date().toLocaleString('pt-BR')
+
+    }
+
+    await pool.query(
+
+      `
+      UPDATE arquivos
+      SET
+        status = $1,
+        observacao = $2,
+        quantidade = $3,
+        dataImpressao = $4
+      WHERE id = $5
+      `,
+
+      [
+        status,
+        observacao,
+        quantidade,
+        dataImpressao,
+        req.params.id
+      ]
+
+    )
+
+    res.json({
+      sucesso: true
+    })
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    res.json({
+      sucesso: false
+    })
+
+  }
+
+})
+
+app.delete('/usuarios/:id', async (req, res) => {
+
+  try {
+
+    await pool.query(
+
+      `
+      DELETE FROM usuarios
+      WHERE id = $1
+      `,
+
+      [req.params.id]
+
+    )
+
+    res.json({
+      sucesso: true
+    })
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    res.json({
+      sucesso: false
+    })
+
+  }
+
+})
+
+app.put('/usuarios/:id', async (req, res) => {
+
+  try {
+
+    const {
+      usuario,
+      senha,
+      tipo
+    } = req.body
+
+    if (!senha || senha.trim() === '') {
+
+      await pool.query(
 
         `
         UPDATE usuarios
-        SET usuario = ?, tipo = ?
-        WHERE id = ?
+        SET
+          usuario = $1,
+          tipo = $2
+        WHERE id = $3
         `,
 
         [
           usuario,
           tipo,
           req.params.id
-        ],
-
-        function (erro) {
-
-          if (erro) {
-
-            return res.json({
-              sucesso: false
-            })
-
-          }
-
-          res.json({
-            sucesso: true
-          })
-
-        }
+        ]
 
       )
 
@@ -762,15 +625,15 @@ app.put('/usuarios/:id', async (req, res) => {
 
       const senhaHash = await bcrypt.hash(senha, 10)
 
-      db.run(
+      await pool.query(
 
         `
         UPDATE usuarios
         SET
-          usuario = ?,
-          senha = ?,
-          tipo = ?
-        WHERE id = ?
+          usuario = $1,
+          senha = $2,
+          tipo = $3
+        WHERE id = $4
         `,
 
         [
@@ -778,27 +641,15 @@ app.put('/usuarios/:id', async (req, res) => {
           senhaHash,
           tipo,
           req.params.id
-        ],
-
-        function (erro) {
-
-          if (erro) {
-
-            return res.json({
-              sucesso: false
-            })
-
-          }
-
-          res.json({
-            sucesso: true
-          })
-
-        }
+        ]
 
       )
 
     }
+
+    res.json({
+      sucesso: true
+    })
 
   } catch (erro) {
 
