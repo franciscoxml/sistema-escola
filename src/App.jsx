@@ -308,10 +308,6 @@ if (!logado) {
             className="w-28 h-28 rounded-full shadow-lg mb-4"
           />
 
-          <h1 className="text-3xl text-white font-black text-center">
-            Escola Argentina Santos da Silva
-          </h1>
-
           <p className="text-slate-400 text-center mt-2">
             Sistema de Controle de Impressões
           </p>
@@ -449,49 +445,6 @@ Versão 2.0
 </div>
 
     {/* MENU ITENS */}
-
-{/* Informações da Escola */}
-
-<div className="bg-slate-800/40 rounded-2xl p-5 mb-6 border border-slate-700">
-
-  <p className="text-xs text-slate-400 uppercase">
-    Unidade Escolar
-  </p>
-
-  <h2 className="text-lg font-bold mt-1">
-    Escola Argentina Santos da Silva 
-    Inep 12022438
-  </h2>
-
-  <p className="text-sm text-slate-400 mt-2">
-    Feijó - Acre
-  </p>
-
-  <div className="mt-4 space-y-2">
-
-    <div className="flex justify-between">
-      <span className="text-slate-400">
-        Status
-      </span>
-
-      <span className="text-green-400 font-bold">
-        Online
-      </span>
-    </div>
-
-    <div className="flex justify-between">
-      <span className="text-slate-400">
-        Ano Letivo
-      </span>
-
-      <span>
-        2026
-      </span>
-    </div>
-
-  </div>
-
-</div>
 
     <div className="mt-14 flex flex-col gap-4">
 
@@ -1294,16 +1247,6 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
         <h1 className="text-4xl font-black">
           Documentos
         </h1>
-
-        <button className="bg-gradient-to-br
-from-blue-500
-to-blue-700
-shadow-2xl
-hover:scale-105
-transition-all
-duration-300 hover:bg-blue-700 transition px-6 py-3 rounded-2xl font-bold">
-          + Novo Documento
-        </button>
 
       </div>
 
