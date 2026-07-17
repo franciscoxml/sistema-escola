@@ -430,7 +430,7 @@ Controle Escolar
 Sistema Online
 </span>
 
-<span className="bg-yellow-500 text-black px-3 py-1 rounded-full text-sm">
+<span className="bg-yellow-600 px-3 py-1 rounded-full text-sm">
 Versão 2.0
 </span>
 
