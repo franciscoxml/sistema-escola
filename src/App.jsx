@@ -227,7 +227,7 @@ const carregarUsuarios = async () => {
 
 useEffect(() => {
 
-  const usuarioSalvo = localStorage.getItem('usuario')
+  const usuarioSalvo = localStorage.getItem('funcionários')
 
   if (usuarioSalvo) {
 
