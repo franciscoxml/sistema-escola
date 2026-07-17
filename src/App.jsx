@@ -303,10 +303,9 @@ if (!logado) {
         <div className="flex flex-col items-center mb-8">
 
           <img
-            src={logo}
-            alt="Logo da Escola"
-            className="w-28 h-28 rounded-full shadow-lg mb-4"
-          />
+  src={logo}
+  className="w-40 h-40 mx-auto object-contain"
+/>
 
           <p className="text-slate-400 text-center mt-2">
             Sistema de Controle de Impressões
@@ -409,14 +408,9 @@ setLogado(true)
     <div className="text-center">
 
  <img
-src={logo}
-className="w-24 h-24 rounded-full shadow-lg"
+  src={logo}
+  className="w-40 h-40 mx-auto object-contain"
 />
-
-
-  <h1 className="text-5xl font-black tracking-tight">
-  Escola Argentina Santos da Silva
-</h1>
 
 <p className="mt-3 text-blue-400 text-xl font-semibold">
   Sistema de Controle de Impressões
