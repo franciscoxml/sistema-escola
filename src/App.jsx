@@ -803,7 +803,7 @@ className="bg-blue-600 hover:bg-blue-700 p-6 rounded-3xl shadow-xl transition ho
 <FaFileAlt className="text-4xl mb-3 mx-auto"/>
 
 <p className="font-bold">
-Documentos
+Solicitações
 </p>
 
 </button>
@@ -816,7 +816,7 @@ className="bg-green-600 hover:bg-green-700 p-6 rounded-3xl shadow-xl transition 
 <FaChartBar className="text-4xl mb-3 mx-auto"/>
 
 <p className="font-bold">
-Relatórios
+Estatisticas
 </p>
 
 </button>
@@ -829,7 +829,7 @@ className="bg-purple-600 hover:bg-purple-700 p-6 rounded-3xl shadow-xl transitio
 <FaUsers className="text-4xl mb-3 mx-auto"/>
 
 <p className="font-bold">
-Usuários
+Funcionários
 </p>
 
 </button>
