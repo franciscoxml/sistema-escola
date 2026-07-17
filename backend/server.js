@@ -6,8 +6,14 @@ const fs = require('fs')
 const express = require('express')
 const cors = require('cors')
 const pool = require('./db')
-
+const cloudinary = require('cloudinary').v2
 const app = express()
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 app.use(cors())
 app.use(express.json())
@@ -116,7 +122,12 @@ dataImpressao TEXT
 
 `)
 
-  const admin = await pool.query(
+await pool.query(`
+ALTER TABLE arquivos
+ADD COLUMN IF NOT EXISTS url TEXT
+`)
+ 
+const admin = await pool.query(
 
 `SELECT * FROM usuarios WHERE usuario='admin'`
 
@@ -219,7 +230,7 @@ app.post('/login', async (req, res) => {
 app.post(
   '/upload',
   upload.single('arquivo'),
-  async (req, res) => {
+async (req, res) => {
 
     try {
 
@@ -234,22 +245,36 @@ app.post(
       const quantidade = req.body.quantidade || 0
       const data = new Date().toLocaleString()
       const nomeArquivo = req.file.filename
+const resultadoCloudinary = await cloudinary.uploader.upload(
 
+  req.file.path,
+
+  {
+    resource_type: "raw",
+    folder: "documentos-escola"
+  }
+
+)
+
+const urlArquivo = resultadoCloudinary.secure_url
+
+// remove o arquivo local
+fs.unlinkSync(req.file.path)
       await pool.query(
 
         `
         INSERT INTO arquivos
-        (nome, usuario, data, status, quantidade)
-        VALUES ($1, $2, $3, $4, $5)
+(nome, usuario, data, status, quantidade, url)
         `,
 
         [
-          nomeArquivo,
-          usuario,
-          data,
-          'Pendente',
-          quantidade
-        ]
+  nomeArquivo,
+  usuario,
+  data,
+  'Pendente',
+  quantidade,
+  urlArquivo
+]
 
       )
 
