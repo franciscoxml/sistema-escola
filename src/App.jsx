@@ -409,7 +409,7 @@ setLogado(true)
 
  <img
   src={logo}
-  className="w-40 h-40 mx-auto object-contain"
+  className="w-44 h-44 mx-auto"
 />
 
 <p className="mt-3 text-blue-400 text-xl font-semibold">
