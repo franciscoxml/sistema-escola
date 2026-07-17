@@ -422,10 +422,6 @@ setLogado(true)
 
 <div className="mt-5 flex gap-3">
 
-<span className="bg-green-600 px-3 py-1 rounded-full text-sm">
-Sistema Online
-</span>
-
 </div>
 
 </div>
