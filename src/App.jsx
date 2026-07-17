@@ -470,10 +470,10 @@ Versão 2.0
 {tipoUsuario === 'Coordenador' && (
 
 <MenuBotao
-  ativo={tela === 'Funcionários'}
-  onClick={() => setTela('Funcionários')}
+  ativo={tela === 'Usuário'}
+  onClick={() => setTela('Usuário')}
   icone={<FaUsers />}
-  texto="Funcionários"
+  texto="Usuário"
 />
 
 )}
@@ -822,14 +822,14 @@ Estatisticas
 </button>
 
 <button
-onClick={() => setTela('Funcionários')}
+onClick={() => setTela('Usuário')}
 className="bg-purple-600 hover:bg-purple-700 p-6 rounded-3xl shadow-xl transition hover:scale-105"
 >
 
 <FaUsers className="text-4xl mb-3 mx-auto"/>
 
 <p className="font-bold">
-Funcionários
+Usuário
 </p>
 
 </button>
@@ -1395,7 +1395,7 @@ doc=>doc.status==="Pendente"
 }
 
 {
-  tela === 'Funcionários' &&
+  tela === 'Usuário' &&
   tipoUsuario === 'Coordenador' && (
 
     <div className="mt-8 bg-slate-900/60 rounded-3xl p-8">
