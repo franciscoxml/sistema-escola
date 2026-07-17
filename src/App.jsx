@@ -694,52 +694,6 @@ Controle centralizado de solicitações, impressão de documentos e acompanhamen
 
 <div>
 
-{/* INDICADORES DA ESCOLA */}
-
-<div className="grid grid-cols-4 gap-5 mb-8">
-
-  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
-    <p className="text-slate-400 text-sm">
-      Unidade Escolar
-    </p>
-
-    <h2 className="text-xl font-bold mt-2">
-      Argentina Santos da Silva
-    </h2>
-  </div>
-
-  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
-    <p className="text-slate-400 text-sm">
-      Usuário
-    </p>
-
-    <h2 className="text-xl font-bold mt-2">
-      {dadosUsuario?.usuario}
-    </h2>
-  </div>
-
-  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
-    <p className="text-slate-400 text-sm">
-      Cargo
-    </p>
-
-    <h2 className="text-xl font-bold mt-2 text-green-400">
-      {dadosUsuario?.tipo}
-    </h2>
-  </div>
-
-  <div className="bg-slate-800 rounded-2xl p-5 border border-slate-700">
-    <p className="text-slate-400 text-sm">
-      Data
-    </p>
-
-    <h2 className="text-xl font-bold mt-2">
-      {new Date().toLocaleDateString('pt-BR')}
-    </h2>
-  </div>
-
-</div>
-
 <h2 className="text-2xl font-bold">
 
 Painel Geral
