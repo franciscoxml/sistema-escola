@@ -242,9 +242,10 @@ async (req, res) => {
       }
 
       const usuario = req.body.usuario
-      const quantidade = req.body.quantidade || 0
-      const data = new Date().toLocaleString()
-      const nomeArquivo = req.file.filename
+const quantidade = req.body.quantidade || 0
+const observacao = req.body.observacao || ''
+const data = new Date().toLocaleString()
+const nomeArquivo = req.file.filename
 const resultadoCloudinary = await cloudinary.uploader.upload(
 
   req.file.path,
@@ -264,7 +265,7 @@ fs.unlinkSync(req.file.path)
 
         `
         INSERT INTO arquivos
-(nome, usuario, data, status, quantidade, url)
+(nome, usuario, data, status, observacao, quantidade, url)
         `,
 
         [
@@ -272,6 +273,7 @@ fs.unlinkSync(req.file.path)
   usuario,
   data,
   'Pendente',
+  observacao,
   quantidade,
   urlArquivo
 ]

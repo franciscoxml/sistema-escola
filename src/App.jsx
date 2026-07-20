@@ -108,6 +108,8 @@ export default function App() {
 
   const [quantidade, setQuantidade] = useState('')
 
+  const [observacao, setObservacao] = useState('')
+
   const [pesquisa, setPesquisa] = useState('')
 
   const [filtroStatus, setFiltroStatus] = useState('Todos')
@@ -153,7 +155,37 @@ export default function App() {
   }
 
 }
- 
+
+const atualizarDocumento = async (doc) => {
+
+  try {
+
+    await axios.put(
+
+      `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
+
+      {
+
+        status: doc.status,
+        observacao: doc.observacao,
+        quantidade: doc.quantidade
+
+      }
+
+    )
+
+    carregarArquivos()
+
+  } catch (erro) {
+
+    console.log(erro)
+
+    alert("Erro ao atualizar documento")
+
+  }
+
+}
+
   const [documentos, setDocumentos] = useState([])
 
   console.log(documentos)
@@ -859,11 +891,85 @@ Nova Solicitação de Impressão
 
 <p className="text-slate-400">
 
-Envie um documento para impressão na secretaria.
+Envie um documento para impressão.
 
 </p>
 
 </div>
+
+<label className="block mt-6">
+
+  <p className="mb-2 text-slate-400">
+    Observação
+  </p>
+
+  <textarea
+    placeholder="Ex.: Frente e verso, colorido, grampear, entregar na coordenação..."
+    value={observacao}
+    onChange={(e) => setObservacao(e.target.value)}
+    rows={4}
+    className="w-full bg-slate-800 rounded-2xl p-5 border border-slate-700 resize-none"
+  />
+
+</label>
+
+<select
+
+value={doc.status}
+
+onChange={(e)=>{
+
+const novosDocs=[...documentos]
+
+novosDocs[index].status=e.target.value
+
+setDocumentos(novosDocs)
+
+}}
+
+className="bg-slate-700 rounded-xl p-3 mt-4"
+
+>
+
+<option>Pendente</option>
+
+<option>Impresso</option>
+
+<option>Cancelado</option>
+
+</select>
+
+<textarea
+
+value={doc.observacao || ""}
+
+onChange={(e)=>{
+
+const novosDocs=[...documentos]
+
+novosDocs[index].observacao=e.target.value
+
+setDocumentos(novosDocs)
+
+}}
+
+rows={3}
+
+className="w-full mt-4 bg-slate-700 rounded-xl p-4"
+
+/>
+
+<button
+
+onClick={()=>atualizarDocumento(doc)}
+
+className="bg-green-600 hover:bg-green-700 px-5 py-3 rounded-xl"
+
+>
+
+Salvar Alterações
+
+</button>
 
 </div>
 
@@ -923,6 +1029,11 @@ formData.append(
 quantidade
 )
 
+formData.append(
+  'observacao',
+  observacao
+)
+
   try {
 
     const resposta = await axios.post(
@@ -940,7 +1051,11 @@ quantidade
     await carregarArquivos()
 
     setNovoDocumento(null)
-
+    
+    setQuantidade('')
+    
+    setObservacao('')
+  
   } catch (erro) {
 
     console.log(erro)
@@ -1252,6 +1367,19 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
   <p className="text-slate-500 text-sm mt-1">
     {doc.data}
   </p>
+
+{doc.observacao && (
+  <div className="mt-4 rounded-2xl bg-blue-950/40 border-l-4 border-blue-500 p-4">
+    <p className="text-blue-400 font-bold text-sm">
+      📝 Observação
+    </p>
+
+    <p className="mt-2 text-slate-200">
+      {doc.observacao}
+    </p>
+  </div>
+)}
+
 </div>
 
       </div>
