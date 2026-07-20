@@ -869,155 +869,217 @@ Atualizar
 
 </div>
 
-        {/* ENVIAR */}
+        {/* NOVA SOLICITAÇÃO */}
 
-        <div className="bg-slate-900/60 backdrop-blur-2xl border border-slate-700 rounded-3xl p-8 mt-8 shadow-2xl">
+<div className="bg-slate-900/70 backdrop-blur-xl border border-slate-700 rounded-3xl shadow-2xl p-8 mt-8">
 
-          <div className="flex items-center gap-4 mb-8">
+  {/* Cabeçalho */}
 
-<div className="bg-blue-600 p-4 rounded-2xl">
+  <div className="flex items-center gap-5 mb-8">
 
-<FaUpload className="text-3xl"/>
+    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center">
+
+      <FaUpload className="text-3xl text-white"/>
+
+    </div>
+
+    <div>
+
+      <h2 className="text-3xl font-black text-white">
+        Nova Solicitação de Impressão
+      </h2>
+
+      <p className="text-slate-400 mt-1">
+        Envie um documento PDF para impressão.
+      </p>
+
+    </div>
+
+  </div>
+
+  {/* Linha PDF + Quantidade */}
+
+  <div className="grid grid-cols-3 gap-6">
+
+    {/* PDF */}
+
+    <div className="col-span-2">
+
+      <label className="block mb-2 text-slate-300 font-semibold">
+        Documento (PDF)
+      </label>
+
+      <input
+        type="file"
+        accept=".pdf"
+        onChange={(e)=>setNovoDocumento(e.target.files[0])}
+        className="
+        w-full
+        bg-slate-800
+        border
+        border-slate-700
+        rounded-2xl
+        p-4
+        text-white
+        "
+      />
+
+    </div>
+
+    {/* Quantidade */}
+
+    <div>
+
+      <label className="block mb-2 text-slate-300 font-semibold">
+        Quantidade
+      </label>
+
+      <input
+        type="number"
+        value={quantidade}
+        onChange={(e)=>setQuantidade(e.target.value)}
+        placeholder="Ex: 50"
+        className="
+        w-full
+        bg-slate-800
+        border
+        border-slate-700
+        rounded-2xl
+        p-4
+        text-white
+        "
+      />
+
+    </div>
+
+  </div>
+
+  {/* Observação */}
+
+  <div className="mt-6">
+
+    <label className="block mb-2 text-slate-300 font-semibold">
+      Observação
+    </label>
+
+    <textarea
+
+      value={observacao}
+
+      onChange={(e)=>setObservacao(e.target.value)}
+
+      rows={5}
+
+      placeholder="Exemplo:
+
+• Frente e verso
+
+• Colorido
+
+• Grampear
+
+• Entregar na coordenação
+
+• Imprimir somente páginas 5 até 12"
+
+      className="
+      w-full
+      bg-slate-800
+      border
+      border-slate-700
+      rounded-2xl
+      p-5
+      text-white
+      resize-none
+      focus:border-blue-500
+      outline-none
+      "
+    />
+
+  </div>
+
+  {/* Botão */}
+
+  <button
+
+    onClick={async()=>{
+
+      if(!novoDocumento){
+
+        alert("Selecione um PDF.")
+
+        return
+
+      }
+
+      const formData = new FormData()
+
+      formData.append("arquivo",novoDocumento)
+
+      formData.append("usuario",nomeUsuario)
+
+      formData.append("quantidade",quantidade)
+
+      formData.append("observacao",observacao)
+
+      try{
+
+        await axios.post(
+
+          "https://sistema-escola-api.onrender.com/upload",
+
+          formData
+
+        )
+
+        alert("Documento enviado com sucesso!")
+
+        carregarArquivos()
+
+        setNovoDocumento(null)
+
+        setQuantidade("")
+
+        setObservacao("")
+
+      }catch{
+
+        alert("Erro ao enviar documento")
+
+      }
+
+    }}
+
+    className="
+    mt-8
+    w-full
+    bg-gradient-to-r
+    from-blue-600
+    to-indigo-700
+    hover:from-blue-700
+    hover:to-indigo-800
+    p-5
+    rounded-2xl
+    text-xl
+    font-bold
+    flex
+    justify-center
+    items-center
+    gap-3
+    transition
+    duration-300
+    hover:scale-[1.02]
+    "
+
+  >
+
+    <FaUpload/>
+
+    Enviar Solicitação
+
+  </button>
 
 </div>
-
-<div>
-
-<h2 className="text-3xl font-bold">
-
-Nova Solicitação de Impressão
-
-</h2>
-
-<p className="text-slate-400">
-
-Envie um documento para impressão.
-
-</p>
-
-</div>
-
-<label className="block mt-6">
-
-  <p className="mb-2 text-slate-400">
-    Observação
-  </p>
-
-  <textarea
-    placeholder="Ex.: Frente e verso, colorido, grampear, entregar na coordenação..."
-    value={observacao}
-    onChange={(e) => setObservacao(e.target.value)}
-    rows={4}
-    className="w-full bg-slate-800 rounded-2xl p-5 border border-slate-700 resize-none"
-  />
-
-</label>
-
-</div>
-
-         <label className="block">
-
-<p className="mb-2 text-slate-400">
-
-Documento (PDF)
-
-</p>
-
-<input
-type="file"
-onChange={(e)=>setNovoDocumento(e.target.files[0])}
-className="w-full bg-slate-800 rounded-2xl p-5 border border-slate-700"
-/>
-
-</label>
-
-<label className="block mt-6">
-
-<p className="mb-2 text-slate-400">
-
-Quantidade de Cópias
-
-</p>
-
-<input
-type="number"
-placeholder="Ex: 50"
-value={quantidade}
-onChange={(e)=>setQuantidade(e.target.value)}
-className="w-full bg-slate-800 rounded-2xl p-5 border border-slate-700"
-/>
-
-</label>
-
-          <button
- onClick={async () => {
-
-  if (!novoDocumento) return
- 
-  const formData = new FormData()
-
-  formData.append(
-    'arquivo',
-    novoDocumento
-  )
-
-  formData.append(
-  'usuario',
-  nomeUsuario
-)
-
-formData.append(
-'quantidade',
-quantidade
-)
-
-formData.append(
-  'observacao',
-  observacao
-)
-
-  try {
-
-    const resposta = await axios.post(
-
-      'https://sistema-escola-api.onrender.com/upload',
-
-      formData
-
-    )
-
-    console.log(resposta.data)
-
-    alert('Documento enviado com sucesso!')
-
-    await carregarArquivos()
-
-    setNovoDocumento(null)
-    
-    setQuantidade('')
-    
-    setObservacao('')
-  
-  } catch (erro) {
-
-    console.log(erro)
-
-    alert('Erro ao enviar documento')
-
-  }
-
-}}
-
-  className="mt-8 w-full bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 hover:scale-[1.02] transition-all duration-300 p-5 rounded-2xl font-bold text-xl flex justify-center items-center gap-4 shadow-2xl shadow-blue-900/40"
->
-
- <FaUpload />
-
-<span>Enviar Solicitação</span>
-
-</button>
-
-        </div>
 
 {/* GRÁFICO */}
 
@@ -1121,32 +1183,50 @@ doc.status === filtroStatus
 .map((doc,index)=>(
 
 <div
-
-key={index}
-
-className="bg-slate-800 hover:bg-slate-700 rounded-3xl p-6 transition-all duration-300 shadow-xl border border-slate-700"
-
+key={doc.id}
+className="
+bg-slate-800
+border
+border-slate-700
+hover:border-blue-500
+hover:bg-slate-750
+rounded-3xl
+p-6
+transition-all
+duration-300
+shadow-xl
+"
 >
 
-<div className="flex justify-between items-start">
+<div className="flex justify-between">
 
-<div className="flex gap-5 items-center">
+{/* ESQUERDA */}
 
-<div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl">
+<div className="flex gap-5 flex-1">
 
-<FaFolderOpen className="text-6xl opacity-40" />
+<div className="
+w-16
+h-16
+rounded-2xl
+bg-blue-600
+flex
+items-center
+justify-center
+">
+
+<FaFileAlt className="text-3xl text-white"/>
 
 </div>
 
-<div>
+<div className="flex-1">
 
-<h2 className="text-2xl font-bold">
+<h2 className="text-2xl font-bold text-white">
 
-{doc.nome}
+{doc.arquivo}
 
 </h2>
 
-<p className="text-slate-400 mt-2">
+<p className="text-slate-400 mt-1">
 
 👤 {doc.usuario}
 
@@ -1158,36 +1238,70 @@ className="bg-slate-800 hover:bg-slate-700 rounded-3xl p-6 transition-all durati
 
 </p>
 
+{doc.observacao && (
+
+<div className="
+mt-5
+bg-slate-900
+border-l-4
+border-blue-500
+rounded-xl
+p-4
+">
+
+<h3 className="text-blue-400 font-bold mb-2">
+
+📝 Observação
+
+</h3>
+
+<p className="text-slate-300 whitespace-pre-wrap leading-7">
+
+{doc.observacao}
+
+</p>
+
+</div>
+
+)}
+
 </div>
 
 </div>
 
-<div className="text-right">
+{/* DIREITA */}
 
-<p className="text-slate-400">
+<div className="flex flex-col items-end justify-between">
+
+<div>
+
+<p className="text-slate-400 text-sm">
 
 Quantidade
 
 </p>
 
-<h2 className="text-3xl font-black">
+<h1 className="text-5xl font-black text-white">
 
 {doc.quantidade}
 
-</h2>
+</h1>
 
 </div>
-
-</div>
-
-<div className="mt-6 flex justify-between items-center">
-
-<div>
 
 <span
 
-className={`px-5 py-2 rounded-full font-bold text-white ${
+className={`
+
+mt-5
+px-5
+py-2
+rounded-full
+font-bold
+
+${
 doc.status==="Impresso"
+
 ?
 
 "bg-green-600"
@@ -1202,9 +1316,11 @@ doc.status==="Cancelado"
 
 :
 
-"bg-yellow-500"
+"bg-yellow-500 text-black"
 
-}`}
+}
+
+`}
 
 >
 
@@ -1212,19 +1328,21 @@ doc.status==="Cancelado"
 
 </span>
 
-</div>
-
-<div className="flex gap-3">
+<div className="flex gap-3 mt-6">
 
 <button
 
-onClick={()=>
+onClick={()=>window.open(doc.file)}
 
-window.open(doc.file)
+className="
 
-}
+bg-blue-600
+hover:bg-blue-700
+w-12
+h-12
+rounded-xl
 
-className="bg-blue-600 hover:bg-blue-700 p-3 rounded-xl"
+"
 
 >
 
@@ -1234,15 +1352,9 @@ className="bg-blue-600 hover:bg-blue-700 p-3 rounded-xl"
 
 <button
 
-onClick={() => {
+onClick={()=>{
 
-const confirmar = window.confirm(
-
-'Deseja excluir este documento?'
-
-)
-
-if(confirmar){
+if(window.confirm("Excluir documento?")){
 
 removerDocumento(doc.id)
 
@@ -1250,7 +1362,15 @@ removerDocumento(doc.id)
 
 }}
 
-className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
+className="
+
+bg-red-600
+hover:bg-red-700
+w-12
+h-12
+rounded-xl
+
+"
 
 >
 
@@ -1264,8 +1384,9 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
 
 </div>
 
-))
+</div>
 
+))
 }
 
 </div>
@@ -1295,7 +1416,7 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
 
     <div
       key={index}
-      className="bg-slate-800 p-6 rounded-2xl flex items-center justify-between"
+     className="bg-slate-800 p-6 rounded-2xl flex items-center justify-between" 
     >
 
       <div>
@@ -1311,12 +1432,20 @@ className="bg-red-600 hover:bg-red-700 p-3 rounded-xl"
   </p>
 
 {doc.observacao && (
-  <div className="mt-4 rounded-2xl bg-blue-950/40 border-l-4 border-blue-500 p-4">
-    <p className="text-blue-400 font-bold text-sm">
-      📝 Observação
-    </p>
+  <div className="
+mt-5
+w-full
+rounded-2xl
+bg-slate-900
+border
+border-blue-500/40
+p-5
+">
+    <h3 className="text-blue-400 font-bold text-lg mb-3">
+📝 Observação
+</h3>
 
-    <p className="mt-2 text-slate-200">
+    <p className="text-slate-200 leading-7 whitespace-pre-wrap break-words">
       {doc.observacao}
     </p>
   </div>
