@@ -94,7 +94,7 @@ export default function App() {
   
   const [dadosUsuario, setDadosUsuario] = useState(null)
  
-  const [tela, setTela] = useState('dashboard')
+  const [tela, setTela] = useState('Painel Geral')
   
   const [usuario, setUsuario] = useState('')
   
@@ -912,64 +912,6 @@ Envie um documento para impressão.
   />
 
 </label>
-
-<select
-
-value={doc.status}
-
-onChange={(e)=>{
-
-const novosDocs=[...documentos]
-
-novosDocs[index].status=e.target.value
-
-setDocumentos(novosDocs)
-
-}}
-
-className="bg-slate-700 rounded-xl p-3 mt-4"
-
->
-
-<option>Pendente</option>
-
-<option>Impresso</option>
-
-<option>Cancelado</option>
-
-</select>
-
-<textarea
-
-value={doc.observacao || ""}
-
-onChange={(e)=>{
-
-const novosDocs=[...documentos]
-
-novosDocs[index].observacao=e.target.value
-
-setDocumentos(novosDocs)
-
-}}
-
-rows={3}
-
-className="w-full mt-4 bg-slate-700 rounded-xl p-4"
-
-/>
-
-<button
-
-onClick={()=>atualizarDocumento(doc)}
-
-className="bg-green-600 hover:bg-green-700 px-5 py-3 rounded-xl"
-
->
-
-Salvar Alterações
-
-</button>
 
 </div>
 
