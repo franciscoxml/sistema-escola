@@ -161,18 +161,13 @@ const atualizarDocumento = async (doc) => {
   try {
 
     await axios.put(
-
-      `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
-
-      {
-
-        status: doc.status,
-        observacao: doc.observacao,
-        quantidade: doc.quantidade
-
-      }
-
-    )
+`https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
+{
+   status: e.target.value,
+   observacao: doc.observacao,
+   quantidade: doc.quantidade
+}
+)
 
     carregarArquivos()
 

@@ -261,14 +261,19 @@ const urlArquivo = resultadoCloudinary.secure_url
 
 // remove o arquivo local
 fs.unlinkSync(req.file.path)
-      await pool.query(
 
-        `
-        INSERT INTO arquivos
+console.log("OBSERVAÇÃO RECEBIDA:")
+console.log(observacao)
+
+await pool.query(
+
+`
+INSERT INTO arquivos
 (nome, usuario, data, status, observacao, quantidade, url)
-        `,
+VALUES ($1,$2,$3,$4,$5,$6,$7)
+`,
 
-        [
+[
   nomeArquivo,
   usuario,
   data,
@@ -278,7 +283,7 @@ fs.unlinkSync(req.file.path)
   urlArquivo
 ]
 
-      )
+)
 
       res.json({
         sucesso: true
@@ -340,6 +345,8 @@ app.get('/arquivos', async (req, res) => {
       )
 
     }
+
+    console.log(resultado.rows) 
 
     res.json(resultado.rows)
 
@@ -535,42 +542,31 @@ app.put('/arquivos/:id', async (req, res) => {
 
   try {
 
-    const id = req.params.id
-
-    const resultado = await pool.query(
-
-      `SELECT * FROM arquivos WHERE id=$1`,
-
-      [id]
-
+    const atual = await pool.query(
+      'SELECT * FROM arquivos WHERE id=$1',
+      [req.params.id]
     )
 
-    if(resultado.rows.length===0){
-
-      return res.json({
-        sucesso:false
-      })
-
+    if (atual.rows.length === 0) {
+      return res.json({ sucesso:false })
     }
 
-    const atual = resultado.rows[0]
+    const documento = atual.rows[0]
 
     const status =
-      req.body.status ?? atual.status
+      req.body.status ?? documento.status
 
     const observacao =
-      req.body.observacao ?? atual.observacao
+      req.body.observacao ?? documento.observacao
 
     const quantidade =
-      req.body.quantidade ?? atual.quantidade
+      req.body.quantidade ?? documento.quantidade
 
-    let dataImpressao = atual.dataimpressao
+    let dataImpressao =
+      documento.dataimpressao
 
-    if(status==="Impresso"){
-
-      dataImpressao =
-        new Date().toLocaleString("pt-BR")
-
+    if(status === "Impresso"){
+      dataImpressao = new Date().toLocaleString("pt-BR")
     }
 
     await pool.query(
@@ -578,46 +574,30 @@ app.put('/arquivos/:id', async (req, res) => {
       `
       UPDATE arquivos
       SET
-        status=$1,
-        observacao=$2,
-        quantidade=$3,
-        dataImpressao=$4
+      status=$1,
+      observacao=$2,
+      quantidade=$3,
+      dataImpressao=$4
       WHERE id=$5
       `,
 
       [
-
         status,
-
         observacao,
-
         quantidade,
-
         dataImpressao,
-
-        id
-
+        req.params.id
       ]
 
     )
 
-    res.json({
+    res.json({ sucesso:true })
 
-      sucesso:true
+  } catch(err){
 
-    })
+    console.log(err)
 
-  }
-
-  catch(erro){
-
-    console.log(erro)
-
-    res.json({
-
-      sucesso:false
-
-    })
+    res.json({ sucesso:false })
 
   }
 
