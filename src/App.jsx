@@ -1289,11 +1289,63 @@ Quantidade
 
 </div>
 
+{tipoUsuario === "Coordenador" ? (
+
+<select
+  value={doc.status}
+  onChange={async (e) => {
+
+    try{
+
+      await axios.put(
+
+        `https://sistema-escola-api.onrender.com/arquivos/${doc.id}`,
+
+        {
+
+          status: e.target.value
+
+        }
+
+      )
+
+      carregarArquivos()
+
+    }catch{
+
+      alert("Erro ao atualizar status")
+
+    }
+
+  }}
+
+  className="
+  bg-slate-900
+  border
+  border-slate-700
+  rounded-xl
+  px-4
+  py-2
+  text-white
+  font-bold
+  "
+
+>
+
+<option>Pendente</option>
+
+<option>Impresso</option>
+
+<option>Cancelado</option>
+
+</select>
+
+) : (
+
 <span
 
 className={`
 
-mt-5
 px-5
 py-2
 rounded-full
@@ -1327,6 +1379,8 @@ doc.status==="Cancelado"
 {doc.status}
 
 </span>
+
+)}
 
 <div className="flex gap-3 mt-6">
 

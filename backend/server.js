@@ -535,17 +535,41 @@ app.put('/arquivos/:id', async (req, res) => {
 
   try {
 
-    const {
-      status,
-      observacao,
-      quantidade
-    } = req.body
+    const id = req.params.id
 
-    let dataImpressao = null
+    const resultado = await pool.query(
 
-    if (status === 'Impresso') {
+      `SELECT * FROM arquivos WHERE id=$1`,
 
-      dataImpressao = new Date().toLocaleString('pt-BR')
+      [id]
+
+    )
+
+    if(resultado.rows.length===0){
+
+      return res.json({
+        sucesso:false
+      })
+
+    }
+
+    const atual = resultado.rows[0]
+
+    const status =
+      req.body.status ?? atual.status
+
+    const observacao =
+      req.body.observacao ?? atual.observacao
+
+    const quantidade =
+      req.body.quantidade ?? atual.quantidade
+
+    let dataImpressao = atual.dataimpressao
+
+    if(status==="Impresso"){
+
+      dataImpressao =
+        new Date().toLocaleString("pt-BR")
 
     }
 
@@ -554,33 +578,45 @@ app.put('/arquivos/:id', async (req, res) => {
       `
       UPDATE arquivos
       SET
-        status = $1,
-        observacao = $2,
-        quantidade = $3,
-        dataImpressao = $4
-      WHERE id = $5
+        status=$1,
+        observacao=$2,
+        quantidade=$3,
+        dataImpressao=$4
+      WHERE id=$5
       `,
 
       [
+
         status,
+
         observacao,
+
         quantidade,
+
         dataImpressao,
-        req.params.id
+
+        id
+
       ]
 
     )
 
     res.json({
-      sucesso: true
+
+      sucesso:true
+
     })
 
-  } catch (erro) {
+  }
+
+  catch(erro){
 
     console.log(erro)
 
     res.json({
-      sucesso: false
+
+      sucesso:false
+
     })
 
   }
