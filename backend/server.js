@@ -250,16 +250,34 @@ const quantidade = req.body.quantidade || 0
 const observacao = req.body.observacao || ''
 const data = new Date().toLocaleString()
 const nomeArquivo = req.file.filename
-const resultadoCloudinary = await cloudinary.uploader.upload(
 
-  req.file.path,
+let resultadoCloudinary;
 
-  {
-    resource_type: "raw",
-    folder: "documentos-escola"
-  }
+try {
 
-)
+  resultadoCloudinary = await cloudinary.uploader.upload(
+    req.file.path,
+    {
+      resource_type: "raw",
+      folder: "documentos-escola"
+    }
+  );
+
+  console.log("UPLOAD OK");
+  console.log(resultadoCloudinary);
+
+} catch (erro) {
+
+  console.log("========== ERRO CLOUDINARY ==========");
+  console.log(erro);
+  console.log(erro.message);
+  console.log(erro.http_code);
+  console.log(erro.error);
+  console.log("====================================");
+
+  return res.status(500).json(erro);
+
+}
 
 const urlArquivo = resultadoCloudinary.secure_url
 
