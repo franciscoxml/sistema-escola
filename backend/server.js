@@ -279,13 +279,21 @@ console.log(resultadoCloudinary);
 } catch (erro) {
 
   console.log("========== ERRO CLOUDINARY ==========");
-  console.log(erro);
-  console.log(erro.message);
-  console.log(erro.http_code);
-  console.log(erro.error);
+
+  console.log("ERRO COMPLETO:");
+  console.dir(erro, { depth: null });
+
+  console.log("RESPONSE:");
+  console.dir(erro.response, { depth: null });
+
+  console.log("BODY:");
+  console.dir(erro.response?.body, { depth: null });
+
   console.log("====================================");
 
-  return res.status(500).json(erro);
+  return res.status(500).json({
+    erro: erro.message
+  });
 
 }
 
