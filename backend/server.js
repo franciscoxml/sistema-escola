@@ -267,9 +267,12 @@ console.log("TAMANHO:");
 console.log(fs.statSync(req.file.path).size);
 
 resultadoCloudinary = await cloudinary.uploader.upload(
-  req.file.path
-);
-
+    req.file.path,
+    {
+        resource_type: "auto",
+        folder: "documentos-escola"
+    }
+)
 console.log("DEPOIS DO UPLOAD");
 console.log(resultadoCloudinary);
 
