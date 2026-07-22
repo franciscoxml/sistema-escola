@@ -14,7 +14,8 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
-
+console.log("CONFIG CLOUDINARY:");
+console.log(cloudinary.config());
 console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME)
 console.log("API Key existe?", !!process.env.CLOUDINARY_API_KEY)
 console.log("API Secret existe?", !!process.env.CLOUDINARY_API_SECRET)
