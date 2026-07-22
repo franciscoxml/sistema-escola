@@ -257,7 +257,14 @@ let resultadoCloudinary;
 try {
 
   console.log("ANTES DO UPLOAD");
+console.log("CAMINHO:");
+console.log(req.file.path);
 
+console.log("EXISTE?");
+console.log(fs.existsSync(req.file.path));
+
+console.log("TAMANHO:");
+console.log(fs.statSync(req.file.path).size);
 resultadoCloudinary = await cloudinary.uploader.upload(
   req.file.path,
   {
