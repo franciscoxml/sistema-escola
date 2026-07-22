@@ -14,6 +14,10 @@ cloudinary.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
+
+console.log("========== CONFIG CLOUDINARY ==========")
+console.log(cloudinary.config())
+console.log("=======================================")
 console.log("CONFIG CLOUDINARY:");
 console.log(cloudinary.config());
 console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME)
@@ -267,11 +271,13 @@ console.log("TAMANHO:");
 console.log(fs.statSync(req.file.path).size);
 
 resultadoCloudinary = await cloudinary.uploader.upload(
-    req.file.path,
-    {
-        resource_type: "auto",
-        folder: "documentos-escola"
-    }
+  req.file.path,
+  {
+    resource_type: "auto",
+    use_filename: true,
+    unique_filename: true,
+    folder: "documentos-escola"
+  }
 )
 console.log("DEPOIS DO UPLOAD");
 console.log(resultadoCloudinary);
