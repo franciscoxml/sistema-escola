@@ -256,16 +256,18 @@ let resultadoCloudinary;
 
 try {
 
-  resultadoCloudinary = await cloudinary.uploader.upload(
-    req.file.path,
-    {
-      resource_type: "raw",
-      folder: "documentos-escola"
-    }
-  );
+  console.log("ANTES DO UPLOAD");
 
-  console.log("UPLOAD OK");
-  console.log(resultadoCloudinary);
+resultadoCloudinary = await cloudinary.uploader.upload(
+  req.file.path,
+  {
+    resource_type: "auto",
+    folder: "documentos-escola"
+  }
+);
+
+console.log("DEPOIS DO UPLOAD");
+console.log(resultadoCloudinary);
 
 } catch (erro) {
 
