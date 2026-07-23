@@ -256,8 +256,7 @@ const observacao = req.body.observacao || ''
 const data = new Date().toLocaleString()
 const nomeArquivo = req.file.filename
 
-let resultadoCloudinary;
-
+let resultadoClo
 try {
 
   console.log("ANTES DO UPLOAD");
@@ -273,12 +272,11 @@ console.log(fs.statSync(req.file.path).size);
 resultadoCloudinary = await cloudinary.uploader.upload(
   req.file.path,
   {
-    resource_type: "auto",
-    use_filename: true,
-    unique_filename: true,
-    folder: "documentos-escola"
+    folder: "documentos-escola",
+    access_mode: "public"
   }
 )
+
 console.log("DEPOIS DO UPLOAD");
 console.log(resultadoCloudinary);
 
