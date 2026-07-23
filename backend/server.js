@@ -15,15 +15,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-console.log("========== CONFIG CLOUDINARY ==========")
-console.log(cloudinary.config())
-console.log("=======================================")
-console.log("CONFIG CLOUDINARY:");
-console.log(cloudinary.config());
-console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME)
-console.log("API Key existe?", !!process.env.CLOUDINARY_API_KEY)
-console.log("API Secret existe?", !!process.env.CLOUDINARY_API_SECRET)
-
 app.use(cors())
 app.use(express.json())
 
@@ -256,58 +247,34 @@ const observacao = req.body.observacao || ''
 const data = new Date().toLocaleString()
 const nomeArquivo = req.file.filename
 
-let resultadoClo
+let resultadoCloudinary;
+
 try {
 
-  console.log("ANTES DO UPLOAD");
-console.log("CAMINHO:");
-console.log(req.file.path);
-
-console.log("EXISTE?");
-console.log(fs.existsSync(req.file.path));
-
-console.log("TAMANHO:");
-console.log(fs.statSync(req.file.path).size);
-
-resultadoCloudinary = await cloudinary.uploader.upload(
-  req.file.path,
-  {
-    folder: "documentos-escola",
-    access_mode: "public"
-  }
-)
-
-console.log("DEPOIS DO UPLOAD");
-console.log(resultadoCloudinary);
+    resultadoCloudinary =
+        await cloudinary.uploader.upload_large(
+            req.file.path,
+            {
+                resource_type: "raw",
+                folder: "documentos-escola"
+            }
+        );
 
 } catch (erro) {
 
-  console.log("========== ERRO CLOUDINARY ==========");
-
-  console.log("ERRO COMPLETO:");
-  console.dir(erro, { depth: null });
-
-  console.log("RESPONSE:");
-  console.dir(erro.response, { depth: null });
-
-  console.log("BODY:");
-  console.dir(erro.response?.body, { depth: null });
-
-  console.log("====================================");
-
-  return res.status(500).json({
-    erro: erro.message
-  });
+    return res.status(500).json({
+        sucesso:false,
+        erro:"Erro ao enviar PDF para o Cloudinary."
+    });
 
 }
 
 const urlArquivo = resultadoCloudinary.secure_url
 
 // remove o arquivo local
-fs.unlinkSync(req.file.path)
-
-console.log("OBSERVAÇÃO RECEBIDA:")
-console.log(observacao)
+if (fs.existsSync(req.file.path)) {
+    fs.unlinkSync(req.file.path)
+}
 
 await pool.query(
 
