@@ -1217,7 +1217,7 @@ justify-center
 
 <h2 className="text-2xl font-bold text-white">
 
-{doc.arquivo}
+{doc.nome}
 
 </h2>
 
@@ -1381,7 +1381,7 @@ doc.status==="Cancelado"
 
 <button
 
-onClick={()=>window.open(doc.file)}
+onClick={()=>window.open(doc.url)}
 
 className="
 
@@ -1471,8 +1471,12 @@ rounded-xl
       <div>
 
         <h2 className="text-2xl font-bold">
-          {doc.arquivo}
+          {doc.nome}
         </h2>
+
+<p className="text-xs text-green-400">
+{doc.url}
+</p>
 
         <div className="py-6 px-4 font-semibold">
   <p>{doc.usuario}</p>
@@ -1506,16 +1510,20 @@ p-5
 
       <div className="flex gap-3">
 
-        <button
+      <button
   onClick={() => {
 
-window.open(
+    console.log(doc);
 
-`https://sistema-escola-api.onrender.com/uploads/${doc.arquivo}`,
+    if (!doc.url) {
 
-'_blank'
+        alert("Arquivo não encontrado");
 
-)
+        return;
+
+    }
+
+    window.open(doc.url, "_blank");
 
 }}
   className="bg-gradient-to-br
@@ -1524,17 +1532,12 @@ to-blue-700
 shadow-2xl
 hover:scale-105
 transition-all
-duration-300 hover:bg-blue-700 transition p-3 rounded-xl"
+duration-300
+p-3
+rounded-xl"
 >
 
   <FaPrint />
-
-<a
-  href={doc.file}
-  download={doc.arquivo}
-  className="hidden"
-  id={`download-${index}`}
-></a>
 
 </button>
 
