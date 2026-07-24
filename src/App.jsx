@@ -206,23 +206,8 @@ const atualizarDocumento = async (doc) => {
     console.log(resposta.data)
 
     setDocumentos(
-
-resposta.data
-
-.sort((a,b)=>b.id-a.id)
-
-.map(doc => ({
-
-...
-doc,
-
-arquivo: doc.nome,
-
-file:
-`https://sistema-escola-api.onrender.com/uploads/${doc.nome}`
-
-}))
-
+  resposta.data
+    .sort((a, b) => b.id - a.id)
 )
 
   } catch (erro) {
@@ -1380,23 +1365,25 @@ doc.status==="Cancelado"
 <div className="flex gap-3 mt-6">
 
 <button
+onClick={() => {
 
-onClick={()=>window.open(doc.url)}
+  console.log("DOCUMENTO:");
+  console.log(doc);
 
-className="
+  console.log("URL:");
+  console.log(doc.url);
 
-bg-blue-600
-hover:bg-blue-700
-w-12
-h-12
-rounded-xl
+  if (!doc.url) {
+    alert("URL não encontrada.");
+    return;
+  }
 
-"
+  window.open(doc.url, "_blank");
 
+}}
+className="bg-blue-600 hover:bg-blue-700 w-12 h-12 rounded-xl"
 >
-
 👁
-
 </button>
 
 <button
