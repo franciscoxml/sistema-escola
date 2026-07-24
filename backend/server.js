@@ -251,14 +251,13 @@ let resultadoCloudinary;
 
 try {
 
-    resultadoCloudinary =
-        await cloudinary.uploader.upload_large(
-            req.file.path,
-            {
-                resource_type: "raw",
-                folder: "documentos-escola"
-            }
-        );
+    resultadoCloudinary = await cloudinary.uploader.upload(
+    req.file.path,
+    {
+        resource_type: "raw",
+        folder: "documentos-escola"
+    }
+);
 
 } catch (erro) {
 
@@ -270,6 +269,9 @@ try {
 }
 
 const urlArquivo = resultadoCloudinary.secure_url
+
+console.log("URL SALVA:");
+console.log(urlArquivo);
 
 // remove o arquivo local
 if (fs.existsSync(req.file.path)) {
@@ -477,22 +479,6 @@ app.delete('/arquivos/:id', async (req, res) => {
       return res.json({
         sucesso: false
       })
-
-    }
-
-    const arquivo = resultado.rows[0]
-
-    const caminhoArquivo = path.join(
-
-      __dirname,
-      'uploads',
-      arquivo.nome
-
-    )
-
-    if (fs.existsSync(caminhoArquivo)) {
-
-      fs.unlinkSync(caminhoArquivo)
 
     }
 
