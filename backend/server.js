@@ -275,13 +275,13 @@ erro:error.message
 
 }
 
-const { data } =
-supabase.storage
+const { data: urlData } =
+await supabase.storage
 .from("documentos")
 .getPublicUrl(nomeStorage);
 
 const urlArquivo =
-data.publicUrl;
+urlData.publicUrl;
 
 console.log("URL SALVA:");
 console.log(urlArquivo);
