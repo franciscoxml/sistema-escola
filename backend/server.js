@@ -6,14 +6,13 @@ const fs = require('fs')
 const express = require('express')
 const cors = require('cors')
 const pool = require('./db')
-const cloudinary = require('cloudinary').v2
 const app = express()
+const { createClient } = require("@supabase/supabase-js");
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-})
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 app.use(cors())
 app.use(express.json())
@@ -219,9 +218,6 @@ app.post('/login', async (req, res) => {
 
 })
 
-// ======================================
-// UPLOAD ARQUIVO
-// ======================================
 
 // ======================================
 // UPLOAD ARQUIVO
@@ -247,35 +243,54 @@ const observacao = req.body.observacao || ''
 const data = new Date().toLocaleString()
 const nomeArquivo = req.file.filename
 
-let resultadoCloudinary;
+const nomeStorage =
+Date.now() + "-" + req.file.originalname;
 
-try {
+const arquivoBuffer =
+fs.readFileSync(req.file.path);
 
-    resultadoCloudinary = await cloudinary.uploader.upload(
-    req.file.path,
-    {
-        resource_type: "raw",
-        folder: "documentos-escola"
-    }
+const { error } =
+await supabase.storage
+.from("documentos")
+.upload(
+nomeStorage,
+arquivoBuffer,
+{
+contentType:"application/pdf",
+upsert:true
+}
 );
 
-} catch (erro) {
+if(error){
 
-    return res.status(500).json({
-        sucesso:false,
-        erro:"Erro ao enviar PDF para o Cloudinary."
-    });
+console.log(error);
+
+return res.json({
+
+sucesso:false,
+
+erro:error.message
+
+});
 
 }
 
-const urlArquivo = resultadoCloudinary.secure_url
+const { data } =
+supabase.storage
+.from("documentos")
+.getPublicUrl(nomeStorage);
+
+const urlArquivo =
+data.publicUrl;
 
 console.log("URL SALVA:");
 console.log(urlArquivo);
 
 // remove o arquivo local
-if (fs.existsSync(req.file.path)) {
-    fs.unlinkSync(req.file.path)
+if(fs.existsSync(req.file.path)){
+
+fs.unlinkSync(req.file.path)
+
 }
 
 await pool.query(
