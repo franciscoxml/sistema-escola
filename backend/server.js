@@ -375,7 +375,8 @@ app.get('/arquivos', async (req, res) => {
     }
 
     console.log(resultado.rows) 
-
+    console.log("===== ARQUIVOS =====");
+    console.log(JSON.stringify(resultado.rows, null, 2));
     res.json(resultado.rows)
 
   } catch (erro) {
