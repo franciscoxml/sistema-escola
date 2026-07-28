@@ -1512,7 +1512,9 @@ p-5
 
     }
 
-    window.open(doc.url, "_blank");
+    console.log("URL:", doc.url);
+
+window.location.href = doc.url;
 
 }}
   className="bg-gradient-to-br
