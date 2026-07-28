@@ -1365,23 +1365,25 @@ doc.status==="Cancelado"
 <div className="flex gap-3 mt-6">
 
 <button
-onClick={() => {
+onClick={async () => {
 
-  console.log("DOCUMENTO:");
-  console.log(doc);
+  try {
 
-  console.log("URL:");
-  console.log(doc.url);
+    const resposta = await fetch(doc.url);
 
-  if (!doc.url) {
-    alert("URL não encontrada.");
-    return;
+    console.log("STATUS:", resposta.status);
+
+    alert("Status: " + resposta.status);
+
+  } catch (erro) {
+
+    console.log(erro);
+
+    alert("Erro ao acessar URL");
+
   }
 
-  window.open(doc.url, "_blank");
-
 }}
-className="bg-blue-600 hover:bg-blue-700 w-12 h-12 rounded-xl"
 >
 👁
 </button>
