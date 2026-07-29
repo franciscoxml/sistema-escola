@@ -1368,9 +1368,6 @@ doc.status==="Cancelado"
   onClick={() => {
 
     console.log(doc);
-
-    alert(doc.url);
-
     window.open(doc.url, "_blank");
 
   }}
