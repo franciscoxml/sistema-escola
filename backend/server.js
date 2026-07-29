@@ -286,6 +286,8 @@ urlData.publicUrl;
 console.log("URL SALVA:");
 console.log(urlArquivo);
 
+console.log("ARQUIVO EXISTE LOCAL?", fs.existsSync(req.file.path));
+
 // remove o arquivo local
 if(fs.existsSync(req.file.path)){
 
