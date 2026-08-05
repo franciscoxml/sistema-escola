@@ -241,10 +241,12 @@ async (req, res) => {
 const quantidade = req.body.quantidade || 0
 const observacao = req.body.observacao || ''
 const data = new Date().toLocaleString()
-const nomeArquivo = req.file.filename
+const nomeArquivo = req.file.originalname;
+
+const extensao = path.extname(req.file.originalname);
 
 const nomeStorage =
-Date.now() + "-" + req.file.originalname;
+`${Date.now()}-${Math.random().toString(36).substring(2,10)}${extensao}`;
 
 const arquivoBuffer =
 fs.readFileSync(req.file.path);
